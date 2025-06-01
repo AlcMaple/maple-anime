@@ -1,6 +1,5 @@
 """
 完整的 PikPak + AnimeGarden 自动化测试
-包含实际下载功能
 """
 
 import asyncio
@@ -96,13 +95,155 @@ class CompleteAnimeAutoPipeline:
             print(f"❌ 获取下载列表失败: {e}")
             return []
 
-    async def get_file_list(self, parent_id: str = "") -> List[Dict]:
-        """获取文件列表"""
+    async def scan_folder_recursive(
+        self,
+        parent_id: str = "",
+        parent_name: str = "根目录",
+        max_depth: int = 3,
+        current_depth: int = 0,
+    ) -> List[Dict]:
+        """递归扫描文件夹获取所有视频文件"""
+        all_videos = []
+
+        if current_depth >= max_depth:
+            print(f"📏 达到最大扫描深度 {max_depth}，停止扫描")
+            return all_videos
+
         try:
-            print("📁 获取云盘文件列表...")
+            print(f"📁 扫描文件夹: {parent_name} (深度: {current_depth})")
+
+            # 获取当前文件夹的文件列表
+            result = await self.pikpak_client.file_list(parent_id=parent_id)
+
+            if result is None:
+                print(f"📂 文件夹 {parent_name} 为空")
+                return all_videos
+
+            # 处理响应格式
+            files = []
+            if isinstance(result, dict):
+                files = result.get("files", [])
+                if "data" in result:
+                    files = result["data"]
+            elif isinstance(result, list):
+                files = result
+
+            print(f"📋 文件夹 {parent_name} 包含 {len(files)} 个项目")
+
+            video_extensions = [
+                ".mp4",
+                ".mkv",
+                ".avi",
+                ".mov",
+                ".m4v",
+                ".webm",
+                ".flv",
+                ".rmvb",
+                ".wmv",
+            ]
+
+            for file in files:
+                if not isinstance(file, dict):
+                    continue
+
+                file_name = file.get("name", "")
+                file_kind = file.get("kind", "")
+                file_type = file.get("type", "")
+
+                # 检查是否为文件夹
+                is_folder = file_kind == "drive#folder" or file_type == "folder"
+
+                if is_folder:
+                    # 递归扫描子文件夹
+                    folder_path = (
+                        f"{parent_name}/{file_name}"
+                        if parent_name != "根目录"
+                        else file_name
+                    )
+                    print(f"📂 发现子文件夹: {folder_path}")
+
+                    sub_videos = await self.scan_folder_recursive(
+                        parent_id=file.get("id", ""),
+                        parent_name=folder_path,
+                        max_depth=max_depth,
+                        current_depth=current_depth + 1,
+                    )
+                    all_videos.extend(sub_videos)
+
+                else:
+                    # 检查是否为视频文件
+                    is_file = file_kind == "drive#file" or file_type == "file"
+                    is_video = any(ext in file_name.lower() for ext in video_extensions)
+
+                    if is_file and is_video:
+                        folder_path = (
+                            parent_name if parent_name != "根目录" else "根目录"
+                        )
+
+                        formatted_file = {
+                            "id": file.get("id", file.get("file_id", "unknown")),
+                            "name": file_name,
+                            "size": int(file.get("size", 0)),
+                            "kind": file_kind,
+                            "created_time": file.get(
+                                "created_time", file.get("created_at", "")
+                            ),
+                            "mime_type": file.get("mime_type", "video/unknown"),
+                            "thumbnail": file.get("thumbnail", ""),
+                            "hash": file.get("hash", ""),
+                            "folder_path": folder_path,  # 记录文件所在文件夹
+                        }
+                        all_videos.append(formatted_file)
+                        print(f"🎥 找到视频文件: {folder_path}/{file_name}")
+
+        except Exception as e:
+            print(f"❌ 扫描文件夹 {parent_name} 失败: {e}")
+
+        return all_videos
+
+    async def get_all_video_files(self) -> List[Dict]:
+        """获取所有视频文件 - 递归扫描版本"""
+        try:
+            print("📁 开始递归扫描所有视频文件...")
+            print("=" * 50)
+
+            # 递归扫描所有文件夹
+            all_videos = await self.scan_folder_recursive(
+                parent_id="", parent_name="根目录", max_depth=3
+            )
+
+            # 按创建时间排序，最新的在前
+            all_videos.sort(key=lambda x: x.get("created_time", ""), reverse=True)
+
+            print(f"\n📊 扫描完成，总共找到 {len(all_videos)} 个视频文件")
+
+            # 按文件夹分组显示
+            folders = {}
+            for video in all_videos:
+                folder = video.get("folder_path", "未知")
+                if folder not in folders:
+                    folders[folder] = []
+                folders[folder].append(video)
+
+            for folder, videos in folders.items():
+                print(f"\n📂 {folder}: {len(videos)} 个视频")
+                for video in videos:
+                    size_mb = video.get("size", 0) / 1024 / 1024
+                    print(f"  🎥 {video['name']} ({size_mb:.1f}MB)")
+
+            return all_videos
+
+        except Exception as e:
+            print(f"❌ 递归扫描视频文件失败: {e}")
+            return []
+
+    async def get_file_list(self, parent_id: str = "") -> List[Dict]:
+        """获取文件列表 - 保留原有功能作为备用"""
+        try:
+            print("📁 获取根目录文件列表...")
             result = await self.pikpak_client.file_list(parent_id=parent_id)
             files = result.get("files", [])
-            print(f"📁 找到 {len(files)} 个文件")
+            print(f"📁 根目录找到 {len(files)} 个文件")
 
             # 显示文件详情
             for i, file in enumerate(files):
@@ -208,26 +349,19 @@ class CompleteAnimeAutoPipeline:
         print("\n" + "=" * 40)
         await self.get_download_list()
 
-        # 6. 获取云盘文件列表
+        # 6. 递归扫描所有视频文件（新增功能）
         print("\n" + "=" * 40)
-        files = await self.get_file_list()
+        video_files = await self.get_all_video_files()
 
         # 7. 查找视频文件并获取播放链接
-        video_files = [
-            f
-            for f in files
-            if f.get("kind") == "drive#file"
-            and any(
-                ext in f.get("name", "").lower()
-                for ext in [".mp4", ".mkv", ".avi", ".mov", ".m4v"]
-            )
-        ]
-
         if video_files:
-            print(f"\n🎬 找到 {len(video_files)} 个视频文件:")
+            print(f"\n🎬 开始处理视频播放链接:")
 
-            for video in video_files[:2]:  # 只处理前2个
-                print(f"\n📹 正在处理: {video['name']}")
+            for i, video in enumerate(video_files[:2]):  # 只处理前2个
+                print(f"\n📹 正在处理视频 {i+1}: {video['name']}")
+                print(f"📂 文件夹: {video.get('folder_path', '未知')}")
+                print(f"📏 大小: {video.get('size', 0) / 1024 / 1024:.1f} MB")
+
                 play_url = await self.get_video_play_url(video["id"], video["name"])
 
                 if play_url:
@@ -276,6 +410,7 @@ class CompleteAnimeAutoPipeline:
         <div class="info">
             <h3>视频信息</h3>
             <p><strong>文件名:</strong> {video['name']}</p>
+            <p><strong>文件夹:</strong> {video.get('folder_path', '未知')}</p>
             <p><strong>链接类型:</strong> {'下载链接' if 'download' in play_url else '流媒体链接'}</p>
             <p><strong>播放URL:</strong> <a href="{play_url}" target="_blank">{play_url[:100]}...</a></p>
         </div>
@@ -316,7 +451,7 @@ class CompleteAnimeAutoPipeline:
                     except:
                         pass
         else:
-            print("\n❌ 云盘中未找到视频文件")
+            print("\n❌ 云盘中未找到任何视频文件")
             print("💡 提示: 如果刚才添加了下载任务，请等待下载完成后再次运行程序")
 
         print("\n" + "=" * 60)
