@@ -121,3 +121,8 @@ pip install -r requirements.txt
 | ⬜ | 播放器组件 |  视频播放、控制条 |
 | ⬜ | 加载状态组件 |  各种加载动画 |
 | ⬜ | 错误提示组件 |  友好的错误显示 |
+
+# 感谢
+
+感谢[AnimeGarden](https://github.com/yjl9903/AnimeGarden)和[PikPak](https://github.com/Quan666/PikPakAPI)提供的API。
+感谢[Bangumi番组计划](https://github.com/bangumi/server)提供的动漫数据。
