@@ -22,13 +22,13 @@ class AnimeSearch:
             print("没有找到相关的动漫")
             return
 
-        # 筛选动漫
-        anime_data = self.process_anime_data(result)
-        if not anime_data:
-            print("没有找到符合条件的动漫")
-            return
+        # # 筛选动漫
+        # anime_data = self.process_anime_data(result, anime_name)
+        # if not anime_data:
+        #     print("没有找到符合条件的动漫")
+        #     return
 
-        return anime_data
+        # return anime_data
 
     async def search_anime(self, name: str) -> List[Dict]:
         """搜索动漫"""
@@ -56,7 +56,7 @@ class AnimeSearch:
                 }
                 results.append(row_data)
 
-            # print("search_anime result: ", results)
+            print("search_anime result: ", results)
             return results
 
         except Exception as e:
@@ -92,7 +92,7 @@ class AnimeSearch:
 
     def is_include_subtitles(self, title: str) -> bool:
         """判断是否包含字幕"""
-        keywords = ["内嵌", "内封"]
+        keywords = ["内嵌", "内封", "简体", "繁體", "简日双语", "繁日雙語"]
         for k in keywords:
             if k in title:
                 return True
@@ -116,18 +116,37 @@ class AnimeSearch:
         print(f"❌ 未发现集数信息")
         return -1
 
-    def process_anime_data(self, data: Dict) -> Dict:
+    def filter_low_quality(self, title: str) -> bool:
+        """过滤低质量资源"""
+        """
+            低于 1080p 的资源过滤
+            过滤案例：
+            1. 480p，720p
+            2. 1280X720，800X450
+        """
+        patterns = [
+            r"480p|720p|360p|240p|144p",
+            r"800[xX×]450|1280[xX×]720|640[xX×]480",
+            r"标清|[Ss][Dd]",  # 标清标识
+            r"HDTV.*480|HDTV.*720(?!0)",  # HDTV但非1080
+        ]
+        for p in patterns:
+            if re.search(p, title):
+                return True
+        return False
+
+    def process_anime_data(self, data: Dict, name: str) -> Dict:
         """筛选动漫"""
         result = []
         episodes = set()
         for d in data:
             title = d.get("title", "")
-            if "1080" not in title or not self.is_include_subtitles(title):
+            if self.filter_low_quality(title) or not self.is_include_subtitles(title):
                 continue
 
-            # 判断是否有季度信息
-            if re.search(r"第\d+季", title):
-                continue
+            # # 判断是否有季度信息
+            # if re.search(r"第\d+季", title):
+            #     continue
 
             # 获取集数
             episode = self.get_anime_episodes(title)
@@ -137,6 +156,7 @@ class AnimeSearch:
             if episode in episodes:
                 continue
             episodes.add(episode)
+            print(f"✅ 发现: {name} {episode}集")
             resource = {
                 "id": d.get("id"),
                 "title": d.get("title", ""),
@@ -153,5 +173,5 @@ class AnimeSearch:
         return result
 
 
-if __name__ == "__main__":
-    asyncio.run(AnimeSearch().main())
+# if __name__ == "__main__":
+#     asyncio.run(AnimeSearch().main())
