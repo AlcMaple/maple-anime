@@ -5,11 +5,19 @@ import { useRouter } from 'next/navigation';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { Table } from '../components/ui/Table';
+import { Search } from '../components/ui/Search';
+import { AddAnimeModal } from '../components/admin/AddAnimeModal';
 
 interface AnimeItem {
   id: string;
   title: string;
   status: '完结' | '连载';
+}
+
+interface AnimeSearchResult {
+  id: string;
+  title: string;
+  magnet: string;
 }
 
 export default function AdminMainPage() {
@@ -45,6 +53,9 @@ export default function AdminMainPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(5);
 
+  // 模态框状态
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+
   // 下载状态
   const [hasDownloading, setHasDownloading] = useState(false);
 
@@ -76,9 +87,15 @@ export default function AdminMainPage() {
     checkAuth();
   }, [router]);
 
+  // 添加动漫
+  const handleAddAnimeToSystem = (anime: AnimeSearchResult) => {
+    setIsAddModalOpen(false);
+  };
+
+
   // 操作按钮处理函数
   const handleAddAnime = () => {
-    console.log('添加动漫');
+    setIsAddModalOpen(true);
   };
 
   const handlePikpakConfig = () => {
@@ -283,29 +300,15 @@ export default function AdminMainPage() {
               </div>
 
               {/* 右侧按钮组 */}
-              <div className="flex items-center">
-                <div className="flex items-center bg-gray-100 rounded-full">
-                  <input
-                    type="text"
-                    placeholder="搜索动漫..."
-                    value={searchQuery}
-                    onChange={(e) => {
-                      setSearchQuery(e.target.value);
-                      setCurrentPage(1); // 输入搜索时重置到第一页
-                    }}
-                    onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-                    className="w-64 px-4 py-3 bg-transparent outline-none text-gray-900 placeholder-gray-500 rounded-l-full"
-                  />
-                  <button
-                    onClick={handleSearch}
-                    className="bg-gradient-to-r from-pink-400 to-pink-500 text-white px-6 py-3 rounded-full hover:from-pink-500 hover:to-pink-600 transition-all duration-300 flex items-center justify-center"
-                  >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
-                  </button>
-                </div>
-              </div>
+              <Search
+                placeholder="搜索动漫..."
+                value={searchQuery}
+                onChange={(value) => {
+                  setSearchQuery(value);
+                  setCurrentPage(1);
+                }}
+                onSearch={handleSearch}
+              />
             </div>
           </div>
 
@@ -327,6 +330,14 @@ export default function AdminMainPage() {
             title="下载中心"
           >📥</button>
         )}
+
+        {/* 动漫模态框 */}
+        <AddAnimeModal
+          isOpen={isAddModalOpen}
+          onClose={() => setIsAddModalOpen(false)}
+          onAddAnime={handleAddAnimeToSystem}
+        />
+
       </div>
     </div>
   );
