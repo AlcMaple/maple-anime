@@ -1,20 +1,22 @@
 import React from 'react';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'success' | 'warning' | 'info' | 'small';
+  variant?: 'primary' | 'success' | 'warning' | 'info' | 'small' | 'danger';
   children: React.ReactNode;
 }
 
-export const Button: React.FC<ButtonProps> = ({ 
-  variant = 'primary', 
-  children, 
-  className = '', 
-  ...props 
+export const Button: React.FC<ButtonProps> = ({
+  variant = 'primary',
+  children,
+  className = '',
+  ...props
 }) => {
   const getVariantStyles = () => {
     const baseStyles = "border-none cursor-pointer transition-all duration-300 font-medium inline-block text-white rounded-full";
-    
+
     switch (variant) {
+      case 'danger':
+        return `${baseStyles} bg-gradient-to-r from-red-500 to-red-600 text-sm px-6 py-3 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-red-400/40`;
       case 'success':
         return `${baseStyles} bg-gradient-to-r from-green-500 to-green-600 text-sm px-6 py-3 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-green-400/40`;
       case 'warning':

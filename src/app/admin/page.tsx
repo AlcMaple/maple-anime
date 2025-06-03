@@ -4,17 +4,12 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
-import { Card } from '../components/ui/Card';
+import { Table } from '../components/ui/Table';
 
-interface AnimeSearchResult {
+interface AnimeItem {
   id: string;
   title: string;
-  magnet: string;
-}
-
-interface PikPakCredentials {
-  username: string;
-  password: string;
+  status: '完结' | '连载';
 }
 
 export default function AdminMainPage() {
@@ -23,15 +18,35 @@ export default function AdminMainPage() {
   const [loginTime, setLoginTime] = useState<string>('');
   const router = useRouter();
 
-  // 动漫搜索相关状态
-  const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState<AnimeSearchResult[]>([]);
-  const [isSearching, setIsSearching] = useState(false);
-  const [searchError, setSearchError] = useState('');
+  // 静态模拟动漫数据
+  const [animeList, setAnimeList] = useState<AnimeItem[]>([
+    { id: '1', title: '小市民系列第一季', status: '完结' },
+    { id: '2', title: '小市民系列第二季', status: '连载' },
+    { id: '3', title: '药屋少女第一季', status: '完结' },
+    { id: '4', title: '药屋少女第二季', status: '连载' },
+    { id: '5', title: '间谍过家家第一季', status: '完结' },
+    { id: '6', title: '间谍过家家第二季', status: '连载' },
+    { id: '7', title: '鬼灭之刃第一季', status: '完结' },
+    { id: '8', title: '鬼灭之刃第二季', status: '完结' },
+    { id: '9', title: '鬼灭之刃第三季', status: '连载' },
+    { id: '10', title: '进击的巨人第一季', status: '完结' },
+    { id: '11', title: '进击的巨人第二季', status: '完结' },
+    { id: '12', title: '进击的巨人第三季', status: '完结' },
+    { id: '13', title: '一拳超人第一季', status: '完结' },
+    { id: '14', title: '一拳超人第二季', status: '完结' },
+    { id: '15', title: '咒术回战第一季', status: '完结' },
+    { id: '16', title: '咒术回战第二季', status: '连载' },
+  ]);
 
-  // PikPak配置相关状态
-  const [pikpakCredentials, setPikpakCredentials] = useState<PikPakCredentials>({ username: '', password: '' });
-  const [savePikpak, setSavePikpak] = useState(false);
+  // 搜索状态
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // 分页状态
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(5);
+
+  // 下载状态
+  const [hasDownloading, setHasDownloading] = useState(false);
 
   // 检查登录状态
   useEffect(() => {
@@ -47,7 +62,6 @@ export default function AdminMainPage() {
         if (daysDiff < 7) {
           setIsAuthenticated(true);
           setLoginTime(loginDate.toLocaleString());
-          loadPikPakCredentials();
         } else {
           localStorage.removeItem('adminAuth');
           localStorage.removeItem('adminLoginTime');
@@ -62,61 +76,147 @@ export default function AdminMainPage() {
     checkAuth();
   }, [router]);
 
-  // 加载保存的PikPak账号
-  const loadPikPakCredentials = () => {
-    const savedUsername = localStorage.getItem('pikpak_username');
-    const savedPassword = localStorage.getItem('pikpak_password');
+  // 操作按钮处理函数
+  const handleAddAnime = () => {
+    console.log('添加动漫');
+  };
 
-    if (savedUsername && savedPassword) {
-      setPikpakCredentials({ username: savedUsername, password: savedPassword });
-      setSavePikpak(true);
+  const handlePikpakConfig = () => {
+    console.log('PikPak配置');
+  };
+
+  const handleCurrentSeason = () => {
+    console.log('当季新番');
+  };
+
+  const handleImport = () => {
+    console.log('导入');
+  };
+
+  const handleExport = () => {
+    console.log('导出');
+  };
+
+  const handleSearch = () => {
+    console.log('搜索:', searchQuery);
+    setCurrentPage(1); // 搜索时重置到第一页
+  };
+
+  // 表格操作按钮
+  const handleEdit = (id: string) => {
+    console.log('编辑:', id);
+  };
+
+  const handleManage = (id: string) => {
+    console.log('管理:', id);
+  };
+
+  const handleUpdate = (id: string) => {
+    console.log('更新:', id);
+  };
+
+  const handleDelete = (id: string) => {
+    console.log('删除:', id);
+    const newList = animeList.filter(item => item.id !== id);
+    setAnimeList(newList);
+
+    // 如果删除后当前页没有数据且不是第一页，则回到前一页
+    const filteredCount = newList.filter(item =>
+      item.title.toLowerCase().includes(searchQuery.toLowerCase())
+    ).length;
+    const totalPages = Math.ceil(filteredCount / pageSize);
+    if (currentPage > totalPages && totalPages > 0) {
+      setCurrentPage(totalPages);
     }
   };
 
-  // 搜索动漫
-  const handleAnimeSearch = async () => {
-    if (!searchQuery.trim()) {
-      setSearchError('请输入动漫名称');
-      return;
-    }
+  // 下载按钮
+  const handleDownloadCenter = () => {
+    console.log('下载中心');
+  };
 
-    setIsSearching(true);
-    setSearchError('');
-    setSearchResults([]);
+  // 表格列定义
+  const columns = [
+    { key: 'title', title: '标题', width: '50%' },
+    { key: 'status', title: '状态', width: '20%' },
+    { key: 'actions', title: '操作', width: '30%' },
+  ];
 
-    try {
-      const response = await fetch('http://localhost:8000/api/search', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ name: searchQuery })
-      });
+  // 处理表格数据，添加操作按钮
+  const filteredData = animeList.filter(item =>
+    item.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-      }
+  // 分页计算
+  const startIndex = (currentPage - 1) * pageSize;
+  const endIndex = startIndex + pageSize;
+  const currentPageData = filteredData.slice(startIndex, endIndex);
 
-      const data = await response.json();
-      setSearchResults(data);
+  const tableData = currentPageData.map(item => ({
+    title: <span className="text-gray-900 font-medium">{item.title}</span>,
+    status: (
+      <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${item.status === '完结'
+        ? 'bg-gray-100 text-gray-800'
+        : 'bg-green-100 text-green-800'
+        }`}>
+        {item.status}
+      </span>
+    ),
+    actions: (
+      <div className="flex space-x-2">
+        <Button
+          variant="info"
+          className="text-xs px-3 py-1"
+          onClick={() => handleEdit(item.id)}
+        >
+          编辑
+        </Button>
+        <Button
+          variant="primary"
+          className="text-xs px-3 py-1"
+          onClick={() => handleManage(item.id)}
+        >
+          管理
+        </Button>
+        {item.status === '连载' && (
+          <Button
+            variant="warning"
+            className="text-xs px-3 py-1"
+            onClick={() => handleUpdate(item.id)}
+          >
+            更新
+          </Button>
+        )}
+        <Button
+          variant="danger"
+          className="text-xs px-3 py-1"
+          onClick={() => handleDelete(item.id)}
+        >
+          删除
+        </Button>
+      </div>
+    ),
+  }));
 
-      if (data.length === 0) {
-        setSearchError('没有找到相关动漫资源');
-      }
-    } catch (error) {
-      const errorMsg = error instanceof Error ? error.message : '搜索失败';
-      setSearchError(`搜索失败: ${errorMsg}`);
-    } finally {
-      setIsSearching(false);
+  // 分页配置
+  const pagination = {
+    current: currentPage,
+    total: filteredData.length,
+    pageSize: pageSize,
+    onChange: (page: number) => {
+      setCurrentPage(page);
+    },
+    onPageSizeChange: (newPageSize: number) => {
+      setPageSize(newPageSize);
+      setCurrentPage(1); // 重置到第一页
     }
   };
 
-  // 下载到PikPak
-  const downloadToPikPak = async (magnet: string, title: string) => {
-    if (!pikpakCredentials.username || !pikpakCredentials.password) {
-      return;
-    }
-  };
+  // 模拟下载状态
+  useEffect(() => {
+    // 模拟有下载任务的情况
+    setHasDownloading(true);
+  }, []);
 
   // 加载中状态
   if (isLoading) {
@@ -138,107 +238,95 @@ export default function AdminMainPage() {
       <div className="max-w-7xl mx-auto">
         {/* 页面头部 */}
         <div className="text-center mb-8 text-gray-800">
-          <div className="text-5xl mb-2 font-bold">
+          <h1 className="text-5xl mb-2 font-bold">
             Maple Anime 管理端
-          </div>
+          </h1>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-          {/* Main区域 */}
-          <div className="lg:col-span-3 space-y-6">
-
-            {/* 动漫搜索 */}
-            {/* <Card title="动漫搜索" variant="section">
-              <div className="flex space-x-3 mb-4">
-                <Input
-                  placeholder="输入动漫名称进行搜索（如：赛马娘）"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && handleAnimeSearch()}
-                  className="flex-1"
-                />
+        {/* 主内容区域 */}
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+          {/* 操作栏 */}
+          <div className="p-6 border-b border-gray-200">
+            <div className="flex justify-between items-center">
+              {/* 左侧按钮组 */}
+              <div className="flex space-x-3">
                 <Button
                   variant="primary"
-                  onClick={handleAnimeSearch}
-                  disabled={isSearching}
-                  className=''
+                  onClick={handleAddAnime}
                 >
-                  {isSearching ? '🔄 搜索中...' : '搜索'}
+                  添加动漫
+                </Button>
+                <Button
+                  variant="info"
+                  onClick={handlePikpakConfig}
+                >
+                  PikPak配置
+                </Button>
+                <Button
+                  variant="warning"
+                  onClick={handleCurrentSeason}
+                >
+                  当季新番
+                </Button>
+                <Button
+                  variant="success"
+                  onClick={handleImport}
+                >
+                  导入
+                </Button>
+                <Button
+                  variant="success"
+                  onClick={handleExport}
+                >
+                  导出
                 </Button>
               </div>
 
-              {searchError && (
-                <div className="bg-red-50 border border-red-200 rounded-lg p-3 mb-4">
-                  <span className="text-sm text-red-700">❌ {searchError}</span>
+              {/* 右侧按钮组 */}
+              <div className="flex items-center">
+                <div className="flex items-center bg-gray-100 rounded-full">
+                  <input
+                    type="text"
+                    placeholder="搜索动漫..."
+                    value={searchQuery}
+                    onChange={(e) => {
+                      setSearchQuery(e.target.value);
+                      setCurrentPage(1); // 输入搜索时重置到第一页
+                    }}
+                    onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                    className="w-64 px-4 py-3 bg-transparent outline-none text-gray-900 placeholder-gray-500 rounded-l-full"
+                  />
+                  <button
+                    onClick={handleSearch}
+                    className="bg-gradient-to-r from-pink-400 to-pink-500 text-white px-6 py-3 rounded-full hover:from-pink-500 hover:to-pink-600 transition-all duration-300 flex items-center justify-center"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                  </button>
                 </div>
-              )}
-
-              <div className="bg-gray-50 rounded-lg p-4 max-h-96 overflow-y-auto">
-                {searchResults.length > 0 ? (
-                  <div className="space-y-3">
-                    <p className="text-sm text-gray-600">✅ 找到 {searchResults.length} 个搜索结果：</p>
-                    {searchResults.map((anime, index) => (
-                      <div key={anime.id} className="bg-white border border-gray-200 rounded-lg p-4">
-                        <h4 className="font-medium text-gray-800 mb-2">{anime.title}</h4>
-                        <p className="text-xs text-gray-500 mb-3 break-all">
-                          磁力链接: {anime.magnet.substring(0, 100)}...
-                        </p>
-                        <div className="flex space-x-2">
-                          <Button
-                            variant="success"
-                            className="text-xs"
-                            onClick={() => downloadToPikPak(anime.magnet, anime.title)}
-                          >
-                            📥 下载到PikPak
-                          </Button>
-                          <Button variant="info" className="text-xs">
-                            ➕ 添加到管理系统
-                          </Button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-sm text-gray-500">搜索结果将在这里显示...</p>
-                )}
               </div>
-            </Card> */}
+            </div>
           </div>
 
-          {/* 侧边栏 */}
-          <div className="space-y-6">
-            {/* PikPak配置 */}
-            {/* <Card title="PikPak 配置" variant="sidebar">
-              <div className="space-y-3">
-                <Input
-                  placeholder="PikPak 用户名"
-                  value={pikpakCredentials.username}
-                  onChange={(e) => setPikpakCredentials(prev => ({ ...prev, username: e.target.value }))}
-                  className="text-sm"
-                />
-                <Input
-                  type="password"
-                  placeholder="PikPak 密码"
-                  value={pikpakCredentials.password}
-                  onChange={(e) => setPikpakCredentials(prev => ({ ...prev, password: e.target.value }))}
-                  className="text-sm"
-                />
-                <div className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    id="savePikPak"
-                    checked={savePikpak}
-                    onChange={(e) => setSavePikpak(e.target.checked)}
-                    className="rounded"
-                  />
-                  <label htmlFor="savePikPak" className="text-xs text-gray-600">
-                    保存账号密码
-                  </label>
-                </div>
-              </div>
-            </Card> */}
+          {/* 表格区域 */}
+          <div className="p-6">
+            <Table
+              columns={columns}
+              data={tableData}
+              pagination={pagination}
+            />
           </div>
         </div>
+
+        {/* 下载按钮 */}
+        {hasDownloading && (
+          <button
+            onClick={handleDownloadCenter}
+            className="fixed bottom-6 right-6 bg-gradient-to-r from-blue-500 to-blue-600 text-white p-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 z-50 w-16 h-16 text-3xl text-center"
+            title="下载中心"
+          >📥</button>
+        )}
       </div>
     </div>
   );
