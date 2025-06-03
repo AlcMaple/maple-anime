@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
 import { Search } from '../ui/Search';
+import { message } from '../ui/Message';
 
 interface AnimeSearchResult {
     id: string;
@@ -25,19 +26,17 @@ export const AddAnimeModal: React.FC<AddAnimeModalProps> = ({
     const [searchQuery, setSearchQuery] = useState('');
     const [searchResults, setSearchResults] = useState<AnimeSearchResult[]>([]);
     const [isSearching, setIsSearching] = useState(false);
-    const [searchError, setSearchError] = useState('');
     const [selectedAnimes, setSelectedAnimes] = useState<Set<string>>(new Set());
     const [isDownloading, setIsDownloading] = useState(false);
 
     // 搜索动漫
     const handleSearch = async () => {
         if (!searchQuery.trim()) {
-            setSearchError('请输入动漫名称');
+            message.warning('请输入动漫名称');
             return;
         }
 
         setIsSearching(true);
-        setSearchError('');
         setSearchResults([]);
         setSelectedAnimes(new Set()); // 清空之前的选择
 
@@ -58,11 +57,11 @@ export const AddAnimeModal: React.FC<AddAnimeModalProps> = ({
             setSearchResults(data);
 
             if (data.length === 0) {
-                setSearchError('没有找到相关动漫资源');
+                message.info('没有找到相关动漫资源');
             }
         } catch (error) {
             const errorMsg = error instanceof Error ? error.message : '搜索失败';
-            setSearchError(`搜索失败: ${errorMsg}`);
+            message.error(`搜索失败: ${errorMsg}`);
         } finally {
             setIsSearching(false);
         }
@@ -91,12 +90,11 @@ export const AddAnimeModal: React.FC<AddAnimeModalProps> = ({
     // 下载选中的动漫到PikPak
     const handleDownloadSelected = async () => {
         if (selectedAnimes.size === 0) {
-            setSearchError('请先选择要下载的动漫');
+            message.warning('请先选择要下载的动漫');
             return;
         }
 
         setIsDownloading(true);
-        setSearchError('');
 
         try {
             const selectedResults = searchResults.filter(anime => selectedAnimes.has(anime.id));
@@ -118,7 +116,7 @@ export const AddAnimeModal: React.FC<AddAnimeModalProps> = ({
 
         } catch (error) {
             const errorMsg = error instanceof Error ? error.message : '下载失败';
-            setSearchError(`下载失败: ${errorMsg}`);
+            message.error(`下载失败: ${errorMsg}`);
         } finally {
             setIsDownloading(false);
         }
@@ -128,7 +126,6 @@ export const AddAnimeModal: React.FC<AddAnimeModalProps> = ({
     const handleClose = () => {
         setSearchQuery('');
         setSearchResults([]);
-        setSearchError('');
         setIsSearching(false);
         setSelectedAnimes(new Set());
         setIsDownloading(false);
@@ -144,7 +141,7 @@ export const AddAnimeModal: React.FC<AddAnimeModalProps> = ({
 
     return (
         <div
-            className="fixed inset-0 bg-opacity-50 flex items-center justify-center z-50 p-4"
+            className="fixed inset-0 bg-white/8 backdrop-blur-[0.3px] flex items-center justify-center z-50 p-4"
             onClick={handleClose}
         >
             <div
@@ -176,13 +173,6 @@ export const AddAnimeModal: React.FC<AddAnimeModalProps> = ({
                             onSearch={handleSearch}
                             disabled={isSearching}
                         />
-
-                        {/* 搜索错误信息 */}
-                        {searchError && (
-                            <div className="bg-red-50 border border-red-200 rounded-lg p-3 mt-8">
-                                <span className="text-sm text-red-700">❌ {searchError}</span>
-                            </div>
-                        )}
                     </div>
 
                     {/* 搜索结果区域 */}
@@ -237,14 +227,6 @@ export const AddAnimeModal: React.FC<AddAnimeModalProps> = ({
                             </div>
                         )}
 
-                        {/* 空状态 */}
-                        {!isSearching && searchResults.length === 0 && !searchError && (
-                            <div className="text-center py-12 text-gray-500">
-                                <div className="text-4xl mb-4">🔍</div>
-                                <p>输入动漫名称开始搜索</p>
-                            </div>
-                        )}
-
                         {/* 搜索中状态 */}
                         {isSearching && (
                             <div className="text-center py-12 text-gray-500">
@@ -262,7 +244,7 @@ export const AddAnimeModal: React.FC<AddAnimeModalProps> = ({
                     </div>
                     <div className="flex space-x-3">
                         <Button
-                            variant="small"
+                            variant="info"
                             onClick={handleClose}
                             className="bg-gray-500 hover:bg-gray-600"
                             disabled={isDownloading}

@@ -56,7 +56,8 @@ class AnimeSearch:
                 }
                 results.append(row_data)
 
-            print("search_anime result number: ", len(results))
+            # print("search_anime result: ", results)
+            # print("search_anime result number: ", len(results))
             return results
 
         except Exception as e:

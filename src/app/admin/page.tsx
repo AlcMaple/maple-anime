@@ -7,6 +7,7 @@ import { Input } from '../components/ui/Input';
 import { Table } from '../components/ui/Table';
 import { Search } from '../components/ui/Search';
 import { AddAnimeModal } from '../components/admin/AddAnimeModal';
+import { PikPakConfigModal } from '../components/admin/PikPakConfigModal';
 
 interface AnimeItem {
   id: string;
@@ -55,6 +56,7 @@ export default function AdminMainPage() {
 
   // 模态框状态
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isPikPakConfigOpen, setIsPikPakConfigOpen] = useState(false);
 
   // 下载状态
   const [hasDownloading, setHasDownloading] = useState(false);
@@ -99,7 +101,11 @@ export default function AdminMainPage() {
   };
 
   const handlePikpakConfig = () => {
-    console.log('PikPak配置');
+    setIsPikPakConfigOpen(true);
+  };
+
+  const handlePikPakConfigSave = (config: any) => {
+    console.log('PikPak配置已保存:', config);
   };
 
   const handleCurrentSeason = () => {
@@ -331,13 +337,19 @@ export default function AdminMainPage() {
           >📥</button>
         )}
 
-        {/* 动漫模态框 */}
+        {/* 添加动漫模态框 */}
         <AddAnimeModal
           isOpen={isAddModalOpen}
           onClose={() => setIsAddModalOpen(false)}
           onAddAnime={handleAddAnimeToSystem}
         />
 
+        {/* PikPak配置模态框 */}
+        <PikPakConfigModal
+          isOpen={isPikPakConfigOpen}
+          onClose={() => setIsPikPakConfigOpen(false)}
+          onSave={handlePikPakConfigSave}
+        />
       </div>
     </div>
   );
