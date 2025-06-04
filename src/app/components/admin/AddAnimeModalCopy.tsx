@@ -4,8 +4,8 @@ import React, { useState } from 'react';
 import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
 import { Search } from '../ui/Search';
-import { message } from '../ui/Message';
 import { Loading } from '../ui/Loading';
+import { message } from '../ui/Message';
 
 interface AnimeSearchResult {
     id: string;
@@ -95,25 +95,57 @@ export const AddAnimeModal: React.FC<AddAnimeModalProps> = ({
             return;
         }
 
+        // 获取PikPak配置
+        const pikpakUsername = localStorage.getItem('pikpak_username');
+        const pikpakPassword = localStorage.getItem('pikpak_password');
+
+        if (!pikpakUsername || !pikpakPassword) {
+            message.error('请先配置PikPak账号信息');
+            return;
+        }
+
         setIsDownloading(true);
 
         try {
             const selectedResults = searchResults.filter(anime => selectedAnimes.has(anime.id));
 
-            // 模拟下载过程
             console.log('开始下载选中的动漫：', selectedResults);
 
-            // 模拟下载延迟
-            await new Promise(resolve => setTimeout(resolve, 2000));
-
-            // 下载成功后添加到系统
-            selectedResults.forEach(anime => {
-                onAddAnime(anime);
+            // 调用后端下载API
+            const response = await fetch('http://localhost:8000/api/download', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username: pikpakUsername,
+                    password: pikpakPassword,
+                    anime_list: selectedResults
+                })
             });
 
-            // 显示成功消息
-            message.success(`成功添加 ${selectedResults.length} 个动漫到下载队列`);
-            handleClose();
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+
+            const result = await response.json();
+
+            if (result.success) {
+                const summary = result.summary;
+                message.success(
+                    `下载完成！成功处理 ${summary.successful_anime}/${summary.total_anime} 个动漫，` +
+                    `${summary.successful_episodes}/${summary.total_episodes} 个资源`
+                );
+
+                // 下载成功后添加到系统
+                selectedResults.forEach(anime => {
+                    onAddAnime(anime);
+                });
+
+                handleClose();
+            } else {
+                message.error(`下载失败: ${result.message}`);
+            }
 
         } catch (error) {
             const errorMsg = error instanceof Error ? error.message : '下载失败';
@@ -155,6 +187,7 @@ export const AddAnimeModal: React.FC<AddAnimeModalProps> = ({
                     <button
                         onClick={handleClose}
                         className="text-gray-400 hover:text-gray-600 text-2xl font-light"
+                        disabled={isDownloading}
                     >
                         ×
                     </button>
@@ -186,7 +219,7 @@ export const AddAnimeModal: React.FC<AddAnimeModalProps> = ({
                                 setSearchQuery(value);
                             }}
                             onSearch={handleSearch}
-                            disabled={isSearching}
+                            disabled={isSearching || isDownloading}
                         />
                     </div>
 
@@ -204,7 +237,8 @@ export const AddAnimeModal: React.FC<AddAnimeModalProps> = ({
                                         </span>
                                         <button
                                             onClick={handleSelectAll}
-                                            className="text-sm text-blue-600 hover:text-blue-800"
+                                            className="text-sm text-blue-600 hover:text-blue-800 disabled:opacity-50"
+                                            disabled={isDownloading}
                                         >
                                             {selectedAnimes.size === searchResults.length ? '全不选' : '全选'}
                                         </button>
@@ -218,14 +252,15 @@ export const AddAnimeModal: React.FC<AddAnimeModalProps> = ({
                                             className={`border rounded-lg p-4 transition-colors ${selectedAnimes.has(anime.id)
                                                 ? 'bg-blue-50 border-blue-200'
                                                 : 'bg-gray-50 border-gray-200 hover:bg-gray-100'
-                                                }`}
+                                                } ${isDownloading ? 'opacity-50' : ''}`}
                                         >
                                             <div className="flex items-start space-x-3">
                                                 <input
                                                     type="checkbox"
                                                     checked={selectedAnimes.has(anime.id)}
                                                     onChange={() => handleCheckboxChange(anime.id)}
-                                                    className="mt-1 w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+                                                    disabled={isDownloading}
+                                                    className="mt-1 w-4 h-4 text-blue-600 rounded focus:ring-blue-500 disabled:opacity-50"
                                                 />
                                                 <div className="flex-1">
                                                     <h4 className="font-medium text-gray-900 mb-2">
@@ -244,9 +279,13 @@ export const AddAnimeModal: React.FC<AddAnimeModalProps> = ({
 
                         {/* 搜索中状态 */}
                         {isSearching && (
-                            <div className="text-center py-12 text-gray-500">
-                                <div className="text-4xl mb-4">⏳</div>
-                                <p>正在搜索动漫资源...</p>
+                            <div className="text-center py-12">
+                                <Loading
+                                    variant="dots"
+                                    size="medium"
+                                    color="primary"
+                                    text="正在搜索动漫资源..."
+                                />
                             </div>
                         )}
                     </div>
@@ -272,7 +311,11 @@ export const AddAnimeModal: React.FC<AddAnimeModalProps> = ({
                             disabled={selectedAnimes.size === 0 || isDownloading}
                             className=""
                         >
-                            下载
+                            {isDownloading ? (
+                                <Loading variant="spinner" size="small" color="white" />
+                            ) : (
+                                '下载'
+                            )}
                         </Button>
                     </div>
                 </div>

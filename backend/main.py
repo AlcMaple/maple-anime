@@ -14,6 +14,7 @@ import uvicorn
 import httpx
 from pikpakapi import PikPakApi
 from apis.anime_garden_api import AnimeSearch
+from apis.pikpak_api import PikPakService
 
 app = FastAPI()
 
@@ -29,6 +30,15 @@ app.add_middleware(
 class SearchRequest(BaseModel):
     name: str
 
+class AnimeItem(BaseModel):
+    id: str
+    title: str
+    magnet: str
+
+class DownloadRequest(BaseModel):
+    username: str
+    password: str
+    anime_list: List[AnimeItem]
 
 @app.post("/api/search")
 async def search_anime(request: SearchRequest):
@@ -38,6 +48,41 @@ async def search_anime(request: SearchRequest):
         return data
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/download")
+async def download_anime(request: DownloadRequest):
+    """
+    下载动漫到PikPak
+    """
+    try:
+        # 验证请求数据
+        if not request.username or not request.password:
+            raise HTTPException(status_code=400, detail="PikPak账号信息不能为空")
+
+        if not request.anime_list:
+            raise HTTPException(status_code=400, detail="动漫列表不能为空")
+        
+        pikpak_service = PikPakService()
+        print("anime_list: ", request.anime_list)
+
+        # # 转换数据格式
+        # anime_list = []
+        # for anime in request.anime_list:
+        #     anime_list.append(
+        #         {"id": anime.id, "title": anime.title, "magnet": anime.magnet}
+        #     )
+
+        # # 批量下载
+        # result = await pikpak_service.batch_download_anime(
+        #     username=request.username, password=request.password, anime_list=anime_list
+        # )
+
+        return result
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"下载失败: {str(e)}")
 
 
 def main():
