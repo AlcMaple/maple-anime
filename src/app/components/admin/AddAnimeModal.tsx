@@ -1,17 +1,14 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Button } from '../ui/Button';
-import { Input } from '../ui/Input';
-import { Search } from '../ui/Search';
-import { message } from '../ui/Message';
-import { Loading } from '../ui/Loading';
-
-interface AnimeSearchResult {
-    id: string;
-    title: string;
-    magnet: string;
-}
+import { Button } from '@/ui/Button';
+import { Input } from '@/ui/Input';
+import { Search } from '@/ui/Search';
+import { message } from '@/ui/Message';
+import { Loading } from '@/ui/Loading';
+import { animeApi } from '@/services/anime';
+import { pikpakApi } from '@/services/pikpak';
+import { AnimeSearchResult } from '@/services/types';
 
 interface AddAnimeModalProps {
     isOpen: boolean;
@@ -42,27 +39,14 @@ export const AddAnimeModal: React.FC<AddAnimeModalProps> = ({
         setSelectedAnimes(new Set()); // 清空之前的选择
 
         try {
-            const response = await fetch('http://localhost:8000/api/search', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ name: searchQuery })
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-            }
-
-            const data = await response.json();
+            const data = await animeApi.search({ name: searchQuery });
             setSearchResults(data);
 
             if (data.length === 0) {
                 message.info('没有找到相关动漫资源');
             }
         } catch (error) {
-            const errorMsg = error instanceof Error ? error.message : '搜索失败';
-            message.error(`搜索失败: ${errorMsg}`);
+            console.error('搜索失败:', error);
         } finally {
             setIsSearching(false);
         }
@@ -88,10 +72,20 @@ export const AddAnimeModal: React.FC<AddAnimeModalProps> = ({
         }
     };
 
+
     // 下载选中的动漫到PikPak
     const handleDownloadSelected = async () => {
         if (selectedAnimes.size === 0) {
             message.warning('请先选择要下载的动漫');
+            return;
+        }
+
+        // 获取PikPak配置
+        const pikpakUsername = localStorage.getItem('pikpak_username');
+        const pikpakPassword = localStorage.getItem('pikpak_password');
+
+        if (!pikpakUsername || !pikpakPassword) {
+            message.error('请先配置PikPak账号信息');
             return;
         }
 
@@ -100,24 +94,30 @@ export const AddAnimeModal: React.FC<AddAnimeModalProps> = ({
         try {
             const selectedResults = searchResults.filter(anime => selectedAnimes.has(anime.id));
 
-            // 模拟下载过程
-            console.log('开始下载选中的动漫：', selectedResults);
-
-            // 模拟下载延迟
-            await new Promise(resolve => setTimeout(resolve, 2000));
-
-            // 下载成功后添加到系统
-            selectedResults.forEach(anime => {
-                onAddAnime(anime);
+            // 调用封装的API
+            const result = await pikpakApi.download({
+                username: pikpakUsername,
+                password: pikpakPassword,
+                anime_list: selectedResults
             });
 
-            // 显示成功消息
-            message.success(`成功添加 ${selectedResults.length} 个动漫到下载队列`);
-            handleClose();
+            if (result.success) {
+                const summary = result.summary;
+                if (summary) {
+                    message.success(
+                        `下载完成！成功处理 ${summary.successful_episodes}/${summary.total_episodes} 个资源`
+                    );
+                } else {
+                    message.success('下载任务已添加到队列');
+                }
+
+                handleClose();
+            } else {
+                message.error(`下载失败: ${result.message}`);
+            }
 
         } catch (error) {
-            const errorMsg = error instanceof Error ? error.message : '下载失败';
-            message.error(`下载失败: ${errorMsg}`);
+            console.error('下载失败:', error);
         } finally {
             setIsDownloading(false);
         }

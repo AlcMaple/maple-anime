@@ -2,9 +2,9 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Button } from '../../components/ui/Button';
-import { Input } from '../../components/ui/Input';
-import { Card } from '../../components/ui/Card';
+import { Button } from '@/ui/Button';
+import { Input } from '@/ui/Input';
+import { Card } from '@/ui/Card';
 
 const ADMIN_PASSWORD = '2333';
 
@@ -40,7 +40,7 @@ export default function LoginPage() {
             <div className="w-full max-w-md">
                 {/* 页面标题 */}
                 <div className="text-center mb-8 font-bold">
-                    <p className="text-lg opacity-90">
+                    <p className="text-gray-900 text-lg opacity-90">
                         Maple Anime 管理后台
                     </p>
                 </div>
@@ -74,7 +74,7 @@ export default function LoginPage() {
                             className="w-full py-4 text-base"
                             disabled={isLoading || !password.trim()}
                         >
-                            {isLoading ? '🔄 验证中...' : '登录'}
+                            {isLoading ? '验证中...' : '登录'}
                         </Button>
                     </form>
 
@@ -82,7 +82,7 @@ export default function LoginPage() {
 
                 {/* 底部信息 */}
                 <div className="mt-6 text-center text-sm opacity-75">
-                    <p className="text-sm">
+                    <p className="text-gray-900 text-sm">
                         🌸 Maple Anime Management System
                     </p>
                 </div>
