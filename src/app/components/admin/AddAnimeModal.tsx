@@ -68,7 +68,7 @@ export const AddAnimeModal: React.FC<AddAnimeModalProps> = ({
         if (selectedAnimes.size === searchResults.length) {
             setSelectedAnimes(new Set());
         } else {
-            setSelectedAnimes(new Set(searchResults.map(anime => anime.id)));
+            setSelectedAnimes(new Set(searchResults.map(anime => String(anime.id))));
         }
     };
 
@@ -92,7 +92,7 @@ export const AddAnimeModal: React.FC<AddAnimeModalProps> = ({
         setIsDownloading(true);
 
         try {
-            const selectedResults = searchResults.filter(anime => selectedAnimes.has(anime.id));
+            const selectedResults = searchResults.filter(anime => selectedAnimes.has(String(anime.id)));
 
             // 调用封装的API
             const result = await pikpakApi.download({
@@ -105,7 +105,7 @@ export const AddAnimeModal: React.FC<AddAnimeModalProps> = ({
                 const summary = result.summary;
                 if (summary) {
                     message.success(
-                        `下载完成！成功处理 ${summary.successful_episodes}/${summary.total_episodes} 个资源`
+                        `下载完成！成功处理${summary.successful_episodes} / ${summary.total_episodes} 个资源`
                     );
                 } else {
                     message.success('下载任务已添加到队列');
@@ -215,7 +215,7 @@ export const AddAnimeModal: React.FC<AddAnimeModalProps> = ({
                                     {searchResults.map((anime, index) => (
                                         <div
                                             key={anime.id}
-                                            className={`border rounded-lg p-4 transition-colors ${selectedAnimes.has(anime.id)
+                                            className={`border rounded - lg p - 4 transition - colors ${selectedAnimes.has(String(anime.id))
                                                 ? 'bg-blue-50 border-blue-200'
                                                 : 'bg-gray-50 border-gray-200 hover:bg-gray-100'
                                                 }`}
@@ -223,8 +223,8 @@ export const AddAnimeModal: React.FC<AddAnimeModalProps> = ({
                                             <div className="flex items-start space-x-3">
                                                 <input
                                                     type="checkbox"
-                                                    checked={selectedAnimes.has(anime.id)}
-                                                    onChange={() => handleCheckboxChange(anime.id)}
+                                                    checked={selectedAnimes.has(String(anime.id))}
+                                                    onChange={() => handleCheckboxChange(String(anime.id))}
                                                     className="mt-1 w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
                                                 />
                                                 <div className="flex-1">

@@ -2,7 +2,7 @@ import sys
 import json
 import urllib.request
 import urllib.parse
-from typing import Dict, List, Any, Optional
+from typing import Dict, List, Any, Optional, Union
 from datetime import datetime, timedelta
 import traceback
 import logging
@@ -30,15 +30,18 @@ app.add_middleware(
 class SearchRequest(BaseModel):
     name: str
 
+
 class AnimeItem(BaseModel):
-    id: str
+    id: int
     title: str
     magnet: str
+
 
 class DownloadRequest(BaseModel):
     username: str
     password: str
     anime_list: List[AnimeItem]
+
 
 @app.post("/api/search")
 async def search_anime(request: SearchRequest):
@@ -48,6 +51,7 @@ async def search_anime(request: SearchRequest):
         return data
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
 
 @app.post("/api/download")
 async def download_anime(request: DownloadRequest):
@@ -61,21 +65,22 @@ async def download_anime(request: DownloadRequest):
 
         if not request.anime_list:
             raise HTTPException(status_code=400, detail="动漫列表不能为空")
-        
+
         pikpak_service = PikPakService()
-        print("anime_list: ", request.anime_list)
 
-        # # 转换数据格式
-        # anime_list = []
-        # for anime in request.anime_list:
-        #     anime_list.append(
-        #         {"id": anime.id, "title": anime.title, "magnet": anime.magnet}
-        #     )
+        # 转换数据格式
+        anime_list = []
+        for anime in request.anime_list:
+            anime_list.append(
+                {"id": anime.id, "title": anime.title, "magnet": anime.magnet}
+            )
 
-        # # 批量下载
-        # result = await pikpak_service.batch_download_anime(
-        #     username=request.username, password=request.password, anime_list=anime_list
-        # )
+        # print(anime_list, "anime_list /api/download")
+
+        # 批量下载
+        result = await pikpak_service.batch_download_anime(
+            username=request.username, password=request.password, anime_list=anime_list
+        )
 
         return result
 

@@ -91,7 +91,9 @@ class AnimeSearch:
         episodes = set()
         for d in data:
             title = d.get("title", "")
-            if self.analyzer.filter_low_quality(title) or not self.analyzer.is_include_subtitles(title):
+            if self.analyzer.filter_low_quality(
+                title
+            ) or not self.analyzer.is_include_subtitles(title):
                 continue
 
             # # 判断是否有季度信息

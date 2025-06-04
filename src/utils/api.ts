@@ -35,15 +35,23 @@ api.interceptors.response.use(
         return response;
     },
     (error) => {
-        // 统一错误处理
-        const errorMessage = error.response?.data?.message ||
-            error.response?.data?.detail ||
-            error.message ||
-            '请求失败';
+        let errorMessage = '请求失败';
 
-        // 显示错误消息
+        if (error.response?.data?.detail) {
+            if (Array.isArray(error.response.data.detail)) {
+                errorMessage = error.response.data.detail.map((item: any) =>
+                    `${item.loc?.join?.('.') || ''}: ${item.msg || ''}`
+                ).join('; ');
+            } else {
+                errorMessage = String(error.response.data.detail);
+            }
+        } else if (error.response?.data?.message) {
+            errorMessage = String(error.response.data.message);
+        } else if (error.message) {
+            errorMessage = String(error.message);
+        }
+
         message.error(errorMessage);
-
         return Promise.reject(error);
     }
 );

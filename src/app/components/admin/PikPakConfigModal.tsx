@@ -155,6 +155,7 @@ export const PikPakConfigModal: React.FC<PikPakConfigModalProps> = ({
                                 placeholder="请输入PikPak密码"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
+                                showPasswordToggle={true}
                             />
                         </div>
 
