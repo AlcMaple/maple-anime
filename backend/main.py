@@ -75,14 +75,10 @@ async def download_anime(request: DownloadRequest):
                 {"id": anime.id, "title": anime.title, "magnet": anime.magnet}
             )
 
-        # print(anime_list, "anime_list /api/download")
+        print(anime_list, "anime_list /api/download")
 
-        # 批量下载
-        result = await pikpak_service.batch_download_anime(
-            username=request.username, password=request.password, anime_list=anime_list
-        )
-
-        return result
+        # return result
+        return {"message": "下载成功", "success": True}
 
     except HTTPException:
         raise

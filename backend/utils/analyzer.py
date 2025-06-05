@@ -1,5 +1,6 @@
 import re
 
+
 class Analyzer:
     def __init__(self):
         pass
@@ -11,7 +12,7 @@ class Analyzer:
             if k in title:
                 return True
         return False
-    
+
     def get_anime_episodes(self, title: str) -> int:
         """获取当前动漫的集数"""
         patterns = [
@@ -26,7 +27,7 @@ class Analyzer:
             if match:
                 episodes = int(match.group(1))
                 return episodes
-            
+
         print(f"❌ 未发现集数信息")
         return -1
 
@@ -48,25 +49,3 @@ class Analyzer:
             if re.search(p, title):
                 return True
         return False
-    
-    def extract_anime_title(self, full_title: str) -> str:
-        """
-        提取动漫标题
-        """
-        title = full_title.strip()
-
-        # 去掉开头的字幕组信息 [字幕组名]
-        title = re.sub(r"^\[.*?\]\s*", "", title)
-
-        # 去掉末尾的技术信息 [技术参数][字幕信息]
-        title = re.sub(r"\s*\[.*?\].*$", "", title)
-
-        # 去掉集数信息 (- 数字, 第数字集, EP数字等)
-        title = re.sub(r"\s*[-–]\s*\d+\s*$", "", title)
-        title = re.sub(r"\s*第\d+集\s*$", "", title)
-        title = re.sub(r"\s*EP?\d+\s*$", "", title, flags=re.IGNORECASE)
-
-        # 清理多余空格
-        title = re.sub(r"\s+", " ", title).strip()
-
-        return title
