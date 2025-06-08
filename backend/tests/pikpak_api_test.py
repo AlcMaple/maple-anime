@@ -15,8 +15,8 @@ from apis.pikpak_api import PikPakService
 class PikPakApiTester:
     def __init__(self):
         self.service = PikPakService()
-        self.username = ""
-        self.password = ""
+        self.username = "hgg13536593830@gmail.com"
+        self.password = "123456789ABc"
 
     def get_credentials(self):
         """获取 pikpak 配置"""
@@ -105,6 +105,11 @@ class PikPakApiTester:
         result = await self.service.get_folder_list(client)
         print(f"📂 所有文件夹: {result}")
 
+    async def test_get_mypack_folder_list(self, client):
+        """测试获取我的My Pack文件夹列表"""
+        result = await self.service.get_mypack_folder_list(client)
+        print(f"📂 我的My Pack文件夹: {result}")
+
     async def test_batch_rename_file(self, client, folder_id):
         """测试批量重命名文件"""
         result = await self.service.batch_rename_file(client, folder_id)
@@ -124,16 +129,16 @@ class PikPakApiTester:
         print("\n🔍 测试4: 批量下载合集")
         print("=" * 50)
 
-        # 准备测试数据
+        # 测试数据
         anime_list = [
             {
-                "id": 500662,
-                "magnet": "magnet:?xt=urn:btih:CWNGOFA3U6HS2AWOWZLNXR3KBHLFS5QA",
-                "title": "[DBD&华盟&IG字幕组][寒蝉鸣泣之时 解/Higurashi no Naku Koro ni Kai/ひぐらしのなく顷に 解][01-24全集][1080P][BDRip][HEVC-10bit][简繁内封][GB&BIG5][FLAC][MKV]",
+                "id": 177243,
+                "magnet": "magnet:?xt=urn:btih:EPZ7JNZHZYKS3S2ILCDDJH2SUTB6K77T",
+                "title": "【华盟字幕社＆元古I.G部落】[寒蝉鸣泣之时_礼][Higurashi no Naku Koro ni Rei][OVA][BDRip][1080p][BD全五卷1-5话]",
             }
         ]
 
-        target_folder_name = "寒蝉鸣泣之时第二季"
+        target_folder_name = "寒蝉鸣泣之时第三季"
 
         print(f"📦 测试动漫合集数量: {len(anime_list)}")
         print(f"📁 目标文件夹名称: {target_folder_name}")
@@ -175,14 +180,20 @@ class PikPakApiTester:
                 print("❌ 合集下载任务创建失败!")
                 print(f"📄 错误消息: {result.get('message')}")
 
+            if result.get("success") and result.get("renamed_folders"):
+                print("\n⏳ 等待文件重命名完成...")
+                # 等待足够的时间让重命名任务完成
+                await asyncio.sleep(10)  # 等待10秒，确保5秒延时任务能完成
+                print("✅ 文件重命名任务应该已完成")
+
+            return result
+
         except Exception as e:
             print(f"❌ 批量下载合集异常: {e}")
             import traceback
 
             print("详细错误信息:")
             traceback.print_exc()
-
-        return result
 
     async def run_all_tests(self):
         """运行测试"""
@@ -214,12 +225,16 @@ class PikPakApiTester:
         # await self.test_get_folder_list(client)
 
         # # 批量重命名文件（已完成测试）
-        # await self.test_batch_rename_file(client, "VOS8KQrWJSipdby-GcwD2Wi9o2")
+        # await self.test_batch_rename_file(client, "VOSDFh8CJSipK9qBIM4ozjvIo2")
 
         # # 批量下载合集（已完成测试）
         # await self.test_batch_download_collection(client)
 
-        print(dir(client))
+        # # 打印 pikpak 的 api 接口
+        # print(dir(client))
+
+        # # 测试获取我的My Pack文件夹列表（已完成测试）
+        # await self.test_get_mypack_folder_list(client)
 
         print("\n" + "=" * 60)
         print("✨ 所有测试完成")

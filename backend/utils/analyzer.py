@@ -7,7 +7,7 @@ class Analyzer:
 
     def is_include_subtitles(self, title: str) -> bool:
         """判断是否包含字幕"""
-        keywords = ["内嵌", "内封", "简体", "繁體", "简日双语", "繁日雙語"]
+        keywords = ["内嵌", "简体", "繁體", "简日双语", "繁日雙語"]
         for k in keywords:
             if k in title:
                 return True
