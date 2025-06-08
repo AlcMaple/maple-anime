@@ -329,7 +329,7 @@ export default function AdminMainPage() {
         </div>
 
         {/* 下载按钮 */}
-        {hasDownloading && (
+        {/* {hasDownloading && (
           <button
             onClick={handleDownloadCenter}
             className="fixed bottom-6 right-6 bg-gradient-to-r from-blue-500 to-blue-600 text-white p-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 z-50 w-16 h-16 flex items-center justify-center"
@@ -349,7 +349,7 @@ export default function AdminMainPage() {
               />
             </svg>
           </button>
-        )}
+        )} */}
 
         {/* 添加动漫模态框 */}
         <AddAnimeModal

@@ -20,10 +20,19 @@ export interface PikPakConfig extends PikPakCredentials {
     rememberCredentials: boolean;
 }
 
+// 动漫分组类型
+export interface AnimeGroup {
+    title: string;
+    anime_list: AnimeSearchResult[];
+}
+
 export interface DownloadRequest {
     username: string;
     password: string;
-    anime_list: AnimeSearchResult[];
+    mode: 'single_season' | 'multiple_seasons';
+    title?: string;  // 单季模式使用
+    anime_list?: AnimeSearchResult[];  // 单季模式使用
+    groups?: AnimeGroup[];  // 多季模式使用
 }
 
 export interface DownloadResult {

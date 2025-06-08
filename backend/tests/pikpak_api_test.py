@@ -15,8 +15,8 @@ from apis.pikpak_api import PikPakService
 class PikPakApiTester:
     def __init__(self):
         self.service = PikPakService()
-        self.username = "hgg13536593830@gmail.com"
-        self.password = "123456789ABc"
+        self.username = ""
+        self.password = ""
 
     def get_credentials(self):
         """获取 pikpak 配置"""
@@ -73,68 +73,13 @@ class PikPakApiTester:
             print(f"❌ 下载任务异常: {e}")
             return None
 
-    async def test_batch_download(self):
-        """测试批量下载功能"""
-        print("\n🔍 测试4: 批量下载动漫")
-
-        # 模拟动漫数据
-        test_anime_list = [
-            {
-                "id": 714354,
-                "title": "【喵萌奶茶屋】★01月新番★[药师少女的独语 / 药屋少女的呢喃 / Kusuriya no Hitorigoto][25][1080p][简日双语]",
-                "magnet": "magnet:?xt=urn:btih:EYZEWWJCBRDB2YZN22K72Z2EMSTJG6GZ",
-            },
-            {
-                "id": 715666,
-                "title": "[北宇治字幕组] 药屋少女的呢喃 / 药屋少女的独语 / Kusuriya no Hitorigoto [26][WebRip][HEVC_AAC][简日内嵌]",
-                "magnet": "magnet:?xt=urn:btih:ab182c11ecc856744c9a7e501e6a8391222b6a6e",
-            },
-            {
-                "id": 720101,
-                "title": "【喵萌奶茶屋】★01月新番★[药师少女的独语 / 药屋少女的呢喃 / Kusuriya no Hitorigoto][27][1080p][简日双语]",
-                "magnet": "magnet:?xt=urn:btih:SUKBWWDST5LV6YVFJYM777HWSZLLKGJE",
-            },
-        ]
-
-        try:
-            result = await self.service.batch_download_anime(
-                self.username, self.password, test_anime_list
-            )
-
-            print(f"批量下载结果:")
-            print(f"  成功: {result.get('success')}")
-            print(f"  消息: {result.get('message')}")
-
-            if result.get("success") and "summary" in result:
-                summary = result["summary"]
-                print(f"  统计信息:")
-                print(f"    总动漫数: {summary.get('total_anime')}")
-                print(f"    成功动漫数: {summary.get('successful_anime')}")
-                print(f"    总集数: {summary.get('total_episodes')}")
-                print(f"    成功集数: {summary.get('successful_episodes')}")
-
-                if "details" in result:
-                    print(f"  详细信息:")
-                    for detail in result["details"]:
-                        print(
-                            f"    - {detail.get('anime_title')}: {detail.get('success')}"
-                        )
-
-            return result
-        except Exception as e:
-            print(f"❌ 批量下载异常: {e}")
-            return None
-
     async def test_analyzer_functions(self):
         """测试分析器功能"""
         print("\n🔍 测试5: 分析器功能")
 
         test_titles = [
-            "【喵萌奶茶屋】★01月新番★[药师少女的独语 / 药屋少女的呢喃 / Kusuriya no Hitorigoto][25][1080p][简日双语]",
-            "[北宇治字幕组] 药屋少女的呢喃 / 药屋少女的独语 / Kusuriya no Hitorigoto [26][WebRip][HEVC_AAC][简日内嵌]",
-            "【喵萌奶茶屋】★01月新番★[药师少女的独语 / 药屋少女的呢喃 / Kusuriya no Hitorigoto][27][1080p][简日双语]",
-            "[NAOKI-Raws] sola BD-BOX 1-13+SP (BDRip x264 DTS-HDMA Chap)（2007年）",
-            "[Moozzi2] Sola 1-13+EX+SP BD-BOX (BD 1920x1080 x.264 FLACx2)（2007年）",
+            "[晚街与灯][小市民系列 第二季_Shoushimin Series S02][01 - 总第11][WebRip][1080P_AVC_AAC][简日双语内嵌字幕][V2].mp4",
+            "[DBD&HKG&X2字幕组][寒蝉鸣泣之时][OVA][猫杀篇][1080P][BDRip][HEVC-10bit][繁体][BIG5][FLAC].mkv",
         ]
 
         for title in test_titles:
@@ -143,6 +88,101 @@ class PikPakApiTester:
             # 测试集数提取
             episode = self.service.analyzer.get_anime_episodes(title)
             print(f"  集数: {episode}")
+
+        # tests_titles = [
+        #     "[DBD&HKG&X2字幕组][寒蝉鸣泣之时/Higurashi no Naku Koro ni/ひぐらしのなく顷に][01-26全集+OVA][1080P][BDRip][HEVC-10bit][简体][GB][FLAC][MKV]"
+        # ]
+
+        # for title in tests_titles:
+        #     print(f"\n分析标题: {title}")
+
+        #     # 测试合集判断
+        #     is_anime_collection = self.service.analyzer.is_collection(title)
+        #     print(f"  是否是合集: {is_anime_collection}")
+
+    async def test_get_folder_list(self, client):
+        """测试获取文件夹列表"""
+        result = await self.service.get_folder_list(client)
+        print(f"📂 所有文件夹: {result}")
+
+    async def test_batch_rename_file(self, client, folder_id):
+        """测试批量重命名文件"""
+        result = await self.service.batch_rename_file(client, folder_id)
+
+        print(f"批量重命名结果: {result['message']}")
+        print(f"成功重命名文件数量: {len(result['renamed_files'])}")
+        print(f"失败文件数量: {len(result['failed_files'])}")
+
+        # 有失败，提供更详细的信息
+        if result["failed_files"]:
+            print("失败的文件:")
+            for failed_file in result["failed_files"]:
+                print(f"  - {failed_file.get('name', 'Unknown')}")
+
+    async def test_batch_download_collection(self, client):
+        """测试批量下载合集功能"""
+        print("\n🔍 测试4: 批量下载合集")
+        print("=" * 50)
+
+        # 准备测试数据
+        anime_list = [
+            {
+                "id": 500662,
+                "magnet": "magnet:?xt=urn:btih:CWNGOFA3U6HS2AWOWZLNXR3KBHLFS5QA",
+                "title": "[DBD&华盟&IG字幕组][寒蝉鸣泣之时 解/Higurashi no Naku Koro ni Kai/ひぐらしのなく顷に 解][01-24全集][1080P][BDRip][HEVC-10bit][简繁内封][GB&BIG5][FLAC][MKV]",
+            }
+        ]
+
+        target_folder_name = "寒蝉鸣泣之时第二季"
+
+        print(f"📦 测试动漫合集数量: {len(anime_list)}")
+        print(f"📁 目标文件夹名称: {target_folder_name}")
+        print(f"🧲 磁力链接: {anime_list[0]['magnet'][:50]}...")
+        print(f"📝 动漫标题: {anime_list[0]['title']}")
+        print()
+
+        print("\n🚀 开始下载合集...")
+
+        try:
+            # 调用批量下载合集方法
+            result = await self.service.batch_download_collection(
+                client, anime_list, target_folder_name
+            )
+
+            print("\n" + "=" * 50)
+            print("📊 下载合集结果:")
+            print("=" * 50)
+
+            if result.get("success"):
+                print("✅ 合集下载任务创建成功!")
+                print(f"📄 返回消息: {result.get('message')}")
+                print(f"📝 任务ID列表: {result.get('task_id_list')}")
+                print(f"📁 重命名文件夹数量: {len(result.get('renamed_folders', []))}")
+
+                # 显示重命名的文件夹详情
+                if result.get("renamed_folders"):
+                    print("\n📂 重命名文件夹详情:")
+                    for i, folder in enumerate(result["renamed_folders"], 1):
+                        print(f"  {i}. 原名称: {folder['old_name']}")
+                        print(f"     新名称: {folder['new_name']}")
+                        print(f"     文件夹ID: {folder['folder_id']}")
+                        print()
+
+                print("💡 提示: 文件下载和重命名将在后台进行，请稍等...")
+                print("💡 提示: 可以检查你的PikPak网盘查看下载进度")
+
+            else:
+                print("❌ 合集下载任务创建失败!")
+                print(f"📄 错误消息: {result.get('message')}")
+
+        except Exception as e:
+            print(f"❌ 批量下载合集异常: {e}")
+            import traceback
+
+            print("详细错误信息:")
+            traceback.print_exc()
+
+        return result
 
     async def run_all_tests(self):
         """运行测试"""
@@ -153,22 +193,33 @@ class PikPakApiTester:
         # if not self.get_credentials():
         #     return
 
-        # # 测试1: 获取客户端（已完成测试）
-        # client = await self.test_get_client()
-        # if not client:
-        #     print("❌ 客户端测试失败，停止后续测试")
-        #     return
+        # 获取客户端（已完成测试）
+        client = await self.test_get_client()
+        if not client:
+            print("❌ 客户端测试失败，停止后续测试")
+            return
 
-        # # 测试2: 创建文件夹（已完成测试）
+        # # 创建文件夹（已完成测试）
         # folder_id = await self.test_create_folder(client)
 
-        # # 测试3: 下载到文件夹（如果文件夹创建成功）（已完成测试）
+        # # 下载到文件夹（如果文件夹创建成功）（已完成测试）
         # print("文件夹 id：", folder_id)
         # if folder_id:
         #     await self.test_download_to_folder(client, folder_id)
 
-        # 测试5: 分析器功能
-        await self.test_analyzer_functions()
+        # # 分析器功能（已完成测试）
+        # await self.test_analyzer_functions()
+
+        # # 获取文件夹列表(已完成测试)
+        # await self.test_get_folder_list(client)
+
+        # # 批量重命名文件（已完成测试）
+        # await self.test_batch_rename_file(client, "VOS8KQrWJSipdby-GcwD2Wi9o2")
+
+        # # 批量下载合集（已完成测试）
+        # await self.test_batch_download_collection(client)
+
+        print(dir(client))
 
         print("\n" + "=" * 60)
         print("✨ 所有测试完成")

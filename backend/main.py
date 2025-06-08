@@ -37,10 +37,18 @@ class AnimeItem(BaseModel):
     magnet: str
 
 
+class SeasonGroup(BaseModel):
+    title: str
+    anime_list: List[AnimeItem]
+
+
 class DownloadRequest(BaseModel):
     username: str
     password: str
-    anime_list: List[AnimeItem]
+    mode: str
+    title: Optional[str] = None
+    anime_list: Optional[List[AnimeItem]] = None
+    groups: Optional[List[SeasonGroup]] = None
 
 
 @app.post("/api/search")
@@ -61,24 +69,50 @@ async def download_anime(request: DownloadRequest):
     try:
         # 验证请求数据
         if not request.username or not request.password:
-            raise HTTPException(status_code=400, detail="PikPak账号信息不能为空")
+            raise HTTPException(status_code=400, detail="请配置pikpak账号密码")
 
-        if not request.anime_list:
-            raise HTTPException(status_code=400, detail="动漫列表不能为空")
+        if request.groups is None and request.anime_list is None:
+            raise HTTPException(status_code=400, detail="请选择下载的动漫")
 
         pikpak_service = PikPakService()
+        # 获取pikpak客户端
+        client = await pikpak_service.get_client(request.username, request.password)
+        result = {}
 
-        # 转换数据格式
-        anime_list = []
-        for anime in request.anime_list:
-            anime_list.append(
-                {"id": anime.id, "title": anime.title, "magnet": anime.magnet}
+        if request.mode == "single_season":
+            # 单季动漫下载
+            anime_list = []
+            for anime in request.anime_list:
+                anime_list.append(
+                    {"id": anime.id, "title": anime.title, "magnet": anime.magnet}
+                )
+
+            # 调用下载 api
+            result = await pikpak_service.batch_download_selected(
+                client, anime_list, request.title
             )
 
-        print(anime_list, "anime_list /api/download")
+            if not result["success"]:
+                raise HTTPException(status_code=500, detail=result["message"])
 
-        # return result
-        return {"message": "下载成功", "success": True}
+        else:
+            # 多季动漫下载
+            for group in request.groups:
+                anime_list = []
+                for anime in group.anime_list:
+                    anime_list.append(
+                        {"id": anime.id, "title": anime.title, "magnet": anime.magnet}
+                    )
+
+                # 调用下载 api
+                result = await pikpak_service.batch_download_selected(
+                    client, anime_list, group.title
+                )
+
+                if not result["success"]:
+                    raise HTTPException(status_code=500, detail=result["message"])
+
+        return result
 
     except HTTPException:
         raise
@@ -87,7 +121,7 @@ async def download_anime(request: DownloadRequest):
 
 
 def main():
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8002)
 
 
 if __name__ == "__main__":
