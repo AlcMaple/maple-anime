@@ -5,6 +5,12 @@ from typing import Dict, List, Any, Optional, Set
 from dataclasses import dataclass
 from datetime import datetime
 import asyncio
+
+# import sys
+# import os
+
+# sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from utils.analyzer import Analyzer
 
 
@@ -24,35 +30,58 @@ class AnimeSearch:
             print("没有找到相关的动漫")
             return
 
-    async def search_anime(self, name: str) -> List[Dict]:
+    async def search_anime(self, name: str, max_results: int = None) -> List[Dict]:
         """搜索动漫"""
         try:
             url = f"{self.base_url}/resources"
             query = {"search": [name]}
             print(f"🔍 搜索 {name}...")
 
-            response = await self.client.post(
-                url,
-                json=query,
-                headers={"Content-Type": "application/json"},
-            )
-            response.raise_for_status()
+            all_results = []
+            page = 1
+            page_size = 100
 
-            data = response.json()
-            resources = data.get("resources", [])
+            while True:
+                params = {"page": page, "pageSize": page_size}
 
-            results = []
-            for resource in resources:
-                row_data = {
-                    "id": resource.get("id"),
-                    "title": resource.get("title", ""),
-                    "magnet": resource.get("magnet", ""),
-                }
-                results.append(row_data)
+                response = await self.client.post(
+                    url,
+                    json=query,
+                    params=params,
+                    headers={"Content-Type": "application/json"},
+                )
+                response.raise_for_status()
 
-            # print("search_anime result: ", results)
-            # print("search_anime result number: ", len(results))
-            return results
+                data = response.json()
+                resources = data.get("resources", [])
+
+                if not resources:
+                    break  # 没有更多数据了
+
+                # 处理当前页数据
+                for resource in resources:
+                    row_data = {
+                        "id": resource.get("id"),
+                        "title": resource.get("title", ""),
+                        "magnet": resource.get("magnet", ""),
+                    }
+                    all_results.append(row_data)
+
+                print(f"📄 第{page}页获取到 {len(resources)} 个结果")
+
+                # 检查是否达到最大结果数限制
+                if max_results and len(all_results) >= max_results:
+                    all_results = all_results[:max_results]
+                    break
+
+                # 如果当前页结果少于页面大小，说明是最后一页
+                if len(resources) < page_size:
+                    break
+
+                page += 1
+
+            print(f"✅ 总共获取到 {len(all_results)} 个结果")
+            return all_results
 
         except Exception as e:
             print(f"❌ 搜索动漫失败: {e}")

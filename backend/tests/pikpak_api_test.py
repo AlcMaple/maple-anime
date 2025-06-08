@@ -15,15 +15,15 @@ from apis.pikpak_api import PikPakService
 class PikPakApiTester:
     def __init__(self):
         self.service = PikPakService()
-        self.username = "hgg13536593830@gmail.com"
-        self.password = "123456789ABc"
+        self.username = ""
+        self.password = ""
 
     def get_credentials(self):
         """获取 pikpak 配置"""
         print("=== PikPak API 测试 ===")
-        # print("请输入你的 PikPak 账号信息:")
-        # self.username = input("用户名 (邮箱或手机号): ").strip()
-        # self.password = input("密码: ").strip()
+        print("请输入你的 PikPak 账号信息:")
+        self.username = input("用户名 (邮箱或手机号): ").strip()
+        self.password = input("密码: ").strip()
 
         if not self.username or not self.password:
             print("❌ 用户名和密码不能为空")

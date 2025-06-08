@@ -115,11 +115,9 @@ export const PikPakConfigModal: React.FC<PikPakConfigModalProps> = ({
     return (
         <div
             className="fixed inset-0 bg-white/8 backdrop-blur-[0.3px] flex items-center justify-center z-50 p-4"
-            onClick={handleClose}
         >
             <div
                 className="bg-white rounded-lg shadow-xl max-w-md w-full overflow-hidden"
-                onClick={handleModalClick}
             >
                 {/* 模态框头部 */}
                 <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">

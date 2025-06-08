@@ -211,11 +211,9 @@ export const DownloadConfigModal: React.FC<DownloadConfigModalProps> = ({
     return (
         <div
             className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[60] p-4"
-            onClick={handleClose}
         >
             <div
                 className="bg-white rounded-lg shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden border-2 border-gray-100 transform transition-all duration-300 animate-in zoom-in-95"
-                onClick={handleModalClick}
             >
                 {/* 模态框头部 */}
                 <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between bg-gradient-to-r from-blue-50 to-indigo-50">
