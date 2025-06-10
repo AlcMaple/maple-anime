@@ -118,5 +118,7 @@ python main.py
 
 # 感谢
 
-感谢[AnimeGarden](https://github.com/yjl9903/AnimeGarden)和[PikPak](https://github.com/Quan666/PikPakAPI)提供的API。
-感谢[Bangumi番组计划](https://github.com/bangumi/server)提供的动漫数据。
+- 感谢[AnimeGarden](https://github.com/yjl9903/AnimeGarden)提供的API
+- 感谢[PikPak](https://github.com/Quan666/PikPakAPI)提供的API
+- 感谢[Bangumi](https://github.com/bangumi/api)提供的API
+- 感谢[Bangumi番组计划](https://github.com/bangumi/server)提供的动漫数据
