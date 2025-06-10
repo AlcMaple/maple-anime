@@ -6,15 +6,18 @@ import { Button } from '@/ui/Button';
 import { Input } from '@/ui/Input';
 import { Table } from '@/ui/Table';
 import { Search } from '@/ui/Search';
+import { message } from '@/ui/Message';
 import { AddAnimeModal } from '@/components/admin/AddAnimeModal';
 import { PikPakConfigModal } from '@/components/admin/PikPakConfigModal';
 import { CalendarModal } from '@/components/admin/CalendarModal';
+import { pikpakApi } from '@/services/pikpak';
+import { AnimeItem } from '@/services/types';
 
-interface AnimeItem {
-  id: string;
-  title: string;
-  status: '完结' | '连载';
-}
+// interface AnimeItem {
+//   id: string;
+//   title: string;
+//   status: '完结' | '连载';
+// }
 
 interface AnimeSearchResult {
   id: string;
@@ -28,25 +31,25 @@ export default function AdminMainPage() {
   const [loginTime, setLoginTime] = useState<string>('');
   const router = useRouter();
 
-  // 静态模拟动漫数据
-  const [animeList, setAnimeList] = useState<AnimeItem[]>([
-    { id: '1', title: '小市民系列第一季', status: '完结' },
-    { id: '2', title: '小市民系列第二季', status: '连载' },
-    { id: '3', title: '药屋少女第一季', status: '完结' },
-    { id: '4', title: '药屋少女第二季', status: '连载' },
-    { id: '5', title: '间谍过家家第一季', status: '完结' },
-    { id: '6', title: '间谍过家家第二季', status: '连载' },
-    { id: '7', title: '鬼灭之刃第一季', status: '完结' },
-    { id: '8', title: '鬼灭之刃第二季', status: '完结' },
-    { id: '9', title: '鬼灭之刃第三季', status: '连载' },
-    { id: '10', title: '进击的巨人第一季', status: '完结' },
-    { id: '11', title: '进击的巨人第二季', status: '完结' },
-    { id: '12', title: '进击的巨人第三季', status: '完结' },
-    { id: '13', title: '一拳超人第一季', status: '完结' },
-    { id: '14', title: '一拳超人第二季', status: '完结' },
-    { id: '15', title: '咒术回战第一季', status: '完结' },
-    { id: '16', title: '咒术回战第二季', status: '连载' },
-  ]);
+  // // 动漫数据
+  // const [animeList, setAnimeList] = useState<AnimeItem[]>([
+  //   { id: '1', title: '小市民系列第一季', status: '完结' },
+  //   { id: '2', title: '小市民系列第二季', status: '连载' },
+  //   { id: '3', title: '药屋少女第一季', status: '完结' },
+  //   { id: '4', title: '药屋少女第二季', status: '连载' },
+  //   { id: '5', title: '间谍过家家第一季', status: '完结' },
+  //   { id: '6', title: '间谍过家家第二季', status: '连载' },
+  //   { id: '7', title: '鬼灭之刃第一季', status: '完结' },
+  //   { id: '8', title: '鬼灭之刃第二季', status: '完结' },
+  //   { id: '9', title: '鬼灭之刃第三季', status: '连载' },
+  //   { id: '10', title: '进击的巨人第一季', status: '完结' },
+  //   { id: '11', title: '进击的巨人第二季', status: '完结' },
+  //   { id: '12', title: '进击的巨人第三季', status: '完结' },
+  //   { id: '13', title: '一拳超人第一季', status: '完结' },
+  //   { id: '14', title: '一拳超人第二季', status: '完结' },
+  //   { id: '15', title: '咒术回战第一季', status: '完结' },
+  //   { id: '16', title: '咒术回战第二季', status: '连载' },
+  // ]);
 
   // 搜索状态
   const [searchQuery, setSearchQuery] = useState('');
@@ -62,6 +65,44 @@ export default function AdminMainPage() {
 
   // 下载状态
   const [hasDownloading, setHasDownloading] = useState(false);
+
+  // 动漫列表状态
+  const [animeList, setAnimeList] = useState<AnimeItem[]>([]);
+  const [isLoadingAnimes, setIsLoadingAnimes] = useState(false);
+
+  // 加载动漫列表
+  const loadAnimeList = async () => {
+    const pikpakUsername = localStorage.getItem('pikpak_username');
+    const pikpakPassword = localStorage.getItem('pikpak_password');
+
+    if (!pikpakUsername || !pikpakPassword) {
+      message.error('请先配置PikPak账号信息');
+      return;
+    }
+
+    setIsLoadingAnimes(true);
+    try {
+      const response = await pikpakApi.getAnimeList({ username: pikpakUsername, password: pikpakPassword });
+
+      if (response.success) {
+        setAnimeList(response.data);
+        message.success(`成功加载 ${response.data.length} 个动漫`);
+      } else {
+        message.error('加载动漫列表失败');
+      }
+    } catch (error) {
+      console.error('加载动漫列表失败:', error);
+    } finally {
+      setIsLoadingAnimes(false);
+    }
+  };
+
+  // 获取动漫列表
+  useEffect(() => {
+    if (isAuthenticated && !isLoading) {
+      loadAnimeList();
+    }
+  }, [isAuthenticated, isLoading]);
 
   // 检查登录状态
   useEffect(() => {

@@ -20,6 +20,21 @@ export interface PikPakConfig extends PikPakCredentials {
     rememberCredentials: boolean;
 }
 
+// 动漫项目类型
+export interface AnimeItem {
+    id: string;
+    title: string;
+    status: '完结' | '连载';
+}
+
+// 动漫列表响应类型
+export interface AnimeListResponse {
+    success: boolean;
+    data: AnimeItem[];
+    total: number;
+    message: string;
+}
+
 // 动漫分组类型
 export interface AnimeGroup {
     title: string;

@@ -16,6 +16,7 @@ from pikpakapi import PikPakApi
 from apis.anime_garden_api import AnimeSearch
 from apis.pikpak_api import PikPakService
 from apis.bangumi_api import BangumiApi
+from database.pikpak import PikPakDatabase
 
 app = FastAPI()
 
@@ -50,6 +51,11 @@ class DownloadRequest(BaseModel):
     title: Optional[str] = None
     anime_list: Optional[List[AnimeItem]] = None
     groups: Optional[List[SeasonGroup]] = None
+
+
+class PikPakCredentialsRequest(BaseModel):
+    username: str
+    password: str
 
 
 @app.post("/api/search")
@@ -145,6 +151,36 @@ async def update_calendar():
         return response
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/api/anime/list")
+async def get_anime_list(request: PikPakCredentialsRequest):
+    """
+    获取动漫列表
+    """
+    try:
+        # 验证请求数据
+        if not request.username or not request.password:
+            raise HTTPException(status_code=400, detail="请配置PikPak账号密码")
+
+        # 获取 PikPak 文件夹列表
+        pikpak_service = PikPakService()
+        client = await pikpak_service.get_client(request.username, request.password)
+        pikpak_folders = await pikpak_service.get_mypack_folder_list(client)
+
+        # 同步数据
+        anime_db = PikPakDatabase()
+        anime_list = anime_db.sync_with_pikpak_folders(pikpak_folders)
+
+        return {
+            "success": True,
+            "data": anime_list,
+            "total": len(anime_list),
+            "message": f"获取到 {len(anime_list)} 个动漫",
+        }
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"获取动漫列表失败: {str(e)}")
 
 
 def main():
