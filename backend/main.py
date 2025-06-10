@@ -15,6 +15,7 @@ import httpx
 from pikpakapi import PikPakApi
 from apis.anime_garden_api import AnimeSearch
 from apis.pikpak_api import PikPakService
+from apis.bangumi_api import BangumiApi
 
 app = FastAPI()
 
@@ -118,6 +119,32 @@ async def download_anime(request: DownloadRequest):
         raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"下载失败: {str(e)}")
+
+
+@app.get("/api/calendar")
+async def get_calendar():
+    """
+    获取当季新番信息
+    """
+    try:
+        bangumi_servers = BangumiApi()
+        data = await bangumi_servers.load_calendar_data()
+        return data
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/api/calendar/update")
+async def update_calendar():
+    """
+    更新当季新番信息
+    """
+    try:
+        bangumi_servers = BangumiApi()
+        response = await bangumi_servers.get_calendar()
+        return response
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 def main():

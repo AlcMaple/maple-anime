@@ -24,3 +24,13 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* 动漫列表滚动条 */
+.anime-list-scroll {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.anime-list-scroll::-webkit-scrollbar {
+  display: none;
+}

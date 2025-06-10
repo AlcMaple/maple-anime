@@ -8,6 +8,7 @@ import { Table } from '@/ui/Table';
 import { Search } from '@/ui/Search';
 import { AddAnimeModal } from '@/components/admin/AddAnimeModal';
 import { PikPakConfigModal } from '@/components/admin/PikPakConfigModal';
+import { CalendarModal } from '@/components/admin/CalendarModal';
 
 interface AnimeItem {
   id: string;
@@ -57,6 +58,7 @@ export default function AdminMainPage() {
   // 模态框状态
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isPikPakConfigOpen, setIsPikPakConfigOpen] = useState(false);
+  const [isCalendarModalOpen, setIsCalendarModalOpen] = useState(false);
 
   // 下载状态
   const [hasDownloading, setHasDownloading] = useState(false);
@@ -109,7 +111,7 @@ export default function AdminMainPage() {
   };
 
   const handleCurrentSeason = () => {
-    console.log('当季新番');
+    setIsCalendarModalOpen(true);
   };
 
   const handleImport = () => {
@@ -363,6 +365,12 @@ export default function AdminMainPage() {
           isOpen={isPikPakConfigOpen}
           onClose={() => setIsPikPakConfigOpen(false)}
           onSave={handlePikPakConfigSave}
+        />
+
+        {/* 当季新番模态框 */}
+        <CalendarModal
+          isOpen={isCalendarModalOpen}
+          onClose={() => setIsCalendarModalOpen(false)}
         />
       </div>
     </div>

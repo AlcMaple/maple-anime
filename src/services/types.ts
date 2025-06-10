@@ -47,6 +47,49 @@ export interface DownloadResult {
     details?: any[];
 }
 
+// 当季新番类型定义
+export interface AnimeImages {
+    large: string;
+    medium: string;
+    small: string;
+}
+
+export interface AnimeRating {
+    total: number;
+    count: Record<string, number>;
+    score: number;
+}
+
+export interface Weekday {
+    en: string;
+    cn: string;
+    ja: string;
+    id: number;
+}
+
+export interface CalendarAnime {
+    id: number;
+    name: string;
+    name_cn: string;
+    summary: string;
+    images: AnimeImages;
+    air_date: string;
+    air_weekday: number;
+    rating: AnimeRating;
+}
+
+export interface CalendarDay {
+    weekday: Weekday;
+    items: CalendarAnime[];
+}
+
+export interface CalendarResponse {
+    success: boolean;
+    data: CalendarDay[];
+    updated_at?: string;
+    error?: string;
+}
+
 // API响应包装类型
 export interface ApiResponse<T = any> {
     success: boolean;
