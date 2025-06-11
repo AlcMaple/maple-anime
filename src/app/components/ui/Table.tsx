@@ -1,4 +1,5 @@
 import React from 'react';
+import { Loading } from './Loading';
 
 interface Column {
     key: string;
@@ -19,6 +20,7 @@ interface TableProps {
     data: any[];
     pagination?: PaginationProps;
     className?: string;
+    loading?: boolean;
 }
 
 const Pagination: React.FC<PaginationProps> = ({
@@ -116,7 +118,8 @@ export const Table: React.FC<TableProps> = ({
     columns,
     data,
     pagination,
-    className = ''
+    className = '',
+    loading = false
 }) => {
     return (
         <div className={`bg-white rounded-lg border border-gray-200 overflow-hidden ${className}`}>
@@ -135,7 +138,21 @@ export const Table: React.FC<TableProps> = ({
                     </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                    {data.length === 0 ? (
+                    {loading ? (
+                        <tr>
+                            <td
+                                colSpan={columns.length}
+                                className="px-6 py-8 text-center"
+                            >
+                                <Loading
+                                    variant='spinner'
+                                    size='large'
+                                    color='primary'
+                                    text='正在加载...'
+                                />
+                            </td>
+                        </tr>
+                    ) : data.length === 0 ? (
                         <tr>
                             <td
                                 colSpan={columns.length}
@@ -158,7 +175,7 @@ export const Table: React.FC<TableProps> = ({
                 </tbody>
             </table>
 
-            {pagination && (
+            {pagination && !loading && (
                 <Pagination {...pagination} />
             )}
         </div>

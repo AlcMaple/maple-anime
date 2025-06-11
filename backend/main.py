@@ -183,6 +183,39 @@ async def get_anime_list(request: PikPakCredentialsRequest):
         raise HTTPException(status_code=500, detail=f"获取动漫列表失败: {str(e)}")
 
 
+@app.post("/api/anime/info")
+async def get_anime_info(request: SearchRequest):
+    """
+    获取动漫信息
+    """
+    try:
+        if not request.name:
+            raise HTTPException(status_code=400, detail="请指定动漫名称")
+
+        banguimi_api = BangumiApi()
+        result = await banguimi_api.search_anime_by_title(request.name)
+        if result["success"]:
+            return {
+                "success": True,
+                "data": result["data"],
+                "total": result["total"],
+                "keyword": result["keyword"],
+                "message": result["message"],
+            }
+        else:
+            return {
+                "success": False,
+                "data": [],
+                "total": 0,
+                "keyword": request.name,
+                "message": result["message"],
+            }
+
+    except Exception as e:
+        print(f"❌ Bangumi获取动漫信息异常: {e}")
+        raise HTTPException(status_code=500, detail=f"获取动漫信息失败: {str(e)}")
+
+
 def main():
     uvicorn.run(app, host="0.0.0.0", port=8002)
 

@@ -1,0 +1,49 @@
+{
+  "animes": {
+    "VOSDFh8CJSipK9qBIM4ozjvIo2": {
+      "title": "寒蝉鸣泣之时第二季",
+      "status": "连载",
+      "updated_at": "2025-06-11T13:39:33.100349"
+    },
+    "VOS8KQrWJSipdby-GcwD2Wi9o2": {
+      "title": "寒蝉鸣泣之时第一季",
+      "status": "连载",
+      "updated_at": "2025-06-11T13:39:33.101345"
+    },
+    "VOS8-AMdJSipdby-GcwCy3wYo2": {
+      "title": "摇滚乐是淑女的嗜好",
+      "status": "连载",
+      "updated_at": "2025-06-11T13:39:33.102193"
+    },
+    "VOS32K1NA63NHOXPfFuohstgo2": {
+      "title": "小市民系列第二季",
+      "status": "连载",
+      "updated_at": "2025-06-11T13:39:33.103015"
+    },
+    "VOS32Jp0yJDkhK9RusLuTAKro2": {
+      "title": "小市民系列第一季",
+      "status": "连载",
+      "updated_at": "2025-06-11T13:39:33.103836"
+    },
+    "VOS31SrtJSipYra7_hMRgOcCo2": {
+      "title": "忍者与杀手二人组的日常生活",
+      "status": "连载",
+      "updated_at": "2025-06-11T13:39:33.104562"
+    },
+    "VORyss1UmO8p4Iaf_-KanWjgo2": {
+      "title": "药屋少女的呢喃 第二季",
+      "status": "连载",
+      "updated_at": "2025-06-11T13:39:33.105239"
+    },
+    "VORypSMOJSipQL1HimaUj2pPo2": {
+      "title": "药屋少女的呢喃 第一季",
+      "status": "连载",
+      "updated_at": "2025-06-11T13:39:33.106138"
+    }
+  },
+  "metadata": {
+    "created_at": "2025-06-11T13:39:33.097951",
+    "last_updated": "2025-06-11T13:39:33.106146",
+    "version": "1.0"
+  }
+}

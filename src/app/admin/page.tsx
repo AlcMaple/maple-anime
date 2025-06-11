@@ -31,26 +31,6 @@ export default function AdminMainPage() {
   const [loginTime, setLoginTime] = useState<string>('');
   const router = useRouter();
 
-  // // 动漫数据
-  // const [animeList, setAnimeList] = useState<AnimeItem[]>([
-  //   { id: '1', title: '小市民系列第一季', status: '完结' },
-  //   { id: '2', title: '小市民系列第二季', status: '连载' },
-  //   { id: '3', title: '药屋少女第一季', status: '完结' },
-  //   { id: '4', title: '药屋少女第二季', status: '连载' },
-  //   { id: '5', title: '间谍过家家第一季', status: '完结' },
-  //   { id: '6', title: '间谍过家家第二季', status: '连载' },
-  //   { id: '7', title: '鬼灭之刃第一季', status: '完结' },
-  //   { id: '8', title: '鬼灭之刃第二季', status: '完结' },
-  //   { id: '9', title: '鬼灭之刃第三季', status: '连载' },
-  //   { id: '10', title: '进击的巨人第一季', status: '完结' },
-  //   { id: '11', title: '进击的巨人第二季', status: '完结' },
-  //   { id: '12', title: '进击的巨人第三季', status: '完结' },
-  //   { id: '13', title: '一拳超人第一季', status: '完结' },
-  //   { id: '14', title: '一拳超人第二季', status: '完结' },
-  //   { id: '15', title: '咒术回战第一季', status: '完结' },
-  //   { id: '16', title: '咒术回战第二季', status: '连载' },
-  // ]);
-
   // 搜索状态
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -367,6 +347,7 @@ export default function AdminMainPage() {
               columns={columns}
               data={tableData}
               pagination={pagination}
+              loading={isLoadingAnimes}
             />
           </div>
         </div>
