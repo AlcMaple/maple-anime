@@ -33,6 +33,16 @@ class SearchRequest(BaseModel):
     name: str
 
 
+class AnimeInfoRequest(BaseModel):
+    id: str
+    title: str
+    status: str
+    summary: Optional[str] = None
+    cover_url: Optional[str] = None
+    username: Optional[str] = None
+    password: Optional[str] = None
+
+
 class AnimeItem(BaseModel):
     id: int
     title: str
@@ -214,6 +224,76 @@ async def get_anime_info(request: SearchRequest):
     except Exception as e:
         print(f"❌ Bangumi获取动漫信息异常: {e}")
         raise HTTPException(status_code=500, detail=f"获取动漫信息失败: {str(e)}")
+
+
+@app.post("/api/anime/info/id")
+async def get_anime_info_by_id(request: AnimeInfoRequest):
+    """
+    根据id从 data/anime.json中获取动漫信息
+    """
+    try:
+        anime_db = PikPakDatabase()
+        anime_info = anime_db.get_anime_detail(request.id)
+        if anime_info:
+            return {
+                "success": True,
+                "data": anime_info,
+                "message": f"获取到 {request.title} 信息",
+            }
+        else:
+            return {
+                "success": False,
+                "data": {},
+                "message": f"未找到 {request.title} 信息",
+            }
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"获取动漫信息失败: {str(e)}")
+
+
+@app.post("/api/anime/info/save")
+async def save_anime_info(request: AnimeInfoRequest):
+    """
+    更新动漫信息
+    """
+    try:
+        # 获取更新前的动漫信息
+        anime_db = PikPakDatabase()
+        old_anime_info = anime_db.get_anime_detail(request.id)
+
+        # 检查标题是否一致，不一致就调用 pikpak api 重命名文件夹
+        if old_anime_info.get("title") != request.title:
+            pikpak_service = PikPakService()
+            client = await pikpak_service.get_client(request.username, request.password)
+            result = await pikpak_service.rename_folder(
+                client, request["id"], request.title
+            )
+            if not result["success"]:
+                raise HTTPException(status_code=500, detail=result["message"])
+
+        # 更新数据库
+        result = anime_db.update_anime_info(
+            request.id,
+            {
+                request.title,
+                request.status,
+                request.summary or "",
+                request.cover_url or "",
+            },
+        )
+        if result:
+            return {
+                "success": True,
+                "message": f"更新 {request.title} 信息成功",
+            }
+        else:
+            return {
+                "success": False,
+                "message": f"更新 {request.title} 信息失败",
+            }
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"更新动漫信息失败: {str(e)}")
 
 
 def main():

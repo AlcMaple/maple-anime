@@ -22,7 +22,6 @@ class PikPakDatabase:
                 "metadata": {
                     "created_at": datetime.now().isoformat(),
                     "last_updated": datetime.now().isoformat(),
-                    "version": "1.0",
                 },
             }
             self.save_data(initial_data)
@@ -36,6 +35,30 @@ class PikPakDatabase:
             print(f"加载数据库失败: {e}")
             return {"animes": {}, "metadata": {}}
 
+    def _upgrade_data_structure(self, data: Dict[str, Any]) -> Dict[str, Any]:
+        """调整数据结构"""
+        upgraded_animes = {}
+        for anime_id, anime_info in data.get("animes", {}).items():
+            # 保持现有数据，添加新字段
+            upgraded_animes[anime_id] = {
+                "title": anime_info.get("title", ""),
+                "status": anime_info.get("status", "连载"),
+                "updated_at": anime_info.get("updated_at", datetime.now().isoformat()),
+                # 新增字段
+                "summary": anime_info.get("summary", ""),
+                "cover_url": anime_info.get("cover_url", ""),
+            }
+
+        return {
+            "animes": upgraded_animes,
+            "metadata": {
+                "created_at": data.get("metadata", {}).get(
+                    "created_at", datetime.now().isoformat()
+                ),
+                "last_updated": datetime.now().isoformat(),
+            },
+        }
+
     def save_data(self, data: Dict[str, Any]) -> bool:
         """保存数据到数据库"""
         try:
@@ -47,24 +70,28 @@ class PikPakDatabase:
             print(f"保存数据库失败: {e}")
             return False
 
+    def get_anime_detail(self, anime_id: str) -> Dict[str, Any]:
+        """获取动漫详细信息"""
+        data = self.load_data()
+        anime_info = data["animes"].get(anime_id, {})
+
+        if not anime_info:
+            return {}
+
+        return {
+            "id": anime_id,
+            "title": anime_info.get("title", ""),
+            "status": anime_info.get("status", "连载"),
+            "summary": anime_info.get("summary", ""),
+            "cover_url": anime_info.get("cover_url", ""),
+            "updated_at": anime_info.get("updated_at", ""),
+        }
+
     def get_anime_status(self, anime_id: str) -> str:
         """获取动漫状态"""
         data = self.load_data()
         anime_info = data["animes"].get(anime_id, {})
         return anime_info.get("status", "连载")
-
-    def set_anime_status(self, anime_id: str, title: str, status: str) -> bool:
-        """设置动漫状态"""
-        data = self.load_data()
-
-        if anime_id not in data["animes"]:
-            data["animes"][anime_id] = {}
-
-        data["animes"][anime_id].update(
-            {"title": title, "status": status, "updated_at": datetime.now().isoformat()}
-        )
-
-        return self.save_data(data)
 
     def sync_with_pikpak_folders(self, pikpak_folders: List[Dict]) -> List[Dict]:
         """
@@ -74,9 +101,8 @@ class PikPakDatabase:
             pikpak_folders: PikPak 文件夹列表 [{"name": "动漫名", "id": "文件夹ID"}]
 
         Returns:
-            合并后的动漫列表 [{"id": "ID", "title": "标题", "status": "状态"}]
+            合并后的动漫列表
         """
-        data = self.load_data()
         result = []
 
         # 处理 PikPak 中的文件夹
@@ -84,31 +110,33 @@ class PikPakDatabase:
             folder_id = folder["id"]
             folder_name = folder["name"]
 
-            # 获取已保存的状态，如果没有则默认为"连载"
-            status = self.get_anime_status(folder_id)
+            # 获取动漫详细信息
+            anime_detail = self.get_anime_detail(folder_id)
 
-            # 如果是新动漫，保存到数据库
-            if folder_id not in data["animes"]:
-                self.set_anime_status(folder_id, folder_name, "连载")
-                status = "连载"
+            # 新动漫
+            if not anime_detail:
+                anime_detail = {
+                    "id": folder_id,
+                    "title": folder_name,
+                    "status": "连载",
+                    "summary": "",
+                    "cover_url": "",
+                    "updated_at": datetime.now().isoformat(),
+                }
 
-            result.append({"id": folder_id, "title": folder_name, "status": status})
+            result.append(
+                {
+                    "id": folder_id,
+                    "title": anime_detail.get("title", folder_name),
+                    "status": anime_detail.get("status", "连载"),
+                    "summary": anime_detail.get("summary", ""),
+                    "cover_url": anime_detail.get("cover_url", ""),
+                    "updated_at": anime_detail.get("updated_at", ""),
+                }
+            )
 
         print(f"同步完成，共 {len(result)} 个动漫")
         return result
-
-    def update_anime_status(self, anime_id: str, status: str) -> bool:
-        """更新动漫状态"""
-        data = self.load_data()
-
-        if anime_id not in data["animes"]:
-            print(f"动漫 ID {anime_id} 不存在")
-            return False
-
-        data["animes"][anime_id]["status"] = status
-        data["animes"][anime_id]["updated_at"] = datetime.now().isoformat()
-
-        return self.save_data(data)
 
     def get_all_animes(self) -> List[Dict]:
         """获取所有动漫列表"""
@@ -121,7 +149,45 @@ class PikPakDatabase:
                     "id": anime_id,
                     "title": anime_info.get("title", ""),
                     "status": anime_info.get("status", "连载"),
+                    "summary": anime_info.get("summary", ""),
+                    "cover_url": anime_info.get("cover_url", ""),
+                    "updated_at": anime_info.get("updated_at", ""),
                 }
             )
 
         return result
+
+    async def update_anime_info(
+        self, anime_id: str, update_data: Dict[str, Any]
+    ) -> bool:
+        """
+        更新动漫信息
+        """
+        try:
+            # 加载现有数据
+            db_data = self.load_data()
+
+            # 检查动漫是否存在
+            if anime_id not in db_data["animes"]:
+                print(f"动漫 {anime_id} 不存在")
+                return False
+
+            # 获取现有动漫信息
+            anime_info = db_data["animes"][anime_id]
+
+            # 只更新传入的字段
+            updatable_fields = ["title", "status", "summary", "cover_url"]
+
+            for field in updatable_fields:
+                if field in update_data:
+                    anime_info[field] = update_data[field]
+
+            # 更新时间戳
+            anime_info["updated_at"] = datetime.now().isoformat()
+
+            # 保存数据
+            return self.save_data(db_data)
+
+        except Exception as e:
+            print(f"更新动漫信息失败: {e}")
+            return False
