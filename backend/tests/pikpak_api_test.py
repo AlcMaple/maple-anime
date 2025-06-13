@@ -15,8 +15,8 @@ from apis.pikpak_api import PikPakService
 class PikPakApiTester:
     def __init__(self):
         self.service = PikPakService()
-        self.username = ""
-        self.password = ""
+        self.username = "hgg13536593830@gmail.com"
+        self.password = "123456789ABc"
 
     def get_credentials(self):
         """获取 pikpak 配置"""
@@ -195,6 +195,85 @@ class PikPakApiTester:
             print("详细错误信息:")
             traceback.print_exc()
 
+    async def test_get_folder_files(self, client, folder_id, folder_name):
+        """测试获取文件夹内文件列表"""
+        print(f"\n🔍 测试: 获取文件夹 '{folder_name}' 内的文件")
+        print("=" * 50)
+
+        try:
+            result = await self.service.get_folder_files(client, folder_id)
+
+            if result["success"]:
+                files = result["files"]
+                print(f"✅ 获取成功:")
+                print(f"   总文件数: {result['total_files']}")
+                print(f"   总项目数: {result['total_items']}")
+                print(f"   消息: {result['message']}")
+
+                if files:
+                    print(f"\n📋 文件列表:")
+                    for i, file in enumerate(files):
+                        size_mb = file["size"] / 1024 / 1024
+                        video_tag = "🎥" if file["is_video"] else "📄"
+                        print(f"  {i+1}. {video_tag} {file['name']}")
+                        print(f"      ID: {file['id']}")
+                        print(f"      大小: {size_mb:.1f} MB")
+                        print(f"      类型: {file['mime_type']}")
+                        print(f"      创建时间: {file['created_time']}")
+                        print()
+
+                return files
+            else:
+                print(f"❌ 获取失败: {result['message']}")
+                return []
+
+        except Exception as e:
+            print(f"❌ 获取文件列表异常: {e}")
+            return []
+
+    async def test_delete_file(self, client, file_id):
+        """测试删除文件"""
+        print(f"\n🔍 测试: 删除文件")
+        print("=" * 50)
+
+        try:
+            result = await self.service.delete_file(client, file_id)
+
+            if result["success"]:
+                print(f"✅ 删除成功: {result['message']}")
+                return True
+            else:
+                print(f"❌ 删除失败: {result['message']}")
+                return False
+
+        except Exception as e:
+            print(f"❌ 删除文件异常: {e}")
+            return False
+
+    async def test_batch_delete_files(self, client, folder_id):
+        """测试批量删除文件"""
+        print(f"\n🔍 测试: 批量删除文件夹内文件")
+
+        try:
+            get_file_list = await self.service.get_folder_files(client, folder_id)
+            file_list = get_file_list.get("files")
+            if file_list:
+                file_ids = [file["id"] for file in file_list]
+                result = await self.service.batch_delete_files(client, file_ids)
+                if result.get("success"):
+                    print(f"✅ 批量删除成功: {result['message']}")
+                    return True
+                else:
+                    print(f"❌ 批量删除失败: {result['message']}")
+                    return False
+            else:
+                print(f"❌ 文件列表为空，无法批量删除")
+                return False
+
+        except Exception as e:
+            print(f"❌ 批量删除文件异常: {e}")
+            return False
+
     async def run_all_tests(self):
         """运行测试"""
         print("🚀 开始 PikPak API 测试")
@@ -235,6 +314,17 @@ class PikPakApiTester:
 
         # # 测试获取我的My Pack文件夹列表（已完成测试）
         # await self.test_get_mypack_folder_list(client)
+
+        # # 测试获取某个文件夹的文件列表（已完成测试）
+        # await self.test_get_folder_files(
+        #     client, "VORyss1UmO8p4Iaf_-KanWjgo2", "药屋少女的呢喃 第二季"
+        # )
+
+        # # 测试删除文件（已完成测试）
+        # await self.test_delete_file(client, "VORyssARClER6__PnjX432lfo2")
+
+        # # 测试批量删除文件（已完成测试）
+        # await self.test_batch_delete_files(client, "VORyss1UmO8p4Iaf_-KanWjgo2")
 
         print("\n" + "=" * 60)
         print("✨ 所有测试完成")

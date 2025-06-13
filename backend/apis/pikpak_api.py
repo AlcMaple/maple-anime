@@ -549,7 +549,7 @@ class PikPakService:
     #     print(f"⏰ 监控超时({timeout//60}分钟)")
     #     return []
 
-    async def _rename_single_file(
+    async def rename_single_file(
         self, client: PikPakApi, file_id: str, new_name: str
     ) -> bool:
         """
@@ -620,7 +620,7 @@ class PikPakService:
                     continue
 
                 # 重命名文件
-                rename_result = await self._rename_single_file(
+                rename_result = await self.rename_single_file(
                     client, file_id, episode_num
                 )
                 if rename_result:
@@ -728,3 +728,166 @@ class PikPakService:
         except Exception as e:
             print(f"获取 My Pack 文件夹列表异常: {e}")
             return []
+
+    async def get_folder_files(self, client: PikPakApi, folder_id: str) -> Dict:
+        """
+        获取指定文件夹内的所有文件
+
+        Args:
+            client: PikPak客户端
+            folder_id: 文件夹ID
+
+        Returns:
+            success: 是否成功
+            files: 文件列表
+            message: 信息
+        """
+        try:
+            print(f"📁 获取文件夹 {folder_id} 内的文件列表...")
+
+            # 获取文件夹内容
+            result = await client.file_list(parent_id=folder_id)
+
+            if not result or "files" not in result:
+                return {"success": False, "files": [], "message": "无法获取文件夹内容"}
+
+            files = result["files"]
+
+            # 过滤出文件（排除文件夹）
+            file_list = []
+            video_extensions = [
+                ".mp4",
+                ".mkv",
+                ".avi",
+                ".mov",
+                ".m4v",
+                ".webm",
+                ".flv",
+                ".rmvb",
+                ".wmv",
+            ]
+
+            for file in files:
+                file_kind = file.get("kind", "")
+                file_type = file.get("type", "")
+                file_name = file.get("name", "")
+
+                # 只保留文件，排除文件夹
+                is_file = file_kind == "drive#file" or file_type == "file"
+
+                if is_file:
+                    # 判断是否为视频文件
+                    is_video = any(ext in file_name.lower() for ext in video_extensions)
+
+                    formatted_file = {
+                        "id": file.get("id", ""),
+                        "name": file_name,
+                        "size": int(file.get("size", 0)),
+                        "kind": file_kind,
+                        "created_time": file.get(
+                            "created_time", file.get("created_at", "")
+                        ),
+                        "mime_type": file.get("mime_type", ""),
+                        "thumbnail": file.get("thumbnail", ""),
+                        "hash": file.get("hash", ""),
+                        "is_video": is_video,
+                    }
+                    file_list.append(formatted_file)
+
+            print(f"✅ 获取到 {len(file_list)} 个文件（共 {len(files)} 个项目）")
+
+            # 按文件名排序
+            file_list.sort(key=lambda x: x.get("name", ""))
+
+            return {
+                "success": True,
+                "files": file_list,
+                "total_files": len(file_list),
+                "total_items": len(files),
+                "message": f"获取到 {len(file_list)} 个文件",
+            }
+
+        except Exception as e:
+            print(f"❌ 获取文件夹文件列表失败: {e}")
+            return {
+                "success": False,
+                "files": [],
+                "message": f"获取文件列表失败: {str(e)}",
+            }
+
+    async def delete_file(self, client: PikPakApi, file_id: str) -> Dict:
+        """
+        删除指定文件
+
+        Args:
+            client: PikPak客户端
+            file_id: 文件ID
+            file_name: 文件名
+
+        Returns:
+            success: 是否成功
+            message: 信息
+        """
+        try:
+            # 调用PikPak删除文件API
+            result = await client.delete_to_trash(ids=[file_id])
+
+            if result:
+                print(f"✅ 文件删除成功")
+                return {"success": True, "message": "文件删除成功"}
+            else:
+                print(f"❌ 文件删除失败")
+                return {"success": False, "message": "文件删除失败"}
+
+        except Exception as e:
+            print(f"❌ 删除文件异常: {e}")
+            return {"success": False, "message": f"删除文件失败: {str(e)}"}
+
+    async def batch_delete_files(self, client: PikPakApi, file_ids: List[str]) -> Dict:
+        """
+        批量删除文件
+
+        Args:
+            client: PikPak客户端
+            file_ids: 文件ID列表
+
+        Returns:
+            success: 是否成功
+            message: 信息
+            deleted_count: 成功删除的文件数量
+            failed_count: 删除失败的文件数量
+        """
+        try:
+            print(f"🗑️ 批量删除 {len(file_ids)} 个文件...")
+
+            deleted_count = 0
+            failed_count = 0
+
+            for file_id in file_ids:
+                try:
+                    result = await self.delete_file(client, file_id)
+                    if result:
+                        deleted_count += 1
+                    else:
+                        failed_count += 1
+                except Exception as e:
+                    print(f"❌ 删除文件 {file_id} 失败: {e}")
+                    failed_count += 1
+
+            print(f"✅ 批量删除完成: 成功 {deleted_count} 个，失败 {failed_count} 个")
+
+            return {
+                "success": deleted_count > 0,
+                "message": f"批量删除完成: 成功 {deleted_count} 个，失败 {failed_count} 个",
+                "deleted_count": deleted_count,
+                "failed_count": failed_count,
+            }
+
+        except Exception as e:
+            print(f"❌ 批量删除异常: {e}")
+            return {
+                "success": False,
+                "message": f"批量删除失败: {str(e)}",
+                "deleted_count": 0,
+                "failed_count": len(file_ids),
+            }
