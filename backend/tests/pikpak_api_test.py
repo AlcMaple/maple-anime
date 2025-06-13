@@ -15,8 +15,8 @@ from apis.pikpak_api import PikPakService
 class PikPakApiTester:
     def __init__(self):
         self.service = PikPakService()
-        self.username = "hgg13536593830@gmail.com"
-        self.password = "123456789ABc"
+        self.username = ""
+        self.password = ""
 
     def get_credentials(self):
         """获取 pikpak 配置"""

@@ -153,6 +153,39 @@ export interface CalendarResponse {
     error?: string;
 }
 
+// 集数文件类型
+export interface EpisodeFile {
+    id: string;
+    name: string;
+    size: number;
+    kind: string;
+    created_time: string;
+    mime_type: string;
+    thumbnail: string;
+    hash: string;
+    is_video: boolean;
+}
+
+// 请求类型
+export interface EpisodeListRequest {
+    username: string;
+    password: string;
+    folder_id: string;
+}
+
+export interface FileDeleteRequest {
+    username: string;
+    password: string;
+    file_ids: string[];
+}
+
+export interface FileRenameRequest {
+    username: string;
+    password: string;
+    file_id: string;
+    new_name: string;
+}
+
 // API响应包装类型
 export interface ApiResponse<T = any> {
     success: boolean;
@@ -160,3 +193,16 @@ export interface ApiResponse<T = any> {
     message?: string;
     error?: string;
 }
+
+// 响应类型
+export interface EpisodeListResponse extends ApiResponse {
+    data: EpisodeFile[];
+    total: number;
+}
+
+export interface FileDeleteResponse extends ApiResponse {
+    deleted_count: number;
+    failed_count: number;
+}
+
+export interface FileRenameResponse extends ApiResponse { }

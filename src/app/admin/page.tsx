@@ -13,15 +13,10 @@ import { AddAnimeModal } from '@/components/admin/AddAnimeModal';
 import { PikPakConfigModal } from '@/components/admin/PikPakConfigModal';
 import { CalendarModal } from '@/components/admin/CalendarModal';
 import { EditAnimeModal } from '@/components/admin/EditAnimeModal';
+import { EpisodeManagementModal } from '@/components/admin/EpisodeManagementModal';
 
 import { pikpakApi } from '@/services/pikpak';
 import { AnimeItem } from '@/services/types';
-
-// interface AnimeItem {
-//   id: string;
-//   title: string;
-//   status: '完结' | '连载';
-// }
 
 interface AnimeSearchResult {
   id: string;
@@ -55,7 +50,25 @@ export default function AdminMainPage() {
   const [hasDownloading, setHasDownloading] = useState(false);
 
   // 动漫列表状态
-  const [animeList, setAnimeList] = useState<AnimeItem[]>([]);
+  // const [animeList, setAnimeList] = useState<AnimeItem[]>([]);
+  const [animeList, setAnimeList] = useState<AnimeItem[]>([
+    { id: '1', title: '小市民系列第一季', status: '完结' },
+    { id: '2', title: '小市民系列第二季', status: '连载' },
+    { id: '3', title: '药屋少女第一季', status: '完结' },
+    { id: '4', title: '药屋少女第二季', status: '连载' },
+    { id: '5', title: '间谍过家家第一季', status: '完结' },
+    { id: '6', title: '间谍过家家第二季', status: '连载' },
+    { id: '7', title: '鬼灭之刃第一季', status: '完结' },
+    { id: '8', title: '鬼灭之刃第二季', status: '完结' },
+    { id: '9', title: '鬼灭之刃第三季', status: '连载' },
+    { id: '10', title: '进击的巨人第一季', status: '完结' },
+    { id: '11', title: '进击的巨人第二季', status: '完结' },
+    { id: '12', title: '进击的巨人第三季', status: '完结' },
+    { id: '13', title: '一拳超人第一季', status: '完结' },
+    { id: '14', title: '一拳超人第二季', status: '完结' },
+    { id: '15', title: '咒术回战第一季', status: '完结' },
+    { id: '16', title: '咒术回战第二季', status: '连载' },
+  ]);
   const [isLoadingAnimes, setIsLoadingAnimes] = useState(false);
 
   // 加载动漫列表
@@ -92,10 +105,15 @@ export default function AdminMainPage() {
 
   // 获取动漫列表
   useEffect(() => {
-    if (isAuthenticated && !isLoading) {
-      loadAnimeList();
-    }
+    // if (isAuthenticated && !isLoading) {
+    //   loadAnimeList();
+    // }
   }, [isAuthenticated, isLoading]);
+
+  // 管理集数状态
+  const [isEpisodeModalOpen, setIsEpisodeModalOpen] = useState(false);
+  const [currentManageAnime, setCurrentManageAnime] = useState<{ id: string; title: string } | null>(null);
+
 
   // 检查登录状态
   useEffect(() => {
@@ -171,7 +189,11 @@ export default function AdminMainPage() {
   };
 
   const handleManage = (id: string) => {
-    console.log('管理:', id);
+    const anime = animeList.find(item => item.id === id);
+    if (anime) {
+      setCurrentManageAnime({ id: anime.id, title: anime.title });
+      setIsEpisodeModalOpen(true);
+    }
   };
 
   const handleUpdate = (id: string) => {
@@ -418,6 +440,17 @@ export default function AdminMainPage() {
           onClose={() => setIsEditModalOpen(false)}
           anime={currentEditAnime}
           onSave={handleEditSave}
+        />
+
+        {/* 集数管理模态框 */}
+        <EpisodeManagementModal
+          isOpen={isEpisodeModalOpen}
+          onClose={() => {
+            setIsEpisodeModalOpen(false);
+            setCurrentManageAnime(null);
+          }}
+          animeId={currentManageAnime?.id || ''}
+          animeTitle={currentManageAnime?.title || ''}
         />
       </div>
     </div>

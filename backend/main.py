@@ -68,6 +68,25 @@ class PikPakCredentialsRequest(BaseModel):
     password: str
 
 
+class EpisodeListRequest(BaseModel):
+    username: str
+    password: str
+    folder_id: str
+
+
+class FileDeleteRequest(BaseModel):
+    username: str
+    password: str
+    file_ids: List[str]
+
+
+class FileRenameRequest(BaseModel):
+    username: str
+    password: str
+    file_id: str
+    new_name: str
+
+
 @app.post("/api/search")
 async def search_anime(request: SearchRequest):
     try:
@@ -296,6 +315,99 @@ async def save_anime_info(request: AnimeInfoRequest):
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"更新动漫信息失败: {str(e)}")
+
+
+@app.post("/api/episodes/list")
+async def get_episode_list(request: EpisodeListRequest):
+    """
+    获取动漫文件夹内的所有集数
+    """
+    try:
+        if not request.username or not request.password:
+            raise HTTPException(status_code=400, detail="请配置PikPak账号密码")
+
+        pikpak_service = PikPakService()
+        client = await pikpak_service.get_client(request.username, request.password)
+
+        result = await pikpak_service.get_folder_files(client, request.folder_id)
+
+        if result["success"]:
+            return {
+                "success": True,
+                "data": result["files"],
+                "total": result["total_files"],
+                "message": result["message"],
+            }
+        else:
+            raise HTTPException(status_code=500, detail=result["message"])
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"获取集数列表失败: {str(e)}")
+
+
+@app.post("/api/episodes/delete")
+async def delete_episodes(request: FileDeleteRequest):
+    """
+    批量删除集数文件
+    """
+    try:
+        if not request.username or not request.password:
+            raise HTTPException(status_code=400, detail="请配置PikPak账号密码")
+
+        if not request.file_ids or len(request.file_ids) == 0:
+            raise HTTPException(status_code=400, detail="请选择要删除的文件")
+
+        pikpak_service = PikPakService()
+        client = await pikpak_service.get_client(request.username, request.password)
+
+        result = await pikpak_service.batch_delete_files(client, request.file_ids)
+
+        if result["success"]:
+            return {
+                "success": True,
+                "message": result["message"],
+                "deleted_count": result["deleted_count"],
+                "failed_count": result["failed_count"],
+            }
+        else:
+            raise HTTPException(status_code=500, detail=result["message"])
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"删除文件失败: {str(e)}")
+
+
+@app.post("/api/episodes/rename")
+async def rename_episode(request: FileRenameRequest):
+    """
+    重命名单个集数文件
+    """
+    try:
+        if not request.username or not request.password:
+            raise HTTPException(status_code=400, detail="请配置PikPak账号密码")
+
+        if not request.file_id or not request.new_name:
+            raise HTTPException(status_code=400, detail="请指定文件ID和新文件名")
+
+        pikpak_service = PikPakService()
+        client = await pikpak_service.get_client(request.username, request.password)
+
+        result = await pikpak_service.rename_single_file(
+            client, request.file_id, request.new_name
+        )
+
+        if result:
+            return {"success": True, "message": "文件重命名成功"}
+        else:
+            raise HTTPException(status_code=500, detail="文件重命名失败")
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"重命名文件失败: {str(e)}")
 
 
 def main():
