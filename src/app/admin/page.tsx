@@ -2,14 +2,18 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+
 import { Button } from '@/ui/Button';
 import { Input } from '@/ui/Input';
 import { Table } from '@/ui/Table';
 import { Search } from '@/ui/Search';
 import { message } from '@/ui/Message';
+
 import { AddAnimeModal } from '@/components/admin/AddAnimeModal';
 import { PikPakConfigModal } from '@/components/admin/PikPakConfigModal';
 import { CalendarModal } from '@/components/admin/CalendarModal';
+import { EditAnimeModal } from '@/components/admin/EditAnimeModal';
+
 import { pikpakApi } from '@/services/pikpak';
 import { AnimeItem } from '@/services/types';
 
@@ -42,6 +46,10 @@ export default function AdminMainPage() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isPikPakConfigOpen, setIsPikPakConfigOpen] = useState(false);
   const [isCalendarModalOpen, setIsCalendarModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
+  // 当前编辑的动漫
+  const [currentEditAnime, setCurrentEditAnime] = useState<AnimeItem | null>(null);
 
   // 下载状态
   const [hasDownloading, setHasDownloading] = useState(false);
@@ -75,6 +83,11 @@ export default function AdminMainPage() {
     } finally {
       setIsLoadingAnimes(false);
     }
+  };
+
+  // 编辑保存完成后刷新列表
+  const handleEditSave = () => {
+    loadAnimeList();
   };
 
   // 获取动漫列表
@@ -150,7 +163,11 @@ export default function AdminMainPage() {
 
   // 表格操作按钮
   const handleEdit = (id: string) => {
-    console.log('编辑:', id);
+    const anime = animeList.find(item => item.id === id);
+    if (anime) {
+      setCurrentEditAnime(anime);
+      setIsEditModalOpen(true);
+    }
   };
 
   const handleManage = (id: string) => {
@@ -393,6 +410,14 @@ export default function AdminMainPage() {
         <CalendarModal
           isOpen={isCalendarModalOpen}
           onClose={() => setIsCalendarModalOpen(false)}
+        />
+
+        {/* 编辑动漫模态框 */}
+        <EditAnimeModal
+          isOpen={isEditModalOpen}
+          onClose={() => setIsEditModalOpen(false)}
+          anime={currentEditAnime}
+          onSave={handleEditSave}
         />
       </div>
     </div>

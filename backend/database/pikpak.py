@@ -164,6 +164,7 @@ class PikPakDatabase:
         更新动漫信息
         """
         try:
+            # print("将要更新的动漫信息：", update_data)
             # 加载现有数据
             db_data = self.load_data()
 
@@ -174,6 +175,7 @@ class PikPakDatabase:
 
             # 获取现有动漫信息
             anime_info = db_data["animes"][anime_id]
+            # print("更新前的动漫信息：", anime_info)
 
             # 只更新传入的字段
             updatable_fields = ["title", "status", "summary", "cover_url"]
@@ -184,6 +186,8 @@ class PikPakDatabase:
 
             # 更新时间戳
             anime_info["updated_at"] = datetime.now().isoformat()
+
+            # print("更新后的动漫信息：", anime_info)
 
             # 保存数据
             return self.save_data(db_data)

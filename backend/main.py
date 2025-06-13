@@ -257,28 +257,30 @@ async def save_anime_info(request: AnimeInfoRequest):
     更新动漫信息
     """
     try:
+        # print("获取前端数据", request.dict())
         # 获取更新前的动漫信息
         anime_db = PikPakDatabase()
         old_anime_info = anime_db.get_anime_detail(request.id)
 
         # 检查标题是否一致，不一致就调用 pikpak api 重命名文件夹
+        print("判断是否需要重命名文件夹", old_anime_info.get("title") == request.title)
         if old_anime_info.get("title") != request.title:
             pikpak_service = PikPakService()
             client = await pikpak_service.get_client(request.username, request.password)
             result = await pikpak_service.rename_folder(
-                client, request["id"], request.title
+                client, request.id, request.title
             )
-            if not result["success"]:
-                raise HTTPException(status_code=500, detail=result["message"])
+            if not result:
+                raise HTTPException(status_code=500, detail=f"重命名失败: {result}")
 
         # 更新数据库
-        result = anime_db.update_anime_info(
+        result = await anime_db.update_anime_info(
             request.id,
             {
-                request.title,
-                request.status,
-                request.summary or "",
-                request.cover_url or "",
+                "title": request.title,
+                "status": request.status,
+                "summary": request.summary or "",
+                "cover_url": request.cover_url or "",
             },
         )
         if result:

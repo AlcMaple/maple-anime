@@ -25,6 +25,54 @@ export interface AnimeItem {
     id: string;
     title: string;
     status: '完结' | '连载';
+    summary?: string;
+    cover_url?: string;
+    updated_at?: string;
+}
+
+// 动漫详细信息类型
+export interface AnimeInfoRequest {
+    id: string;
+    title: string;
+    status: '完结' | '连载';
+    summary?: string;
+    cover_url?: string;
+    username?: string;
+    password?: string;
+}
+
+// 动漫信息响应类型
+export interface BangumiAnimeInfo {
+    id: number;
+    name: string;
+    name_cn: string;
+    summary: string;
+    images: {
+        large: string;
+        medium: string;
+        small: string;
+    };
+    air_date: string;
+    eps_count: number;
+    rating: {
+        score: number;
+        total: number;
+    };
+    tags: string[];
+}
+
+export interface AnimeInfoResponse {
+    success: boolean;
+    data: BangumiAnimeInfo[];
+    total: number;
+    keyword: string;
+    message: string;
+}
+
+export interface AnimeDetailResponse {
+    success: boolean;
+    data: AnimeItem;
+    message: string;
 }
 
 // 动漫列表响应类型
