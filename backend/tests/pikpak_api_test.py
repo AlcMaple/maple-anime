@@ -15,8 +15,8 @@ from apis.pikpak_api import PikPakService
 class PikPakApiTester:
     def __init__(self):
         self.service = PikPakService()
-        self.username = ""
-        self.password = ""
+        self.username = "hgg13536593830@gmail.com"
+        self.password = "123456789ABc"
 
     def get_credentials(self):
         """获取 pikpak 配置"""
@@ -35,6 +35,22 @@ class PikPakApiTester:
         print("\n🔍 测试1: 获取PikPak客户端")
         try:
             client = await self.service.get_client(self.username, self.password)
+            print(f"🔑 客户端: {client}")
+
+            # 查看客户端属性
+            print(f"🔍 客户端属性:")
+            if hasattr(client, "access_token"):
+                print(f"  access_token: {client.access_token}")
+            if hasattr(client, "token"):
+                print(f"  token: {client.token}")
+            if hasattr(client, "session_token"):
+                print(f"  session_token: {client.session_token}")
+
+            # 查看所有非私有属性
+            print(
+                f"🔍 所有属性: {[attr for attr in dir(client) if not attr.startswith('_')]}"
+            )
+
             print("✅ 客户端获取成功")
             return client
         except Exception as e:

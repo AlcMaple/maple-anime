@@ -410,6 +410,22 @@ async def rename_episode(request: FileRenameRequest):
         raise HTTPException(status_code=500, detail=f"重命名文件失败: {str(e)}")
 
 
+@app.post("/api/key")
+async def get_key(request: PikPakCredentialsRequest):
+    """
+    获取 PikPak 密钥
+    """
+    try:
+        if not request.username or not request.password:
+            raise HTTPException(status_code=400, detail="请配置PikPak账号密码")
+
+        pikpak_service = PikPakService()
+        client = await pikpak_service.get_client(request.username, request.password)
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"获取密钥失败: {str(e)}")
+
+
 def main():
     uvicorn.run(app, host="0.0.0.0", port=8002)
 

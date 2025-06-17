@@ -201,7 +201,9 @@ export default function AdminMainPage() {
   };
 
   const handleDelete = (id: string) => {
-    console.log('删除:', id);
+    // 调用 pikpak Api 删除动漫
+
+
     const newList = animeList.filter(item => item.id !== id);
     setAnimeList(newList);
 

@@ -4,6 +4,7 @@ from typing import Dict, List, Any, Optional
 from pikpakapi import PikPakApi
 from utils.analyzer import Analyzer
 import time
+from pathlib import Path
 
 
 class PikPakService:
@@ -12,8 +13,9 @@ class PikPakService:
     def __init__(self):
         self.clients = {}  # 客户端连接
         self.analyzer = Analyzer()
-        self._back_mask = {}  # 后台任务
+        # self._back_mask = {}  # 后台任务
         self.my_pack_id = "VOQqzYAEiKo3JmMhSvj6UYvto2"
+        self.user_data_path = Path("data/user.json")
 
     async def get_client(self, username: str, password: str) -> PikPakApi:
         """获取或创建PikPak客户端"""

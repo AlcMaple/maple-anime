@@ -24,10 +24,6 @@ interface CacheItem {
 
 // 缓存对象
 const episodeCache = new Map<string, CacheItem>();
-
-// 缓存过期时间
-const CACHE_EXPIRE_TIME = 5 * 60 * 1000;
-
 // 请求防抖
 const REQUEST_DEBOUNCE_TIME = 2000;
 
@@ -107,19 +103,9 @@ export const EpisodeManagementModal: React.FC<EpisodeManagementModalProps> = ({
 
     const requestTimeoutRef = useRef<NodeJS.Timeout>();
 
-    // 检查缓存
-    const isCacheValid = (cacheItem: CacheItem): boolean => {
-        const now = Date.now();
-        return (now - cacheItem.timestamp) < CACHE_EXPIRE_TIME;
-    };
-
     // 从缓存获取数据
     const getFromCache = (animeId: string): CacheItem | null => {
-        const cached = episodeCache.get(animeId);
-        if (cached && isCacheValid(cached)) {
-            return cached;
-        }
-        return null;
+        return episodeCache.get(animeId) || null;
     };
 
     // 设置缓存
@@ -378,15 +364,13 @@ export const EpisodeManagementModal: React.FC<EpisodeManagementModalProps> = ({
     };
 
     // 获取缓存状态信息
-    const getCacheStatusInfo = () => {
+    const getCacheStatusInfo = (): string => {
         const cached = episodeCache.get(animeId);
-        if (!cached) return '';
-
-        const age = Date.now() - cached.timestamp;
-        const ageMinutes = Math.floor(age / 1000 / 60);
-        const isExpired = age > CACHE_EXPIRE_TIME;
-
-        return `缓存时间: ${ageMinutes}分钟前 ${isExpired ? '(已过期)' : '(有效)'}`;
+        if (cached) {
+            const cacheTime = new Date(cached.timestamp).toLocaleString('zh-CN');
+            return `缓存时间: ${cacheTime}`;
+        }
+        return '无缓存';
     };
 
     // 表格列定义
