@@ -6,6 +6,8 @@ from utils.analyzer import Analyzer
 import time
 from pathlib import Path
 import json
+from database.pikpak import PikPakDatabase
+from datetime import datetime
 
 
 class PikPakService:
@@ -16,6 +18,7 @@ class PikPakService:
         self.analyzer = Analyzer()
         # self._back_mask = {}  # 后台任务
         self.my_pack_id = "VOQqzYAEiKo3JmMhSvj6UYvto2"
+        self.anime_db = PikPakDatabase()
 
     async def get_client(self, username: str, password: str) -> PikPakApi:
         """获取或创建PikPak客户端"""
@@ -275,12 +278,12 @@ class PikPakService:
 
                             asyncio.create_task(
                                 self.delayed_rename_task(
-                                    client, new_folder["id"], delay_seconds=5
+                                    client, new_folder["id"], delay_seconds=8
                                 )
                             )
 
                             print(
-                                f"📝 已为文件夹 {target_folder_name} 安排5秒后重命名任务"
+                                f"📝 已为文件夹 {target_folder_name} 安排8秒后重命名任务"
                             )
 
                         # 更新before_folders，避免重复检测
@@ -330,7 +333,7 @@ class PikPakService:
             # )
 
             asyncio.create_task(
-                self.delayed_rename_task(client, folder_id, delay_seconds=5)
+                self.delayed_rename_task(client, folder_id, delay_seconds=8)
             )
 
             return {
@@ -648,7 +651,7 @@ class PikPakService:
             return {"success": False, "message": f"重命名异常: {str(e)}"}
 
     async def delayed_rename_task(
-        self, client: PikPakApi, folder_id: str, delay_seconds: int = 5
+        self, client: PikPakApi, folder_id: str, delay_seconds: int = 8
     ):
         """
         延时重命名任务
@@ -656,7 +659,7 @@ class PikPakService:
         Args:
             client: PikPak客户端
             folder_id: 文件夹ID
-            delay_seconds: 延时秒数，默认5秒
+            delay_seconds: 延时秒数，默认8秒
         """
         try:
             print(
@@ -669,11 +672,39 @@ class PikPakService:
 
             if rename_result["success"]:
                 print(f"✅ 文件夹 {folder_id} 重命名完成: {rename_result['message']}")
+                # 重命名完成后，启动延时同步数据任务
+                asyncio.create_task(
+                    self.delayed_sync_data_task(client, delay_seconds=8)
+                )
+                print(f"📝 已安排8秒后同步数据任务")
             else:
                 print(f"❌ 文件夹 {folder_id} 重命名失败: {rename_result['message']}")
 
         except Exception as e:
             print(f"❌ 延时重命名任务异常: {e}")
+
+    async def delayed_sync_data_task(self, client: PikPakApi, delay_seconds: int = 8):
+        """
+        延时同步数据任务
+
+        Args:
+            client: PikPak客户端
+            delay_seconds: 延时秒数，默认8秒
+        """
+        try:
+            print(f"🕐 将在 {delay_seconds} 秒后开始同步数据...")
+            await asyncio.sleep(delay_seconds)
+
+            print(f"🚀 开始同步数据...")
+            sync_result = await self.sync_data(client)
+
+            if sync_result:
+                print(f"✅ 数据同步完成")
+            else:
+                print(f"❌ 数据同步失败")
+
+        except Exception as e:
+            print(f"❌ 延时同步数据任务异常: {e}")
 
     async def get_folder_list(self, client: PikPakApi) -> List[Dict]:
         """
@@ -941,3 +972,130 @@ class PikPakService:
         except Exception as e:
             print(f"❌ 获取 My Pack 文件夹ID异常: {e}")
             return None
+
+    async def sync_data(self, client: PikPakApi, blocking_wait: bool = False) -> bool:
+        """
+        同步数据
+        """
+        try:
+            # 加载数据
+            data = self.anime_db.load_data()
+            if "animes" not in data:
+                print("❌ 数据格式错误，缺少animes字段")
+                return
+
+            # 获取mypack_id
+            mypack_id = list(data["animes"].keys())[0]
+            anime_folders = data["animes"][mypack_id]
+
+            # api 调用计数
+            api_call_count = 0
+            api_batch_size = 3
+            api_delay = 8
+
+            print(f"📊 开始同步数据")
+
+            # 获取云端 mypack的所有文件夹 id
+            cloud_folders = await self.get_mypack_folder_list(client)
+            # 建立云端文件夹映射 {id: id_value}
+            cloud_folder_map = {folder["id"]: folder for folder in cloud_folders}
+            cloud_folder_ids = set(cloud_folder_map.keys())
+
+            # 获取本地已有的文件列表，建立ID到播放链接的映射
+            local_folder_ids = set(anime_folders.keys())
+
+            # 计算差异
+            new_folder_ids = cloud_folder_ids - local_folder_ids  # 云端有，本地没有
+            del_folder_ids = local_folder_ids - cloud_folder_ids  # 云端没有，本地有
+
+            # 删除本地多余的
+            for folder_id in del_folder_ids:
+                folder_name = anime_folders[folder_id].get("title", "未知")
+                print(f"  ➖ 删除本地多余的 {folder_name} 文件夹")
+                del anime_folders[folder_id]
+
+            # 处理新增的文件夹
+            for folder_id in new_folder_ids:
+                folder_name = cloud_folder_map[folder_id]["name"]
+                print(f"  ➕ 新增 {folder_name} 文件夹")
+                anime_folders[folder_id] = {
+                    "title": folder_name,
+                    "status": "连载",
+                    "files": [],
+                    "updated_at": datetime.now().isoformat(),
+                    "summary": "",
+                    "cover_url": "",
+                }
+
+            # 处理相同的文件夹
+            for folder_id, anime_info in anime_folders.items():
+
+                # 获取本地已有的文件列表，建立ID到播放链接的映射
+                existing_files = anime_info.get("files", [])
+                existing_file_map = {}
+                for existing_file in existing_files:
+                    file_id = existing_file.get("id")
+                    play_url = existing_file.get("play_url")
+                    if file_id and play_url:
+                        existing_file_map[file_id] = existing_file
+
+                # 获取文件夹内的文件
+                folder_result = await self.get_folder_files(client, folder_id)
+
+                if not folder_result["success"]:
+                    print(f"  ❌ 获取文件夹内容失败: {folder_result['message']}")
+                    continue
+
+                files = folder_result["files"]
+
+                if not files:
+                    print(f"  ⚠️  文件夹为空")
+                    continue
+
+                print(f"  📝 找到 {len(files)} 个文件")
+                result = []
+
+                # 为每个文件夹获取播放连接
+                for file in files:
+                    if file["id"] in existing_file_map:
+                        # print(f"      ♻️  使用本地已有播放链接")
+                        original_file = existing_file_map[file["id"]]
+                        file_data = {
+                            "id": file["id"],
+                            "name": file["name"],
+                            "play_url": original_file["play_url"],
+                        }
+                    else:
+                        # 获取播放连接
+                        play_url = await self.get_video_play_url(file["id"], client)
+                        # print(f"      📡 成功获取播放链接: {play_url}")
+                        api_call_count += 1
+
+                        # 检查是否需要延时
+                        if api_call_count % api_batch_size == 0:
+                            print(
+                                f"      ⏱️  已调用 {api_call_count} 次API，延时 {api_delay} 秒..."
+                            )
+                            if blocking_wait:
+                                time.sleep(api_delay)
+                            else:
+                                await asyncio.sleep(api_delay)
+
+                        file_data = {
+                            "id": file["id"],
+                            "name": file["name"],
+                            "play_url": play_url,
+                        }
+                    result.append(file_data)
+
+                # 更新数据
+                anime_info["files"] = result
+
+            # 保存数据
+            data["metadata"]["last_updated"] = datetime.now().isoformat()
+            self.anime_db.save_data(data)
+            print("✅ 同步成功")
+            return True
+        except Exception as e:
+            print(f"同步数据失败: {e}")
+            return False

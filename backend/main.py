@@ -400,8 +400,7 @@ async def syn_data(request: PikPakCredentialsRequest):
     try:
         pikpak_service = PikPakService()
         client = await pikpak_service.get_client(request.username, request.password)
-        anime_db = PikPakDatabase()
-        await anime_db.sync_data(client)
+        await pikpak_service.sync_data(client, blocking_wait=True)
         return {"success": True, "message": "同步数据成功"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"同步数据失败: {str(e)}")
