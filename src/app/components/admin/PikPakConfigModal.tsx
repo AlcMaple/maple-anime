@@ -8,7 +8,6 @@ import { message } from '@/ui/Message';
 interface PikPakConfig {
     username: string;
     password: string;
-    key: string;
     rememberCredentials: boolean;
 }
 
@@ -25,11 +24,8 @@ export const PikPakConfigModal: React.FC<PikPakConfigModalProps> = ({
 }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [key, setKey] = useState('');
     const [rememberCredentials, setRememberCredentials] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
-    const [isGettingKey, setIsGettingKey] = useState(false);
-    const [getKeyCountdown, setGetKeyCountdown] = useState(0);
 
     // 组件挂载时加载保存的配置
     useEffect(() => {
@@ -38,31 +34,16 @@ export const PikPakConfigModal: React.FC<PikPakConfigModalProps> = ({
         }
     }, [isOpen]);
 
-    // 倒计时
-    useEffect(() => {
-        let timer: NodeJS.Timeout;
-        if (getKeyCountdown > 0) {
-            timer = setTimeout(() => {
-                setGetKeyCountdown(prev => prev - 1);
-            }, 1000);
-        }
-        return () => {
-            if (timer) clearTimeout(timer);
-        };
-    }, [getKeyCountdown]);
-
     // 从localStorage加载保存的配置
     const loadSavedConfig = () => {
         try {
             const savedUsername = localStorage.getItem('pikpak_username');
             const savedPassword = localStorage.getItem('pikpak_password');
-            const savedKey = localStorage.getItem('pikpak_key');
             const savedRemember = localStorage.getItem('pikpak_remember') === 'true';
 
-            if (savedRemember) {
-                setUsername(savedUsername || '');
-                setPassword(savedPassword || '');
-                setKey(savedKey || '');
+            if (savedUsername && savedPassword && savedRemember) {
+                setUsername(savedUsername);
+                setPassword(savedPassword);
                 setRememberCredentials(true);
             }
         } catch (error) {
@@ -70,23 +51,16 @@ export const PikPakConfigModal: React.FC<PikPakConfigModalProps> = ({
         }
     };
 
-    // 验证输入
-    const validateInput = () => {
-        const hasKey = key.trim();
-        const hasCredentials = username.trim() && password.trim();
-
-        if (!hasKey && !hasCredentials) {
-            message.error('请输入Key或者用户名和密码');
-            return false;
-        }
-
-        return true;
-    };
-
     // 保存配置
     const handleSave = async () => {
         // 验证输入
-        if (!validateInput()) {
+        if (!username.trim()) {
+            message.error('请输入PikPak用户名');
+            return;
+        }
+
+        if (!password.trim()) {
+            message.error('请输入PikPak密码');
             return;
         }
 
@@ -96,7 +70,6 @@ export const PikPakConfigModal: React.FC<PikPakConfigModalProps> = ({
             const config: PikPakConfig = {
                 username: username.trim(),
                 password: password.trim(),
-                key: key.trim(),
                 rememberCredentials
             };
 
@@ -104,12 +77,10 @@ export const PikPakConfigModal: React.FC<PikPakConfigModalProps> = ({
                 // 记住密码
                 localStorage.setItem('pikpak_username', config.username);
                 localStorage.setItem('pikpak_password', config.password);
-                localStorage.setItem('pikpak_key', config.key);
                 localStorage.setItem('pikpak_remember', 'true');
             } else {
                 localStorage.removeItem('pikpak_username');
                 localStorage.removeItem('pikpak_password');
-                localStorage.removeItem('pikpak_key');
                 localStorage.removeItem('pikpak_remember');
             }
 
@@ -128,62 +99,9 @@ export const PikPakConfigModal: React.FC<PikPakConfigModalProps> = ({
         }
     };
 
-    // 获取Key
-    const handleGetKey = async () => {
-        // 验证用户名密码是否已填写
-        if (!username.trim() || !password.trim()) {
-            message.error('请先填写用户名和密码才能获取Key');
-            return;
-        }
-
-        // 检查是否在倒计时中
-        if (getKeyCountdown > 0) {
-            message.warning(`请等待 ${getKeyCountdown} 秒后重试`);
-            return;
-        }
-
-        setIsGettingKey(true);
-
-        try {
-            // // 获取Key
-            // const testResult = await pikpakApi.testConnection({
-            //     username: username.trim(),
-            //     password: password.trim(),
-            //     key: ''
-            // });
-
-            // if (testResult.success && testResult.new_key) {
-            //     // 获取成功，自动填入Key
-            //     setKey(testResult.new_key);
-            //     message.success('Key获取成功！已自动填入');
-
-            //     // 如果开启了记住配置，立即保存key到localStorage
-            //     if (rememberCredentials) {
-            //         localStorage.setItem('pikpak_key', testResult.new_key);
-            //     }
-
-            //     // 开始60秒倒计时
-            //     setGetKeyCountdown(60);
-            // } else {
-            //     // 获取失败
-            //     message.error(testResult.message || '获取Key失败，请检查用户名密码');
-            //     // 失败也开始倒计时，防止频繁请求
-            //     setGetKeyCountdown(60);
-            // }
-        } catch (error) {
-            const errorMsg = error instanceof Error ? error.message : '获取Key失败';
-            message.error(errorMsg);
-            setGetKeyCountdown(60);
-        } finally {
-            setIsGettingKey(false);
-        }
-    };
-
     // 清理数据并关闭
     const handleClose = () => {
         setIsSaving(false);
-        setIsGettingKey(false);
-        setGetKeyCountdown(0);
         onClose();
     };
 
@@ -234,26 +152,7 @@ export const PikPakConfigModal: React.FC<PikPakConfigModalProps> = ({
                             />
                         </div>
 
-                        {/* Key输入框 */}
-                        <Input
-                            label="Key"
-                            type="text"
-                            placeholder="请输入PikPak API Key"
-                            value={key}
-                            onChange={(e) => setKey(e.target.value)}
-                            rightButton={{
-                                text: '获取key',
-                                countdownText: (count) => `${count}s后重试`,
-                                onClick: handleGetKey,
-                                disabled: !username.trim() || !password.trim(),
-                                countdown: getKeyCountdown,
-                                title: getKeyCountdown > 0
-                                    ? `请等待 ${getKeyCountdown} 秒后重试`
-                                    : '获取Key'
-                            }}
-                        />
-
-                        {/* 记住选项 */}
+                        {/* 保存选项 */}
                         <div className="flex items-center space-x-2">
                             <input
                                 type="checkbox"
@@ -263,7 +162,7 @@ export const PikPakConfigModal: React.FC<PikPakConfigModalProps> = ({
                                 className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
                             />
                             <label htmlFor="rememberCredentials" className="text-sm text-gray-700">
-                                记住
+                                保存
                             </label>
                         </div>
                     </div>

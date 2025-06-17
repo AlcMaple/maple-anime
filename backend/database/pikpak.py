@@ -38,15 +38,22 @@ class PikPakDatabase:
     def _upgrade_data_structure(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """调整数据结构"""
         upgraded_animes = {}
-        for anime_id, anime_info in data.get("animes", {}).items():
-            # 保持现有数据，添加新字段
-            upgraded_animes[anime_id] = {
-                "title": anime_info.get("title", ""),
-                "status": anime_info.get("status", "连载"),
-                "updated_at": anime_info.get("updated_at", datetime.now().isoformat()),
-                # 新增字段
-                "summary": anime_info.get("summary", ""),
+
+        for folder_id, anime_info in data.get("animes", {}).items():
+            # 数据结构
+            upgraded_animes[folder_id] = {
+                "folder_name": anime_info.get("title", ""),
+                "files": [
+                    # 文件列表结构示例
+                    # {
+                    #     "file_name": "第01话.mp4",
+                    #     "file_id": "file123",
+                    #     "play_url": "https://example.com/play/file123"
+                    # }
+                ],
                 "cover_url": anime_info.get("cover_url", ""),
+                "status": anime_info.get("status", "连载"),
+                "summary": anime_info.get("summary", ""),
             }
 
         return {

@@ -17,6 +17,7 @@ class PikPakApiTester:
         self.service = PikPakService()
         self.username = "hgg13536593830@gmail.com"
         self.password = "123456789ABc"
+        self.token = "eyJhbGciOiJSUzI1NiIsImtpZCI6ImFlY2ZiM2NkLTkxYzktNDExZC04MTViLTdkNWY0ODczZWZlMSJ9.eyJpc3MiOiJodHRwczovL3VzZXIubXlwaWtwYWsuY29tIiwic3ViIjoiYUM3WW41YzhFSDY1ZVdNbCIsImF1ZCI6IllOeFQ5dzdHTWRXdkVPS2EiLCJleHAiOjE3NTAxNTc2OTAsImlhdCI6MTc1MDE1MDQ5MCwiYXRfaGFzaCI6InIudWg3ME1FdFlFZkMyV1k3S1hGOGJlQSIsInNjb3BlIjoidXNlciBwYW4gc3luYyBvZmZsaW5lIiwicHJvamVjdF9pZCI6IjJ3a3M1NmMzMWRjODBzeG01cDkiLCJtZXRhIjp7ImEiOiJaM0RKRzIwb1A4TjVzZ0NGOG1CeGR3M3JRaW9sbklFbXYrYjVnaHlQczZzPSJ9fQ.aM0vNWrkHXxiu4QfmfE5Ogi6aRVmWHbC93XYQ6VSfbxY-tnEcu16bv3DX3H9WVhyPhPgIOTEfp2WtHM7sDyKfzodBZ3PTFMnjVBFb7B5xulofkyEXgGwPAvfpvXqrGOyZ_mwZmhqkvQhH0gLw6BP3HgGJULw3RP87Vxp1kqzDf6PezkHa1atKWaLR81YgttL08d7JsX167laWHManuH_9IQNHy9BD99V3dx9nNK1hbHivx-h2yQGo4wrhVf8rk9eYWpCa6S-DdTrweOxE6lEBgJz3rLiEhX43u1da-j96d3TjOPPj0ddCpTZ8Qm9EKJuTQ4K_ajruWSX5Sy99PVGhQ"
 
     def get_credentials(self):
         """获取 pikpak 配置"""
@@ -35,32 +36,47 @@ class PikPakApiTester:
         print("\n🔍 测试1: 获取PikPak客户端")
         try:
             client = await self.service.get_client(self.username, self.password)
-            print(f"🔑 客户端: {client}")
 
-            # 查看客户端属性
-            print(f"🔍 客户端属性:")
-            if hasattr(client, "access_token"):
-                print(f"  access_token: {client.access_token}")
-            if hasattr(client, "token"):
-                print(f"  token: {client.token}")
-            if hasattr(client, "session_token"):
-                print(f"  session_token: {client.session_token}")
+            # # 查看客户端属性
+            # print(f"🔍 客户端属性:")
+            # if hasattr(client, "access_token"):
+            #     print(f"  access_token: {client.access_token}")
+            # if hasattr(client, "token"):
+            #     print(f"  token: {client.token}")
+            # if hasattr(client, "session_token"):
+            #     print(f"  session_token: {client.session_token}")
 
-            # 查看所有非私有属性
-            print(
-                f"🔍 所有属性: {[attr for attr in dir(client) if not attr.startswith('_')]}"
-            )
+            # # 查看所有非私有属性
+            # print(
+            #     f"🔍 所有属性: {[attr for attr in dir(client) if not attr.startswith('_')]}"
+            # )
 
-            print("✅ 客户端获取成功")
+            print("✅ 客户端创建成功")
             return client
         except Exception as e:
-            print(f"❌ 客户端获取失败: {e}")
+            print(f"❌ 客户端创建失败: {e}")
+            return None
+
+    async def test_get_client_token(self):
+        """测试获取客户端 token"""
+        print("\n🔍 测试2: 获取客户端 token")
+        try:
+            result = await self.service.get_client_token(
+                self.username, self.password, self.token
+            )
+            if result:
+                print("✅ 客户端 token 验证成功")
+            else:
+                print("❌ 客户端 token 验证失败")
+            return result
+        except Exception as e:
+            print(f"❌ 客户端 token 验证失败: {e}")
             return None
 
     async def test_create_folder(self, client):
         """测试创建文件夹"""
         print("\n🔍 测试2: 创建动漫文件夹")
-        test_folder_name = "药屋少女的呢喃 第二季"
+        test_folder_name = "test"
 
         folder_id = await self.service.create_anime_folder(client, test_folder_name)
 
@@ -299,14 +315,20 @@ class PikPakApiTester:
         # if not self.get_credentials():
         #     return
 
+        # # 创建客户端（已完成测试）
+        # client = await self.test_get_client()
+        # if not client:
+        #     print("❌ 创建客户端测试失败，停止后续测试")
+        #     return
+
         # 获取客户端（已完成测试）
-        client = await self.test_get_client()
+        client = await self.test_get_client_token()
         if not client:
-            print("❌ 客户端测试失败，停止后续测试")
+            print("❌ 获取客户端测试失败，停止后续测试")
             return
 
-        # # 创建文件夹（已完成测试）
-        # folder_id = await self.test_create_folder(client)
+        # 创建文件夹（已完成测试）
+        folder_id = await self.test_create_folder(client)
 
         # # 下载到文件夹（如果文件夹创建成功）（已完成测试）
         # print("文件夹 id：", folder_id)

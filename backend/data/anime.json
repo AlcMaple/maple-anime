@@ -1,53 +1,62 @@
 {
   "animes": {
-    "VOSDFh8CJSipK9qBIM4ozjvIo2": {
-      "title": "寒蝉鸣泣之时第二季",
-      "status": "连载",
-      "updated_at": "2025-06-10T15:40:03.581995",
-      "summary": "",
-      "cover_url": ""
-    },
-    "VOS8KQrWJSipdby-GcwD2Wi9o2": {
-      "title": "寒蝉鸣泣之时第一季",
-      "status": "连载",
-      "updated_at": "2025-06-10T15:40:03.583093",
-      "summary": "",
-      "cover_url": ""
-    },
-    "VOS8-AMdJSipdby-GcwCy3wYo2": {
-      "title": "摇滚乐是淑女的嗜好",
-      "status": "连载",
-      "updated_at": "2025-06-10T15:40:03.583912",
-      "summary": "",
-      "cover_url": ""
-    },
-    "VOS32K1NA63NHOXPfFuohstgo2": {
-      "title": "小市民系列第二季",
-      "status": "连载",
-      "updated_at": "2025-06-10T15:40:03.584399",
-      "summary": "",
-      "cover_url": ""
-    },
-    "VOS32Jp0yJDkhK9RusLuTAKro2": {
-      "title": "小市民系列第一季",
-      "status": "连载",
-      "updated_at": "2025-06-10T15:40:03.584866",
-      "summary": "",
-      "cover_url": ""
-    },
-    "VOS31SrtJSipYra7_hMRgOcCo2": {
-      "title": "忍者与杀手二人组的日常生活",
-      "status": "连载",
-      "updated_at": "2025-06-10T15:40:03.585341",
-      "summary": "",
-      "cover_url": ""
-    },
-    "VORypSMOJSipQL1HimaUj2pPo2": {
-      "title": "药屋少女的呢喃",
-      "status": "完结",
-      "updated_at": "2025-06-13T14:24:22.709316",
-      "summary": "大陆的中央有个大国，在那个国家的后宫之中有一位少女，其名为“猫猫”。她以前在花街做药师，现在在后宫做事。某天，她得知皇子们皆早夭，而现在的两个皇子都因为生病而逐渐衰弱。于是，在好奇心的驱使下，她开始调查事情的真相，就好像在说世上不可能存在诅咒。壬氏是一位外表俊美的宦官，他让猫猫当皇帝宠妃的试毒人。猫猫对人没有兴趣，却异常钟情毒和药，就是这样一位在花街长大的药师，被卷入了宫中的传闻事件。美丽的玫瑰长有刺，女人的庭院里到处都是毒，流言和阴谋更是不缺。虽然不断地被壬氏委托麻烦事，但猫猫还是照常处理。罕见的嗜毒姑娘今天也在后宫里奔走。",
-      "cover_url": "https://lain.bgm.tv/pic/cover/l/fe/31/420628_2ZEz0.jpg"
+    "VOQqzYAEiKo3JmMhSvj6UYvto2": {
+      "VOSDFh8CJSipK9qBIM4ozjvIo2": {
+        "title": "寒蝉鸣泣之时第二季",
+        "status": "连载",
+        "files": [],
+        "updated_at": "2025-06-10T15:40:03.581995",
+        "summary": "",
+        "cover_url": ""
+      },
+      "VOS8KQrWJSipdby-GcwD2Wi9o2": {
+        "title": "寒蝉鸣泣之时第一季",
+        "status": "连载",
+        "files": [],
+        "updated_at": "2025-06-10T15:40:03.583093",
+        "summary": "",
+        "cover_url": ""
+      },
+      "VOS8-AMdJSipdby-GcwCy3wYo2": {
+        "title": "摇滚乐是淑女的嗜好",
+        "status": "连载",
+        "files": [],
+        "updated_at": "2025-06-10T15:40:03.583912",
+        "summary": "",
+        "cover_url": ""
+      },
+      "VOS32K1NA63NHOXPfFuohstgo2": {
+        "title": "小市民系列第二季",
+        "status": "连载",
+        "files": [],
+        "updated_at": "2025-06-10T15:40:03.584399",
+        "summary": "",
+        "cover_url": ""
+      },
+      "VOS32Jp0yJDkhK9RusLuTAKro2": {
+        "title": "小市民系列第一季",
+        "status": "连载",
+        "files": [],
+        "updated_at": "2025-06-10T15:40:03.584866",
+        "summary": "",
+        "cover_url": ""
+      },
+      "VOS31SrtJSipYra7_hMRgOcCo2": {
+        "title": "忍者与杀手二人组的日常生活",
+        "status": "连载",
+        "files": [],
+        "updated_at": "2025-06-10T15:40:03.585341",
+        "summary": "",
+        "cover_url": ""
+      },
+      "VORypSMOJSipQL1HimaUj2pPo2": {
+        "title": "药屋少女的呢喃",
+        "status": "完结",
+        "files": [],
+        "updated_at": "2025-06-13T14:24:22.709316",
+        "summary": "大陆的中央有个大国，在那个国家的后宫之中有一位少女，其名为“猫猫”。她以前在花街做药师，现在在后宫做事。某天，她得知皇子们皆早夭，而现在的两个皇子都因为生病而逐渐衰弱。于是，在好奇心的驱使下，她开始调查事情的真相，就好像在说世上不可能存在诅咒。壬氏是一位外表俊美的宦官，他让猫猫当皇帝宠妃的试毒人。猫猫对人没有兴趣，却异常钟情毒和药，就是这样一位在花街长大的药师，被卷入了宫中的传闻事件。美丽的玫瑰长有刺，女人的庭院里到处都是毒，流言和阴谋更是不缺。虽然不断地被壬氏委托麻烦事，但猫猫还是照常处理。罕见的嗜毒姑娘今天也在后宫里奔走。",
+        "cover_url": "https://lain.bgm.tv/pic/cover/l/fe/31/420628_2ZEz0.jpg"
+      }
     }
   },
   "metadata": {

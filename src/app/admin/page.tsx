@@ -166,12 +166,8 @@ export default function AdminMainPage() {
     setIsCalendarModalOpen(true);
   };
 
-  const handleImport = () => {
-    console.log('导入');
-  };
-
-  const handleExport = () => {
-    console.log('导出');
+  const synData = () => {
+    console.log('同步数据');
   };
 
   const handleSearch = () => {
@@ -357,15 +353,9 @@ export default function AdminMainPage() {
                 </Button>
                 <Button
                   variant="success"
-                  onClick={handleImport}
+                  onClick={synData}
                 >
-                  导入
-                </Button>
-                <Button
-                  variant="success"
-                  onClick={handleExport}
-                >
-                  导出
+                  同步
                 </Button>
               </div>
 
