@@ -6,15 +6,19 @@ PikPak API 测试
 import asyncio
 import sys
 import os
+from datetime import datetime
+import json
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from apis.pikpak_api import PikPakService
+from database.pikpak import PikPakDatabase
 
 
 class PikPakApiTester:
     def __init__(self):
         self.service = PikPakService()
+        self.db = PikPakDatabase()
         self.username = "hgg13536593830@gmail.com"
         self.password = "123456789ABc"
         self.token = "eyJhbGciOiJSUzI1NiIsImtpZCI6ImFlY2ZiM2NkLTkxYzktNDExZC04MTViLTdkNWY0ODczZWZlMSJ9.eyJpc3MiOiJodHRwczovL3VzZXIubXlwaWtwYWsuY29tIiwic3ViIjoiYUM3WW41YzhFSDY1ZVdNbCIsImF1ZCI6IllOeFQ5dzdHTWRXdkVPS2EiLCJleHAiOjE3NTAxNTc2OTAsImlhdCI6MTc1MDE1MDQ5MCwiYXRfaGFzaCI6InIudWg3ME1FdFlFZkMyV1k3S1hGOGJlQSIsInNjb3BlIjoidXNlciBwYW4gc3luYyBvZmZsaW5lIiwicHJvamVjdF9pZCI6IjJ3a3M1NmMzMWRjODBzeG01cDkiLCJtZXRhIjp7ImEiOiJaM0RKRzIwb1A4TjVzZ0NGOG1CeGR3M3JRaW9sbklFbXYrYjVnaHlQczZzPSJ9fQ.aM0vNWrkHXxiu4QfmfE5Ogi6aRVmWHbC93XYQ6VSfbxY-tnEcu16bv3DX3H9WVhyPhPgIOTEfp2WtHM7sDyKfzodBZ3PTFMnjVBFb7B5xulofkyEXgGwPAvfpvXqrGOyZ_mwZmhqkvQhH0gLw6BP3HgGJULw3RP87Vxp1kqzDf6PezkHa1atKWaLR81YgttL08d7JsX167laWHManuH_9IQNHy9BD99V3dx9nNK1hbHivx-h2yQGo4wrhVf8rk9eYWpCa6S-DdTrweOxE6lEBgJz3rLiEhX43u1da-j96d3TjOPPj0ddCpTZ8Qm9EKJuTQ4K_ajruWSX5Sy99PVGhQ"
@@ -306,6 +310,123 @@ class PikPakApiTester:
             print(f"❌ 批量删除文件异常: {e}")
             return False
 
+    async def test_syn_data(self, client):
+        """测试同步数据"""
+        # 加载数据
+        data = self.db.load_data()
+        if "animes" not in data:
+            print("❌ 数据格式错误，缺少animes字段")
+            return
+
+        # 获取mypack_id
+        mypack_id = list(data["animes"].keys())[0]
+        anime_folders = data["animes"][mypack_id]
+
+        # api 调用计数
+        api_call_count = 0
+        api_batch_size = 3
+        api_delay = 8
+
+        print(f"📊 开始同步数据")
+
+        # 获取云端 mypack的所有文件夹 id
+        cloud_folders = await self.service.get_mypack_folder_list(client)
+        # 建立云端文件夹映射 {id: id_value}
+        cloud_folder_map = {folder["id"]: folder for folder in cloud_folders}
+        cloud_folder_ids = set(cloud_folder_map.keys())
+
+        # 获取本地已有的文件列表，建立ID到播放链接的映射
+        local_folder_ids = set(anime_folders.keys())
+
+        # 计算差异
+        new_folder_ids = cloud_folder_ids - local_folder_ids  # 云端有，本地没有
+        del_folder_ids = local_folder_ids - cloud_folder_ids  # 云端没有，本地有
+
+        # 删除本地多余的
+        for folder_id in del_folder_ids:
+            folder_name = anime_folders[folder_id].get("title", "未知")
+            print(f"  ➖ 删除本地多余的 {folder_name} 文件夹")
+            del anime_folders[folder_id]
+
+        # 处理新增的文件夹
+        for folder_id in new_folder_ids:
+            folder_name = cloud_folder_map[folder_id]["name"]
+            print(f"  ➕ 新增 {folder_name} 文件夹")
+            anime_folders[folder_id] = {
+                "title": folder_name,
+                "status": "连载",
+                "files": [],
+                "updated_at": datetime.now().isoformat(),
+                "summary": "",
+                "cover_url": "",
+            }
+
+        # 处理相同的文件夹
+        for folder_id, anime_info in anime_folders.items():
+
+            # 获取本地已有的文件列表，建立ID到播放链接的映射
+            existing_files = anime_info.get("files", [])
+            existing_file_map = {}
+            for existing_file in existing_files:
+                file_id = existing_file.get("id")
+                play_url = existing_file.get("play_url")
+                if file_id and play_url:
+                    existing_file_map[file_id] = existing_file
+
+            # 获取文件夹内的文件
+            folder_result = await self.service.get_folder_files(client, folder_id)
+
+            if not folder_result["success"]:
+                print(f"  ❌ 获取文件夹内容失败: {folder_result['message']}")
+                continue
+
+            files = folder_result["files"]
+
+            if not files:
+                print(f"  ⚠️  文件夹为空")
+                continue
+
+            print(f"  📝 找到 {len(files)} 个文件")
+            result = []
+
+            # 为每个文件夹获取播放连接
+            for file in files:
+                if file["id"] in existing_file_map:
+                    print(f"      ♻️  使用本地已有播放链接")
+                    original_file = existing_file_map[file_id]
+                    file_data = {
+                        "id": file["id"],
+                        "name": file["name"],
+                        "play_url": original_file["play_url"],
+                    }
+                else:
+                    # 获取播放连接
+                    play_url = await self.service.get_video_play_url(file["id"], client)
+                    print(f"      📡 成功获取播放链接: {play_url}")
+                    api_call_count += 1
+
+                    # 检查是否需要延时
+                    if api_call_count % api_batch_size == 0:
+                        print(
+                            f"      ⏱️  已调用 {api_call_count} 次API，延时 {api_delay} 秒..."
+                        )
+                        await asyncio.sleep(api_delay)
+
+                    file_data = {
+                        "id": file["id"],
+                        "name": file["name"],
+                        "play_url": play_url,
+                    }
+                result.append(file_data)
+
+            # 更新数据
+            anime_info["files"] = result
+
+        # 保存数据
+        data["metadata"]["last_updated"] = datetime.now().isoformat()
+        self.db.save_data(data)
+        print("✅ 同步成功")
+
     async def run_all_tests(self):
         """运行测试"""
         print("🚀 开始 PikPak API 测试")
@@ -315,20 +436,20 @@ class PikPakApiTester:
         # if not self.get_credentials():
         #     return
 
-        # # 创建客户端（已完成测试）
-        # client = await self.test_get_client()
-        # if not client:
-        #     print("❌ 创建客户端测试失败，停止后续测试")
-        #     return
-
-        # 获取客户端（已完成测试）
-        client = await self.test_get_client_token()
+        # 创建客户端（已完成测试）
+        client = await self.test_get_client()
         if not client:
-            print("❌ 获取客户端测试失败，停止后续测试")
+            print("❌ 创建客户端测试失败，停止后续测试")
             return
 
-        # 创建文件夹（已完成测试）
-        folder_id = await self.test_create_folder(client)
+        # # 获取客户端（已完成测试）
+        # client = await self.test_get_client_token()
+        # if not client:
+        #     print("❌ 获取客户端测试失败，停止后续测试")
+        #     return
+
+        # # 创建文件夹（已完成测试）
+        # folder_id = await self.test_create_folder(client)
 
         # # 下载到文件夹（如果文件夹创建成功）（已完成测试）
         # print("文件夹 id：", folder_id)
@@ -363,6 +484,9 @@ class PikPakApiTester:
 
         # # 测试批量删除文件（已完成测试）
         # await self.test_batch_delete_files(client, "VORyss1UmO8p4Iaf_-KanWjgo2")
+
+        # 测试同步数据（已完成测试）
+        await self.test_syn_data(client)
 
         print("\n" + "=" * 60)
         print("✨ 所有测试完成")

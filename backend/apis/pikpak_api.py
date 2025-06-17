@@ -897,3 +897,47 @@ class PikPakService:
                 "deleted_count": 0,
                 "failed_count": len(file_ids),
             }
+
+    async def get_video_play_url(
+        self, file_id: str, client: PikPakApi
+    ) -> Optional[str]:
+        """获取视频播放连接"""
+        try:
+            # 调用PikPak获取视频播放连接API
+            result = await client.get_download_url(file_id)
+            if result and "web_content_link" in result:
+                return result["web_content_link"]
+            else:
+                return None
+        except Exception as e:
+            print(f"❌ 获取视频播放连接异常: {e}")
+            return None
+
+    async def get_mypack_folder_id(self, client: PikPakApi) -> Optional[str]:
+        """
+        获取 My Pack 文件夹 ID
+
+        Args:
+            client: PikPak客户端
+
+        Returns:
+            My Pack 文件夹ID，如果找不到返回None
+        """
+        try:
+            # 获取根目录文件夹列表
+            folders = await self.get_folder_list(client)
+
+            mypack_names = ["My Pack", "MyPack", "我的收藏", "mypack"]
+
+            for folder in folders:
+                folder_name = folder.get("name", "")
+                if folder_name in mypack_names:
+                    print(f"✅ 找到 My Pack 文件夹: {folder_name} (ID: {folder['id']})")
+                    return folder["id"]
+
+            print("❌ 未找到 My Pack 文件夹")
+            return None
+
+        except Exception as e:
+            print(f"❌ 获取 My Pack 文件夹ID异常: {e}")
+            return None

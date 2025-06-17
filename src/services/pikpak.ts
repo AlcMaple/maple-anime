@@ -10,6 +10,7 @@ import {
     EpisodeListResponse,
     FileDeleteResponse,
     FileRenameResponse,
+    ApiResponse
 } from './types';
 
 export class PikPakService {
@@ -37,6 +38,11 @@ export class PikPakService {
     static async renameEpisode(request: FileRenameRequest): Promise<FileRenameResponse> {
         return apiClient.post<FileRenameResponse>('/api/episodes/rename', request);
     }
+
+    // 同步数据
+    static async syncData(request: PikPakCredentials): Promise<ApiResponse> {
+        return apiClient.post<ApiResponse>('/api/sync', request);
+    }
 }
 
 // 导出实例
@@ -46,4 +52,5 @@ export const pikpakApi = {
     getEpisodeList: PikPakService.getEpisodeList,
     deleteEpisodes: PikPakService.deleteEpisodes,
     renameEpisode: PikPakService.renameEpisode,
+    syncData: PikPakService.syncData
 };

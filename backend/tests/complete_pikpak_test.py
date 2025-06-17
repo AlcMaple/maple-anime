@@ -264,27 +264,27 @@ class CompleteAnimeAutoPipeline:
         try:
             print(f"🎬 获取视频播放链接: {file_name}")
 
-            # 方法1：尝试获取流媒体播放链接
-            print("🔍 尝试获取流媒体播放链接...")
-            try:
-                # 获取文件详情
-                file_info = await self.pikpak_client.get_file_info(file_id)
-                print(f"📋 文件信息: {file_info}")
+            # # 方法1：尝试获取流媒体播放链接
+            # print("🔍 尝试获取流媒体播放链接...")
+            # try:
+            #     # 获取文件详情
+            #     file_info = await self.pikpak_client.get_file_info(file_id)
+            #     print(f"📋 文件信息: {file_info}")
 
-                # 检查是否有媒体链接
-                if file_info and "medias" in file_info:
-                    medias = file_info["medias"]
-                    print(f"🎥 找到 {len(medias)} 个媒体链接")
+            #     # 检查是否有媒体链接
+            #     if file_info and "medias" in file_info:
+            #         medias = file_info["medias"]
+            #         print(f"🎥 找到 {len(medias)} 个媒体链接")
 
-                    for i, media in enumerate(medias):
-                        print(f"  媒体 {i+1}: {media}")
-                        if "link" in media and media.get("is_visible", True):
-                            streaming_url = media["link"]["url"]
-                            print(f"✅ 找到流媒体链接: {streaming_url}")
-                            return streaming_url
+            #         for i, media in enumerate(medias):
+            #             print(f"  媒体 {i+1}: {media}")
+            #             if "link" in media and media.get("is_visible", True):
+            #                 streaming_url = media["link"]["url"]
+            #                 print(f"✅ 找到流媒体链接: {streaming_url}")
+            #                 return streaming_url
 
-            except Exception as e:
-                print(f"⚠️ 获取流媒体链接失败: {e}")
+            # except Exception as e:
+            #     print(f"⚠️ 获取流媒体链接失败: {e}")
 
             # 方法2：获取下载链接（备用）
             print("🔍 尝试获取下载链接...")

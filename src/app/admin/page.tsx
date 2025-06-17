@@ -8,6 +8,7 @@ import { Input } from '@/ui/Input';
 import { Table } from '@/ui/Table';
 import { Search } from '@/ui/Search';
 import { message } from '@/ui/Message';
+import { Loading } from '@/ui/Loading';
 
 import { AddAnimeModal } from '@/components/admin/AddAnimeModal';
 import { PikPakConfigModal } from '@/components/admin/PikPakConfigModal';
@@ -166,8 +167,37 @@ export default function AdminMainPage() {
     setIsCalendarModalOpen(true);
   };
 
+  const [refreshIsLoading, setRefreshIsLoading] = useState(false);
+
+  // 同步数据
+  const refreshData = async () => {
+    const pikpakUsername = localStorage.getItem('pikpak_username');
+    const pikpakPassword = localStorage.getItem('pikpak_password');
+
+    if (!pikpakUsername || !pikpakPassword) {
+      message.error('请先配置PikPak账号信息');
+      return;
+    }
+
+    setRefreshIsLoading(true);
+
+    try {
+      const response = await pikpakApi.syncData({ username: pikpakUsername, password: pikpakPassword });
+
+      if (response.success) {
+        message.success('同步数据成功');
+      } else {
+        message.error('同步数据失败');
+      }
+    } catch (error) {
+      console.error('同步数据失败:', error);
+    } finally {
+      setRefreshIsLoading(false);
+    }
+  }
+
   const synData = () => {
-    console.log('同步数据');
+    refreshData();
   };
 
   const handleSearch = () => {
@@ -382,6 +412,20 @@ export default function AdminMainPage() {
             />
           </div>
         </div>
+
+        {/* 同步数据遮罩 */}
+        {refreshIsLoading && (
+          <div className="absolute inset-0 bg-white/90 flex items-center justify-center z-10">
+            <div className="text-center">
+              <Loading
+                variant="spinner"
+                size="large"
+                color="primary"
+                text="正在同步数据，此过程可能需要几分钟时间，请耐心等待..."
+              />
+            </div>
+          </div>
+        )}
 
         {/* 下载按钮 */}
         {/* {hasDownloading && (

@@ -182,31 +182,13 @@ async def update_calendar():
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@app.post("/api/anime/list")
-async def get_anime_list(request: PikPakCredentialsRequest):
+@app.get("/api/anime/list")
+async def get_anime_list():
     """
     获取动漫列表
     """
     try:
-        # 验证请求数据
-        if not request.username or not request.password:
-            raise HTTPException(status_code=400, detail="请配置PikPak账号密码")
-
-        # 获取 PikPak 文件夹列表
-        pikpak_service = PikPakService()
-        client = await pikpak_service.get_client(request.username, request.password)
-        pikpak_folders = await pikpak_service.get_mypack_folder_list(client)
-
-        # 同步数据
-        anime_db = PikPakDatabase()
-        anime_list = anime_db.sync_with_pikpak_folders(pikpak_folders)
-
-        return {
-            "success": True,
-            "data": anime_list,
-            "total": len(anime_list),
-            "message": f"获取到 {len(anime_list)} 个动漫",
-        }
+        pass
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"获取动漫列表失败: {str(e)}")
@@ -410,12 +392,19 @@ async def rename_episode(request: FileRenameRequest):
         raise HTTPException(status_code=500, detail=f"重命名文件失败: {str(e)}")
 
 
-@app.get("/api/synData")
-async def syn_data():
+@app.post("/api/sync")
+async def syn_data(request: PikPakCredentialsRequest):
     """
     同步数据
     """
-    pass
+    try:
+        pikpak_service = PikPakService()
+        client = await pikpak_service.get_client(request.username, request.password)
+        anime_db = PikPakDatabase()
+        await anime_db.sync_data(client)
+        return {"success": True, "message": "同步数据成功"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"同步数据失败: {str(e)}")
 
 
 def main():
