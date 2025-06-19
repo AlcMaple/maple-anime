@@ -996,8 +996,9 @@ class PikPakService:
             print(f"📊 开始同步数据")
 
             # 获取云端 mypack的所有文件夹 id
+            # { id:id_value,name:name_value }
             cloud_folders = await self.get_mypack_folder_list(client)
-            # 建立云端文件夹映射 {id: id_value}
+            # 建立云端文件夹映射
             cloud_folder_map = {folder["id"]: folder for folder in cloud_folders}
             cloud_folder_ids = set(cloud_folder_map.keys())
 

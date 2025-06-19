@@ -33,65 +33,65 @@ export const EpisodeManagementModal: React.FC<EpisodeManagementModalProps> = ({
     animeId,
     animeTitle
 }) => {
-    // const [episodes, setEpisodes] = useState<EpisodeFile[]>([]);
+    const [episodes, setEpisodes] = useState<EpisodeFile[]>([]);
     // 静态数据
-    const [episodes, setEpisodes] = useState<EpisodeFile[]>([
-        {
-            id: '1',
-            name: '第1集.mkv',
-            size: 1024 * 1024 * 10,
-            kind: 'video',
-            created_time: '2021-10-10T10:10:10Z',
-            mime_type: 'video/x-matroska',
-            thumbnail: 'https://www.bilibili.com/video/BV1inTSzqEYJ/?spm_id_from=333.1007.tianma.1-1-1.click',
-            hash: '1234567890',
-            is_video: true
-        },
-        {
-            id: '2',
-            name: '第2集.mkv',
-            size: 1024 * 1024 * 10,
-            kind: 'video',
-            created_time: '2021-10-10T10:10:10Z',
-            mime_type: 'video/x-matroska',
-            thumbnail: 'https://via.placeholder.com/150',
-            hash: '1234567890',
-            is_video: true
-        },
-        {
-            id: '3',
-            name: '第3集.mkv',
-            size: 1024 * 1024 * 10,
-            kind: 'video',
-            created_time: '2021-10-10T10:10:10Z',
-            mime_type: 'video/x-matroska',
-            thumbnail: 'https://via.placeholder.com/150',
-            hash: '1234567890',
-            is_video: true
-        },
-        {
-            id: '4',
-            name: '第4集.mkv',
-            size: 1024 * 1024 * 10,
-            kind: 'video',
-            created_time: '2021-10-10T10:10:10Z',
-            mime_type: 'video/x-matroska',
-            thumbnail: 'https://via.placeholder.com/150',
-            hash: '1234567890',
-            is_video: true
-        },
-        {
-            id: '5',
-            name: '第5集.mkv',
-            size: 1024 * 1024 * 10,
-            kind: 'video',
-            created_time: '2021-10-10T10:10:10Z',
-            mime_type: 'video/x-matroska',
-            thumbnail: 'https://via.placeholder.com/150',
-            hash: '1234567890',
-            is_video: true
-        }
-    ]);
+    // const [episodes, setEpisodes] = useState<EpisodeFile[]>([
+    //     {
+    //         id: '1',
+    //         name: '第1集.mkv',
+    //         size: 1024 * 1024 * 10,
+    //         kind: 'video',
+    //         created_time: '2021-10-10T10:10:10Z',
+    //         mime_type: 'video/x-matroska',
+    //         play_url: 'https://www.bilibili.com/video/BV1inTSzqEYJ/?spm_id_from=333.1007.tianma.1-1-1.click',
+    //         hash: '1234567890',
+    //         is_video: true
+    //     },
+    //     {
+    //         id: '2',
+    //         name: '第2集.mkv',
+    //         size: 1024 * 1024 * 10,
+    //         kind: 'video',
+    //         created_time: '2021-10-10T10:10:10Z',
+    //         mime_type: 'video/x-matroska',
+    //         play_url: 'https://via.placeholder.com/150',
+    //         hash: '1234567890',
+    //         is_video: true
+    //     },
+    //     {
+    //         id: '3',
+    //         name: '第3集.mkv',
+    //         size: 1024 * 1024 * 10,
+    //         kind: 'video',
+    //         created_time: '2021-10-10T10:10:10Z',
+    //         mime_type: 'video/x-matroska',
+    //         play_url: 'https://via.placeholder.com/150',
+    //         hash: '1234567890',
+    //         is_video: true
+    //     },
+    //     {
+    //         id: '4',
+    //         name: '第4集.mkv',
+    //         size: 1024 * 1024 * 10,
+    //         kind: 'video',
+    //         created_time: '2021-10-10T10:10:10Z',
+    //         mime_type: 'video/x-matroska',
+    //         play_url: 'https://via.placeholder.com/150',
+    //         hash: '1234567890',
+    //         is_video: true
+    //     },
+    //     {
+    //         id: '5',
+    //         name: '第5集.mkv',
+    //         size: 1024 * 1024 * 10,
+    //         kind: 'video',
+    //         created_time: '2021-10-10T10:10:10Z',
+    //         mime_type: 'video/x-matroska',
+    //         play_url: 'https://via.placeholder.com/150',
+    //         hash: '1234567890',
+    //         is_video: true
+    //     }
+    // ]);
     const [loading, setLoading] = useState(false);
     const [selectedIds, setSelectedIds] = useState<string[]>([]);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -129,25 +129,25 @@ export const EpisodeManagementModal: React.FC<EpisodeManagementModalProps> = ({
 
     // 加载集数列表
     const loadEpisodes = async (forceRefresh: boolean = false) => {
-        if (!isOpen || !animeId) return;
+        // if (!isOpen || !animeId) return;
 
-        // 检查缓存
-        if (!forceRefresh) {
-            const cached = getFromCache(animeId);
-            if (cached) {
-                setEpisodes(cached.data);
-                setCacheInfo('数据来自缓存');
-                message.success(`从缓存加载 ${cached.data.length} 个文件`);
-                return;
-            }
-        }
+        // // 检查缓存
+        // if (!forceRefresh) {
+        //     const cached = getFromCache(animeId);
+        //     if (cached) {
+        //         setEpisodes(cached.data);
+        //         setCacheInfo('数据来自缓存');
+        //         message.success(`从缓存加载 ${cached.data.length} 个文件`);
+        //         return;
+        //     }
+        // }
 
-        // 检查请求频率
-        if (!canMakeRequest()) {
-            const remainingTime = Math.ceil((REQUEST_DEBOUNCE_TIME - (Date.now() - lastRequestTime)) / 1000);
-            message.warning(`请求过于频繁，请等待 ${remainingTime} 秒后再试`);
-            return;
-        }
+        // // 检查请求频率
+        // if (!canMakeRequest()) {
+        //     const remainingTime = Math.ceil((REQUEST_DEBOUNCE_TIME - (Date.now() - lastRequestTime)) / 1000);
+        //     message.warning(`请求过于频繁，请等待 ${remainingTime} 秒后再试`);
+        //     return;
+        // }
 
         const pikpakUsername = localStorage.getItem('pikpak_username');
         const pikpakPassword = localStorage.getItem('pikpak_password');
@@ -157,21 +157,19 @@ export const EpisodeManagementModal: React.FC<EpisodeManagementModalProps> = ({
             return;
         }
 
-        setLoading(true);
-        setLastRequestTime(Date.now());
-        setCacheInfo('正在从服务器获取数据...');
+        // setLoading(true);
+        // setLastRequestTime(Date.now());
+        // setCacheInfo('正在从服务器获取数据...');
 
         try {
             const response = await pikpakApi.getEpisodeList({
-                username: pikpakUsername,
-                password: pikpakPassword,
                 folder_id: animeId
             });
 
             if (response.success) {
                 setEpisodes(response.data);
-                setCache(animeId, response.data); // 设置缓存
-                setCacheInfo('数据已更新并缓存');
+                // setCache(animeId, response.data); // 设置缓存
+                // setCacheInfo('数据已更新并缓存');
                 message.success(`成功加载 ${response.data.length} 个文件`);
             } else {
                 message.error(response.message || '加载失败');
@@ -180,18 +178,19 @@ export const EpisodeManagementModal: React.FC<EpisodeManagementModalProps> = ({
             console.error('加载集数失败:', error);
             const errorMessage = error instanceof Error ? error.message : '加载集数失败';
 
-            if (errorMessage.includes('too frequent')) {
-                message.error('请求过于频繁，请稍后再试。建议使用缓存数据。');
-                // 尝试从缓存获取数据（即使过期）
-                const cached = episodeCache.get(animeId);
-                if (cached) {
-                    setEpisodes(cached.data);
-                    setCacheInfo('使用过期缓存数据');
-                    message.info('使用缓存数据，请稍后刷新');
-                }
-            } else {
-                message.error(errorMessage);
-            }
+            // if (errorMessage.includes('too frequent')) {
+            //     message.error('请求过于频繁，请稍后再试。建议使用缓存数据。');
+            //     // 尝试从缓存获取数据（即使过期）
+            //     const cached = episodeCache.get(animeId);
+            //     if (cached) {
+            //         setEpisodes(cached.data);
+            //         setCacheInfo('使用过期缓存数据');
+            //         message.info('使用缓存数据，请稍后刷新');
+            //     }
+            // } else {
+            //     message.error(errorMessage);
+            // }
+            message.error(errorMessage)
         } finally {
             setLoading(false);
         }
@@ -205,18 +204,18 @@ export const EpisodeManagementModal: React.FC<EpisodeManagementModalProps> = ({
 
     // 当模态框打开时加载数据
     useEffect(() => {
-        // if (isOpen) {
-        //     // 清除之前的定时器
-        //     if (requestTimeoutRef.current) {
-        //         clearTimeout(requestTimeoutRef.current);
-        //     }
+        if (isOpen) {
+            //     // 清除之前的定时器
+            //     if (requestTimeoutRef.current) {
+            //         clearTimeout(requestTimeoutRef.current);
+            //     }
 
-        //     // 延迟加载，避免快速切换
-        //     requestTimeoutRef.current = setTimeout(() => {
-        //         loadEpisodes(false);
-        //         setSelectedIds([]);
-        //     }, 100);
-        // }
+            //     // 延迟加载，避免快速切换
+            //     requestTimeoutRef.current = setTimeout(() => {
+            loadEpisodes(false);
+            //         setSelectedIds([]);
+            //     }, 100);
+        }
 
         // return () => {
         //     if (requestTimeoutRef.current) {
@@ -277,15 +276,16 @@ export const EpisodeManagementModal: React.FC<EpisodeManagementModalProps> = ({
             const response = await pikpakApi.deleteEpisodes({
                 username: pikpakUsername,
                 password: pikpakPassword,
-                file_ids: selectedIds
+                file_ids: selectedIds,
+                folder_id: animeId
             });
 
             if (response.success) {
                 message.success(`成功删除 ${response.deleted_count} 个文件`);
                 setSelectedIds([]);
                 setIsDeleteModalOpen(false);
-                // 清除缓存并重新加载
-                clearCache(animeId);
+                // // 清除缓存并重新加载
+                // clearCache(animeId);
                 loadEpisodes(true);
             } else {
                 message.error(response.message || '删除失败');
@@ -334,7 +334,8 @@ export const EpisodeManagementModal: React.FC<EpisodeManagementModalProps> = ({
                 username: pikpakUsername,
                 password: pikpakPassword,
                 file_id: currentRenameFile.id,
-                new_name: fullFileName
+                new_name: fullFileName,
+                folder_id: animeId
             });
 
             if (response.success) {
@@ -343,7 +344,7 @@ export const EpisodeManagementModal: React.FC<EpisodeManagementModalProps> = ({
                 setCurrentRenameFile(null);
                 setNewFileName('');
                 // 清除缓存并重新加载
-                clearCache(animeId);
+                // clearCache(animeId);
                 loadEpisodes(true);
             } else {
                 message.error(response.message || '重命名失败');
@@ -373,6 +374,17 @@ export const EpisodeManagementModal: React.FC<EpisodeManagementModalProps> = ({
         return '无缓存';
     };
 
+    // 新窗口播放动漫
+    const handlePlayAnime = (episode: EpisodeFile) => {
+        console.log("将要播放的连接：", episode.play_url);
+
+        if (!episode.play_url) {
+            message.warning('暂无播放链接');
+            return;
+        }
+        window.open(episode.play_url, '_blank');
+    };
+
     // 表格列定义
     const columns = [
         {
@@ -388,8 +400,8 @@ export const EpisodeManagementModal: React.FC<EpisodeManagementModalProps> = ({
             width: '8%'
         },
         { key: 'name', title: '文件名', width: '40%' },
-        { key: 'size', title: '文件大小', width: '12%' },
-        { key: 'time', title: '创建时间', width: '15%' },
+        // { key: 'size', title: '文件大小', width: '12%' },
+        // { key: 'time', title: '创建时间', width: '15%' },
         { key: 'actions', title: '操作', width: '15%' }
     ];
 
@@ -415,16 +427,16 @@ export const EpisodeManagementModal: React.FC<EpisodeManagementModalProps> = ({
                 </span>
             </div>
         ),
-        size: (
-            <span className="text-sm text-gray-600">
-                {formatFileSize(episode.size)}
-            </span>
-        ),
-        time: (
-            <span className="text-sm text-gray-600">
-                {formatTime(episode.created_time)}
-            </span>
-        ),
+        // size: (
+        //     <span className="text-sm text-gray-600">
+        //         {formatFileSize(episode.size)}
+        //     </span>
+        // ),
+        // time: (
+        //     <span className="text-sm text-gray-600">
+        //         {formatTime(episode.created_time)}
+        //     </span>
+        // ),
         actions: (
             <div className="flex space-x-1">
                 <Button
@@ -434,13 +446,11 @@ export const EpisodeManagementModal: React.FC<EpisodeManagementModalProps> = ({
                 >
                     <Edit2 className="w-3 h-3" />
                 </Button>
-                {episode.is_video && (
+                {episode.play_url && (
                     <Button
                         variant="success"
                         className="text-xs px-2 py-1"
-                        onClick={() => {
-                            message.info('播放功能待实现');
-                        }}
+                        onClick={() => handlePlayAnime(episode)}
                     >
                         <Play className="w-3 h-3" />
                     </Button>
@@ -483,7 +493,7 @@ export const EpisodeManagementModal: React.FC<EpisodeManagementModalProps> = ({
                                 <span>删除 ({selectedIds.length})</span>
                             </Button>
                         </div>
-                        <div className="flex items-center space-x-2">
+                        {/* <div className="flex items-center space-x-2">
                             <Button
                                 variant="primary"
                                 onClick={handleForceRefresh}
@@ -492,22 +502,22 @@ export const EpisodeManagementModal: React.FC<EpisodeManagementModalProps> = ({
                             >
                                 <span>刷新</span>
                             </Button>
-                        </div>
+                        </div> */}
                     </div>
 
                     {/* 统计信息 */}
                     <div className="bg-gray-50 rounded-lg p-4 mb-4">
-                        <div className="grid grid-cols-2 gap-4 text-center">
+                        <div className="grid gap-4 text-center">
                             <div>
                                 <div className="text-xl font-bold text-blue-600">{episodes.length}</div>
                                 <div className="text-xs text-gray-600">总文件数</div>
                             </div>
-                            <div>
+                            {/* <div>
                                 <div className="text-xl font-bold text-purple-600">
                                     {formatFileSize(episodes.reduce((total, ep) => total + ep.size, 0))}
                                 </div>
                                 <div className="text-xs text-gray-600">总大小</div>
-                            </div>
+                            </div> */}
                         </div>
                     </div>
 

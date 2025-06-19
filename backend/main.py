@@ -28,6 +28,8 @@ app.add_middleware(
     allow_headers=["*"],  # 允许所有头
 )
 
+ANIME_CONTAINER_ID = "VOQqzYAEiKo3JmMhSvj6UYvto2"
+
 
 class SearchRequest(BaseModel):
     name: str
@@ -69,8 +71,6 @@ class PikPakCredentialsRequest(BaseModel):
 
 
 class EpisodeListRequest(BaseModel):
-    username: str
-    password: str
     folder_id: str
 
 
@@ -78,6 +78,7 @@ class FileDeleteRequest(BaseModel):
     username: str
     password: str
     file_ids: List[str]
+    folder_id: str
 
 
 class FileRenameRequest(BaseModel):
@@ -85,6 +86,7 @@ class FileRenameRequest(BaseModel):
     password: str
     file_id: str
     new_name: str
+    folder_id: str
 
 
 @app.post("/api/search")
@@ -188,7 +190,30 @@ async def get_anime_list():
     获取动漫列表
     """
     try:
-        pass
+        db = PikPakDatabase()
+        result = db.load_data()
+        # 解析成表格需要的数据
+        anime_list = []
+
+        # 遍历所有动漫数据
+        animes_container = result.get("animes", {}).get(ANIME_CONTAINER_ID, {})
+
+        anime_list = []
+        for anime_id, anime_info in animes_container.items():
+            anime_list.append(
+                {
+                    "id": anime_id,
+                    "title": anime_info.get("title", ""),
+                    "status": anime_info.get("status", "连载"),
+                }
+            )
+
+        return {
+            "success": True,
+            "data": anime_list,
+            "total": len(anime_list),
+            "message": "获取动漫列表成功",
+        }
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"获取动漫列表失败: {str(e)}")
@@ -234,7 +259,7 @@ async def get_anime_info_by_id(request: AnimeInfoRequest):
     """
     try:
         anime_db = PikPakDatabase()
-        anime_info = anime_db.get_anime_detail(request.id)
+        anime_info = anime_db.get_anime_detail(request.id, ANIME_CONTAINER_ID)
         if anime_info:
             return {
                 "success": True,
@@ -261,7 +286,7 @@ async def save_anime_info(request: AnimeInfoRequest):
         # print("获取前端数据", request.dict())
         # 获取更新前的动漫信息
         anime_db = PikPakDatabase()
-        old_anime_info = anime_db.get_anime_detail(request.id)
+        old_anime_info = anime_db.get_anime_detail(request.id, ANIME_CONTAINER_ID)
 
         # 检查标题是否一致，不一致就调用 pikpak api 重命名文件夹
         print("判断是否需要重命名文件夹", old_anime_info.get("title") == request.title)
@@ -283,6 +308,7 @@ async def save_anime_info(request: AnimeInfoRequest):
                 "summary": request.summary or "",
                 "cover_url": request.cover_url or "",
             },
+            ANIME_CONTAINER_ID,
         )
         if result:
             return {
@@ -305,23 +331,30 @@ async def get_episode_list(request: EpisodeListRequest):
     获取动漫文件夹内的所有集数
     """
     try:
-        if not request.username or not request.password:
-            raise HTTPException(status_code=400, detail="请配置PikPak账号密码")
+        if not request.folder_id:
+            raise HTTPException(status_code=400, detail="请指定文件夹ID")
 
-        pikpak_service = PikPakService()
-        client = await pikpak_service.get_client(request.username, request.password)
+        anime_db = PikPakDatabase()
+        result = anime_db.load_data()
+        # 获取 json 中对应文件夹的集数
+        episode_list = (
+            result.get("animes", {})
+            .get(ANIME_CONTAINER_ID, {})
+            .get(request.folder_id, {})
+            .get("files", [])
+        )
 
-        result = await pikpak_service.get_folder_files(client, request.folder_id)
+        print("获取集数：", len(episode_list))
 
-        if result["success"]:
+        if episode_list:
             return {
                 "success": True,
-                "data": result["files"],
-                "total": result["total_files"],
-                "message": result["message"],
+                "data": episode_list,
+                "total": len(episode_list),
+                "message": "获取集数列表成功",
             }
         else:
-            raise HTTPException(status_code=500, detail=result["message"])
+            raise HTTPException(status_code=500, detail="获取集数列表失败")
 
     except HTTPException:
         raise
@@ -347,12 +380,27 @@ async def delete_episodes(request: FileDeleteRequest):
         result = await pikpak_service.batch_delete_files(client, request.file_ids)
 
         if result["success"]:
-            return {
-                "success": True,
-                "message": result["message"],
-                "deleted_count": result["deleted_count"],
-                "failed_count": result["failed_count"],
-            }
+
+            # 更新数据库
+            anime_db = PikPakDatabase()
+            res = await anime_db.del_anime_files(
+                request.folder_id, {"files": []}, ANIME_CONTAINER_ID
+            )
+
+            if res:
+                return {
+                    "success": True,
+                    "message": result["message"],
+                    "deleted_count": result["deleted_count"],
+                    "failed_count": result["failed_count"],
+                }
+            else:
+                return {
+                    "success": False,
+                    "message": "删除文件成功，但更新数据库失败",
+                    "deleted_count": result["deleted_count"],
+                    "failed_count": result["failed_count"],
+                }
         else:
             raise HTTPException(status_code=500, detail=result["message"])
 
@@ -378,11 +426,19 @@ async def rename_episode(request: FileRenameRequest):
         client = await pikpak_service.get_client(request.username, request.password)
 
         result = await pikpak_service.rename_single_file(
-            client, request.file_id, request.new_name
+            client, request.file_id, request.new_name, request.folder_id
         )
 
         if result:
-            return {"success": True, "message": "文件重命名成功"}
+            # 更新数据库
+            anime_db = PikPakDatabase()
+            res = await anime_db.rename_anime_file(
+                request.file_id, request.new_name, ANIME_CONTAINER_ID
+            )
+
+            if res:
+                return {"success": True, "message": "文件重命名成功"}
+            return {"success": False, "message": "文件重命名成功，但更新数据库失败"}
         else:
             raise HTTPException(status_code=500, detail="文件重命名失败")
 

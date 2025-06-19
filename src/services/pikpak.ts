@@ -20,8 +20,8 @@ export class PikPakService {
     }
 
     // 获取动漫列表
-    static async getAnimeList(credentials: PikPakCredentials): Promise<AnimeListResponse> {
-        return apiClient.post<AnimeListResponse>('/api/anime/list', credentials);
+    static async getAnimeList(): Promise<AnimeListResponse> {
+        return apiClient.get<AnimeListResponse>('/api/anime/list');
     }
 
     // 获取集数列表

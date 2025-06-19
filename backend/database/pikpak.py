@@ -80,10 +80,10 @@ class PikPakDatabase:
             print(f"保存数据库失败: {e}")
             return False
 
-    def get_anime_detail(self, anime_id: str) -> Dict[str, Any]:
+    def get_anime_detail(self, anime_id: str, my_pack_id: str) -> Dict[str, Any]:
         """获取动漫详细信息"""
         data = self.load_data()
-        anime_info = data["animes"].get(anime_id, {})
+        anime_info = data.get("animes", {}).get(my_pack_id, {}).get(anime_id, {})
 
         if not anime_info:
             return {}
@@ -168,7 +168,7 @@ class PikPakDatabase:
         return result
 
     async def update_anime_info(
-        self, anime_id: str, update_data: Dict[str, Any]
+        self, anime_id: str, update_data: Dict[str, Any], my_pack_id: str
     ) -> bool:
         """
         更新动漫信息
@@ -177,14 +177,15 @@ class PikPakDatabase:
             # print("将要更新的动漫信息：", update_data)
             # 加载现有数据
             db_data = self.load_data()
+            anime_info = db_data.get("animes", {}).get(my_pack_id, {})
 
             # 检查动漫是否存在
-            if anime_id not in db_data["animes"]:
+            if anime_id not in anime_info:
                 print(f"动漫 {anime_id} 不存在")
                 return False
 
             # 获取现有动漫信息
-            anime_info = db_data["animes"][anime_id]
+            info = anime_info.get(anime_id, {})
             # print("更新前的动漫信息：", anime_info)
 
             # 只更新传入的字段
@@ -192,10 +193,10 @@ class PikPakDatabase:
 
             for field in updatable_fields:
                 if field in update_data:
-                    anime_info[field] = update_data[field]
+                    info[field] = update_data[field]
 
             # 更新时间戳
-            anime_info["updated_at"] = datetime.now().isoformat()
+            info["updated_at"] = datetime.now().isoformat()
 
             # print("更新后的动漫信息：", anime_info)
 
@@ -204,4 +205,64 @@ class PikPakDatabase:
 
         except Exception as e:
             print(f"更新动漫信息失败: {e}")
+            return False
+
+    async def del_anime_files(
+        self, folder_id: str, file_ids: List[str], my_pack_id: str
+    ) -> bool:
+        """
+        更新动漫文件列表
+        """
+        try:
+            # 加载现有数据
+            db_data = self.load_data()
+            anime_data = (
+                db_data.get("animes", {}).get(my_pack_id, {}).get(folder_id, {})
+            )
+
+            if not anime_data:
+                print(f"数据库不存在该动漫，需要同步数据")
+                return False
+
+            files = anime_data.get("files", [])
+
+            # 删除 files_id 对应的文件
+            files["files"] = [f for f in files if f.get("id") not in file_ids]
+
+            # 保存数据
+            return self.save_data(db_data)
+
+        except Exception as e:
+            print(f"删除动漫文件失败: {e}")
+            return False
+
+    async def rename_anime_file(
+        self, file_id: str, new_name: str, my_pack_id: str, folder_id: str
+    ) -> bool:
+        """
+        更新动漫文件名称
+        """
+        try:
+            # 加载现有数据
+            db_data = self.load_data()
+            anime_data = (
+                db_data.get("animes", {}).get(my_pack_id, {}).get(folder_id, {})
+            )
+
+            if not anime_data:
+                print(f"数据库不存在该动漫，需要同步数据")
+                return False
+
+            files = anime_data.get("files", [])
+            # 找到文件并更新名称
+            for file in files:
+                if file.get("id") == file_id:
+                    file["file_name"] = new_name
+                    break
+
+            # 保存数据
+            return self.save_data(db_data)
+
+        except Exception as e:
+            print(f"更新动漫文件名称失败: {e}")
             return False

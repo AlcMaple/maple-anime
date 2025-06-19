@@ -157,19 +157,17 @@ export interface CalendarResponse {
 export interface EpisodeFile {
     id: string;
     name: string;
-    size: number;
-    kind: string;
-    created_time: string;
-    mime_type: string;
-    thumbnail: string;
-    hash: string;
-    is_video: boolean;
+    size?: number;
+    kind?: string;
+    created_time?: string;
+    mime_type?: string;
+    play_url?: string;
+    hash?: string;
+    is_video?: boolean;
 }
 
 // 请求类型
 export interface EpisodeListRequest {
-    username: string;
-    password: string;
     folder_id: string;
 }
 
@@ -177,6 +175,7 @@ export interface FileDeleteRequest {
     username: string;
     password: string;
     file_ids: string[];
+    folder_id: string;
 }
 
 export interface FileRenameRequest {
@@ -184,6 +183,7 @@ export interface FileRenameRequest {
     password: string;
     file_id: string;
     new_name: string;
+    folder_id: string;
 }
 
 // API响应包装类型
