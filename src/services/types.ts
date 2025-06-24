@@ -14,6 +14,8 @@ export interface AnimeSearchResult {
 export interface PikPakCredentials {
     username: string;
     password: string;
+    folder_id?: string;
+    file_id?: string;
 }
 
 export interface PikPakConfig extends PikPakCredentials {
@@ -160,10 +162,12 @@ export interface EpisodeFile {
     size?: number;
     kind?: string;
     created_time?: string;
+    updated_time?: string;
     mime_type?: string;
     play_url?: string;
     hash?: string;
     is_video?: boolean;
+    folder_id?: string;
 }
 
 // 请求类型

@@ -68,6 +68,8 @@ class DownloadRequest(BaseModel):
 class PikPakCredentialsRequest(BaseModel):
     username: str
     password: str
+    file_id: Optional[str] = None
+    folder_id: Optional[str] = None
 
 
 class EpisodeListRequest(BaseModel):
@@ -460,6 +462,48 @@ async def syn_data(request: PikPakCredentialsRequest):
         return {"success": True, "message": "同步数据成功"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"同步数据失败: {str(e)}")
+
+
+@app.post("/api/video/url")
+async def update_link(request: PikPakCredentialsRequest):
+    """
+    更新链接
+    """
+    try:
+        if not request.file_id or not request.folder_id:
+            raise HTTPException(status_code=400, detail="请指定要更新连接的动漫")
+        if not request.username or not request.password:
+            raise HTTPException(status_code=400, detail="请配置PikPak账号密码")
+
+        pikpak_service = PikPakService()
+        client = await pikpak_service.get_client(request.username, request.password)
+        result = await pikpak_service.get_video_play_url(request.file_id, client)
+        if result:
+            # 更新数据库
+            anime_db = PikPakDatabase()
+            res = await anime_db.update_anime_file_link(
+                request.file_id, result, ANIME_CONTAINER_ID, request.folder_id
+            )
+            if res["success"]:
+                return {
+                    "success": True,
+                    "message": "更新链接成功",
+                    "data": {
+                        "play_url": res["data"]["play_url"],
+                        "updated_time": res["data"]["updated_time"],
+                    },
+                }
+            else:
+                return {
+                    "success": False,
+                    "message": "更新链接成功，但更新数据库失败",
+                    "data": {"play_url": "", "updated_time": ""},
+                }
+        else:
+            raise HTTPException(status_code=500, detail="更新链接失败", data=result)
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"更新链接失败: {str(e)}")
 
 
 def main():

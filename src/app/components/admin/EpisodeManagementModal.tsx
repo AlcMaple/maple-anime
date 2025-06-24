@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, use } from 'react';
-import { Trash2, Edit2, Download, Play, FileVideo, File, RefreshCw } from 'lucide-react';
+import { Trash2, Edit2, Download, Play, FileVideo, File, RefreshCw, Link } from 'lucide-react';
 import { Button } from '@/ui/Button';
 import { Table } from '@/ui/Table';
 import { Modal } from '@/ui/Modal';
@@ -256,6 +256,55 @@ export const EpisodeManagementModal: React.FC<EpisodeManagementModalProps> = ({
         }
     };
 
+    // 更新视频连接处理函数
+    const handleUpdateVideoLink = async (episodeId: string) => {
+        const episode = episodes.find(ep => ep.id === episodeId);
+        if (!episode) {
+            message.error('未找到对应的集数文件');
+            return;
+        }
+
+        setLoading(true);
+        try {
+            const pikpakUsername = localStorage.getItem('pikpak_username');
+            const pikpakPassword = localStorage.getItem('pikpak_password');
+
+            message.info(`正在更新 "${episode.name}" 的视频连接...`);
+
+            // 调用 API 更新视频连接
+            const response = await pikpakApi.getVideoUrl({
+                username: pikpakUsername,
+                password: pikpakPassword,
+                file_id: episodeId,
+                folder_id: animeId
+            });
+
+            if (response.success && response.data) {
+                // 更新数据
+                const updatedEpisodes = episodes.map(ep => {
+                    if (ep.id === episodeId) {
+                        return {
+                            ...ep,
+                            play_url: response.data.play_url,
+                            updated_time: response.data.updated_time
+                        };
+                    }
+                    return ep;
+                });
+                setEpisodes(updatedEpisodes);
+                message.success(`"${episode.name}" 视频连接更新成功`);
+            } else {
+                message.error(response.message || '更新失败');
+            }
+            message.success(`"${episode.name}" 视频连接更新成功`);
+        } catch (error) {
+            console.error('更新视频连接失败:', error);
+            message.error(`更新 "${episode.name}" 视频连接失败`);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     // 批量删除
     const handleBatchDelete = async () => {
         if (selectedIds.length === 0) {
@@ -374,7 +423,10 @@ export const EpisodeManagementModal: React.FC<EpisodeManagementModalProps> = ({
         return '无缓存';
     };
 
-    // 新窗口播放动漫
+    const [isPlayerModalOpen, setIsPlayerModalOpen] = useState(false);
+    const [playerEpisode, setPlayerEpisode] = useState<EpisodeFile | null>(null);
+
+    // 播放动漫
     const handlePlayAnime = (episode: EpisodeFile) => {
         console.log("将要播放的连接：", episode.play_url);
 
@@ -382,7 +434,10 @@ export const EpisodeManagementModal: React.FC<EpisodeManagementModalProps> = ({
             message.warning('暂无播放链接');
             return;
         }
-        window.open(episode.play_url, '_blank');
+
+        // 播放器模态框
+        setPlayerEpisode(episode);
+        setIsPlayerModalOpen(true);
     };
 
     // 表格列定义
@@ -402,6 +457,7 @@ export const EpisodeManagementModal: React.FC<EpisodeManagementModalProps> = ({
         { key: 'name', title: '文件名', width: '40%' },
         // { key: 'size', title: '文件大小', width: '12%' },
         // { key: 'time', title: '创建时间', width: '15%' },
+        { key: 'updated_time', title: '更新时间', width: '12%' },
         { key: 'actions', title: '操作', width: '15%' }
     ];
 
@@ -437,6 +493,11 @@ export const EpisodeManagementModal: React.FC<EpisodeManagementModalProps> = ({
         //         {formatTime(episode.created_time)}
         //     </span>
         // ),
+        updated_time: (
+            <span className="text-sm text-gray-600">
+                {formatTime(episode.updated_time || '')}
+            </span>
+        ),
         actions: (
             <div className="flex space-x-1">
                 <Button
@@ -455,6 +516,15 @@ export const EpisodeManagementModal: React.FC<EpisodeManagementModalProps> = ({
                         <Play className="w-3 h-3" />
                     </Button>
                 )}
+                <Button
+                    variant="warning"
+                    className="text-xs px-2 py-1"
+                    onClick={() => handleUpdateVideoLink(episode.id)}
+                    disabled={loading}
+                    title="更新视频连接"
+                >
+                    <Link className="w-3 h-3" />
+                </Button>
             </div>
         )
     }));
@@ -612,6 +682,45 @@ export const EpisodeManagementModal: React.FC<EpisodeManagementModalProps> = ({
                             确定
                         </Button>
                     </div>
+                </div>
+            </Modal>
+
+            {/* 播放器模态框 */}
+            <Modal
+                isOpen={isPlayerModalOpen}
+                onClose={() => setIsPlayerModalOpen(false)}
+                title={`播放: ${playerEpisode?.name}`}
+                size="xl"
+            >
+                <div className="p-6">
+                    {playerEpisode && (
+                        <div className="space-y-4">
+                            {/* 视频播放器 */}
+                            <div className="bg-black rounded-lg overflow-hidden">
+                                <video
+                                    className="w-full h-96"
+                                    controls
+                                    autoPlay
+                                    preload="metadata"
+                                    onError={(e) => {
+                                        console.error('视频播放错误:', e);
+                                        message.error('视频播放失败，可能链接已过期');
+                                    }}
+                                    onLoadStart={() => {
+                                        console.log('开始加载视频');
+                                    }}
+                                    onCanPlay={() => {
+                                        console.log('视频可以播放');
+                                    }}
+                                >
+                                    <source src={playerEpisode.play_url} type="video/mp4" />
+                                    <source src={playerEpisode.play_url} type="video/webm" />
+                                    <source src={playerEpisode.play_url} type="video/x-matroska" />
+                                    您的浏览器不支持视频播放
+                                </video>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </Modal>
         </>

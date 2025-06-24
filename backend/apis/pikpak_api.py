@@ -1065,6 +1065,7 @@ class PikPakService:
                             "id": file["id"],
                             "name": file["name"],
                             "play_url": original_file["play_url"],
+                            "update_time": datetime.now().isoformat(),
                         }
                     else:
                         # 获取播放连接
@@ -1086,6 +1087,7 @@ class PikPakService:
                             "id": file["id"],
                             "name": file["name"],
                             "play_url": play_url,
+                            "update_time": datetime.now().isoformat(),
                         }
                     result.append(file_data)
 

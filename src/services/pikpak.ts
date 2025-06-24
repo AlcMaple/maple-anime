@@ -43,6 +43,11 @@ export class PikPakService {
     static async syncData(request: PikPakCredentials): Promise<ApiResponse> {
         return apiClient.post<ApiResponse>('/api/sync', request);
     }
+
+    // 获取视频连接
+    static async getVideoUrl(request: PikPakCredentials): Promise<ApiResponse> {
+        return apiClient.post<ApiResponse>('/api/video/url', request);
+    }
 }
 
 // 导出实例
@@ -52,5 +57,6 @@ export const pikpakApi = {
     getEpisodeList: PikPakService.getEpisodeList,
     deleteEpisodes: PikPakService.deleteEpisodes,
     renameEpisode: PikPakService.renameEpisode,
-    syncData: PikPakService.syncData
+    syncData: PikPakService.syncData,
+    getVideoUrl: PikPakService.getVideoUrl
 };

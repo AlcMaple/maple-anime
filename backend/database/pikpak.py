@@ -266,3 +266,59 @@ class PikPakDatabase:
         except Exception as e:
             print(f"更新动漫文件名称失败: {e}")
             return False
+
+    async def update_anime_file_link(
+        self, file_id: str, play_url: str, my_pack_id: str, folder_id: str
+    ) -> dict:
+        """
+        更新动漫文件播放链接
+        """
+        try:
+            # 加载现有数据
+            db_data = self.load_data()
+            anime_data = (
+                db_data.get("animes", {}).get(my_pack_id, {}).get(folder_id, {})
+            )
+
+            if not anime_data:
+                print(f"数据库不存在该动漫，需要同步数据")
+                return False
+
+            files = anime_data.get("files", [])
+            update_time = datetime.now().isoformat()
+            file_found = False
+            # 找到文件并更新播放链接
+            for file in files:
+                if file.get("id") == file_id:
+                    file["play_url"] = play_url
+                    file["update_time"] = update_time
+                    file_found = True
+                    break
+
+            if not file_found:
+                return {
+                    "success": False,
+                    "message": f"未找到文件ID: {file_id}",
+                    "data": {},
+                }
+
+            # 保存数据
+            save_success = self.save_data(db_data)
+
+            if save_success:
+                return {
+                    "success": True,
+                    "message": "更新成功",
+                    "data": {
+                        "file_id": file_id,
+                        "play_url": play_url,
+                        "updated_time": update_time,
+                    },
+                }
+            else:
+                print("保存数据失败")
+                return {"success": False, "message": "保存数据失败", "data": {}}
+
+        except Exception as e:
+            print(f"更新动漫文件播放链接失败: {e}")
+            return {"success": False, "message": f"更新失败: {str(e)}", "data": {}}
