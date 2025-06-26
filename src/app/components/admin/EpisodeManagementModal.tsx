@@ -5,6 +5,7 @@ import { Table } from '@/ui/Table';
 import { Modal } from '@/ui/Modal';
 import { message } from '@/ui/Message';
 import { Input } from '@/ui/Input';
+import { Loading } from '@/ui/Loading';
 import { pikpakApi } from '@/services/pikpak';
 import { EpisodeFile } from '@/services/types';
 
@@ -275,25 +276,31 @@ export const EpisodeManagementModal: React.FC<EpisodeManagementModalProps> = ({
             const response = await pikpakApi.getVideoUrl({
                 username: pikpakUsername,
                 password: pikpakPassword,
-                file_id: episodeId,
+                file_ids: [episodeId],
                 folder_id: animeId
             });
 
             if (response.success && response.data) {
-                // 更新数据
-                const updatedEpisodes = episodes.map(ep => {
-                    if (ep.id === episodeId) {
-                        return {
-                            ...ep,
-                            play_url: response.data.play_url,
-                            updated_time: response.data.updated_time
-                        };
-                    }
-                    return ep;
-                });
-                setEpisodes(updatedEpisodes);
-                message.success(`"${episode.name}" 视频连接更新成功`);
-            } else {
+                const result = response.data.results[0];
+                if (result.success) {
+                    // 更新数据
+                    const updatedEpisodes = episodes.map(ep => {
+                        if (ep.id === episodeId) {
+                            return {
+                                ...ep,
+                                play_url: result.play_url,
+                                updated_time: result.updated_time
+                            };
+                        }
+                        return ep;
+                    });
+                    setEpisodes(updatedEpisodes);
+                    message.success(`"${episode.name}" 视频连接更新成功`);
+                } else {
+                    message.error(result.message || '更新失败');
+                }
+            }
+            else {
                 message.error(response.message || '更新失败');
             }
             message.success(`"${episode.name}" 视频连接更新成功`);
@@ -302,6 +309,70 @@ export const EpisodeManagementModal: React.FC<EpisodeManagementModalProps> = ({
             message.error(`更新 "${episode.name}" 视频连接失败`);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const [batchUpdateLoading, setBatchUpdateLoading] = useState(false);
+    // 批量更新视频链接
+    const handleUpdateAllVideoLinks = async () => {
+        if (episodes.length === 0) {
+            message.warning('没有可更新的视频文件');
+            return;
+        }
+
+        const pikpakUsername = localStorage.getItem('pikpak_username');
+        const pikpakPassword = localStorage.getItem('pikpak_password');
+
+        if (!pikpakUsername || !pikpakPassword) {
+            message.error('请先配置PikPak账号信息');
+            return;
+        }
+
+        setBatchUpdateLoading(true);
+        try {
+            message.info(`正在批量更新 ${episodes.length} 个视频连接...`);
+
+            const allFileIds = episodes.map(ep => ep.id);
+
+            // 调用 API 批量更新视频连接
+            const response = await pikpakApi.getVideoUrl({
+                username: pikpakUsername,
+                password: pikpakPassword,
+                file_ids: allFileIds,
+                folder_id: animeId
+            });
+
+            if (response.success && response.data) {
+                const { success_count, failed_count, results } = response.data;
+
+                // 更新成功的视频数据
+                const updatedEpisodes = episodes.map(ep => {
+                    const result = results.find(r => r.file_id === ep.id);
+                    if (result && result.success) {
+                        return {
+                            ...ep,
+                            play_url: result.play_url,
+                            updated_time: result.updated_time
+                        };
+                    }
+                    return ep;
+                });
+
+                setEpisodes(updatedEpisodes);
+
+                if (success_count > 0) {
+                    message.success(`批量更新完成: 成功 ${success_count} 个，失败 ${failed_count} 个`);
+                } else {
+                    message.error(`批量更新失败: 所有 ${failed_count} 个文件都更新失败`);
+                }
+            } else {
+                message.error(response.message || '批量更新失败');
+            }
+        } catch (error) {
+            console.error('批量更新视频连接失败:', error);
+            message.error('批量更新视频连接失败');
+        } finally {
+            setBatchUpdateLoading(false);
         }
     };
 
@@ -537,7 +608,24 @@ export const EpisodeManagementModal: React.FC<EpisodeManagementModalProps> = ({
                 title={`${animeTitle}`}
                 size="xl"
             >
-                <div className="p-6">
+                <div className="p-6 relative">
+                    {batchUpdateLoading && (
+                        <div className="absolute inset-0 bg-white/90 flex items-start pt-24 justify-center z-50 rounded-lg">
+                            <div className="text-center">
+                                <div className="flex flex-col items-center gap-4">
+                                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+                                    <div className="text-lg font-medium text-gray-800">正在批量更新视频链接</div>
+                                    <div className="text-sm text-gray-600 max-w-md">
+                                        此过程可能需要几分钟时间，系统会每处理3个文件延时8秒以保护服务器，请耐心等待...
+                                    </div>
+                                    <div className="text-xs text-gray-500">
+                                        更新进度会在控制台显示，请勿关闭此窗口
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
                     {/* 缓存状态信息 */}
                     {/* <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
                         <div className="flex items-center justify-between">
@@ -573,6 +661,15 @@ export const EpisodeManagementModal: React.FC<EpisodeManagementModalProps> = ({
                                 <span>刷新</span>
                             </Button>
                         </div> */}
+                        <div className="flex items-center space-x-2">
+                            <Button
+                                variant="primary"
+                                onClick={handleUpdateAllVideoLinks}
+                                disabled={episodes.length === 0 || loading || batchUpdateLoading}
+                            >
+                                更新
+                            </Button>
+                        </div>
                     </div>
 
                     {/* 统计信息 */}

@@ -15,7 +15,7 @@ export interface PikPakCredentials {
     username: string;
     password: string;
     folder_id?: string;
-    file_id?: string;
+    file_ids?: string[];
 }
 
 export interface PikPakConfig extends PikPakCredentials {
@@ -170,7 +170,6 @@ export interface EpisodeFile {
     folder_id?: string;
 }
 
-// 请求类型
 export interface EpisodeListRequest {
     folder_id: string;
 }
