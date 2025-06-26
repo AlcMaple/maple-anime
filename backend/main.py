@@ -100,6 +100,12 @@ class UpdateAnimeRequest(BaseModel):
     anime_list: List[AnimeItem]
 
 
+class DeleteAnimeRequest(BaseModel):
+    username: str
+    password: str
+    folder_id: str
+
+
 @app.post("/api/search")
 async def search_anime(request: SearchRequest):
     try:
@@ -611,6 +617,45 @@ async def update_anime(request: UpdateAnimeRequest):
         raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"更新动漫失败: {str(e)}")
+
+
+@app.post("/api/anime/delete")
+async def delete_anime(request: DeleteAnimeRequest):
+    """
+    删除动漫
+    """
+    try:
+        if not request.username or not request.password:
+            raise HTTPException(status_code=400, detail="请配置PikPak账号密码")
+
+        if not request.folder_id:
+            raise HTTPException(status_code=400, detail="请指定要删除的动漫ID")
+
+        pikpak_service = PikPakService()
+        client = await pikpak_service.get_client(request.username, request.password)
+
+        delete_result = await client.delete_file(request.folder_id)
+
+        if delete_result:
+            # 同步数据以更新本地数据库
+            print(f"🔄 开始同步数据以更新本地数据库...")
+            sync_result = await pikpak_service.sync_data(client, blocking_wait=True)
+
+            return {
+                "success": True,
+                "message": f"成功删除动漫",
+                "data": {
+                    "folder_id": request.folder_id,
+                    "synced": sync_result,
+                },
+            }
+        else:
+            raise HTTPException(status_code=500, detail=f"删除动漫失败")
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"删除动漫失败: {str(e)}")
 
 
 def main():

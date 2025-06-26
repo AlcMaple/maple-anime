@@ -12,6 +12,8 @@ import {
     FileRenameResponse,
     UpdateAnimeRequest,
     UpdateAnimeResponse,
+    DeleteAnimeRequest,
+    DeleteAnimeResponse,
     ApiResponse
 } from './types';
 
@@ -55,6 +57,11 @@ export class PikPakService {
     static async updateAnime(request: UpdateAnimeRequest): Promise<UpdateAnimeResponse> {
         return apiClient.post<UpdateAnimeResponse>('/api/anime/update', request);
     }
+
+    // 删除动漫
+    static async deleteAnime(request: DeleteAnimeRequest): Promise<DeleteAnimeResponse> {
+        return apiClient.post<DeleteAnimeResponse>('/api/anime/delete', request);
+    }
 }
 
 // 导出实例
@@ -66,5 +73,6 @@ export const pikpakApi = {
     renameEpisode: PikPakService.renameEpisode,
     syncData: PikPakService.syncData,
     getVideoUrl: PikPakService.getVideoUrl,
-    updateAnime: PikPakService.updateAnime
+    updateAnime: PikPakService.updateAnime,
+    deleteAnime: PikPakService.deleteAnime,
 };

@@ -204,6 +204,20 @@ export interface UpdateAnimeResponse extends ApiResponse {
     };
 }
 
+export interface DeleteAnimeRequest {
+    username: string;
+    password: string;
+    folder_id: string;
+}
+
+export interface DeleteAnimeResponse extends ApiResponse {
+    data: {
+        folder_id: string;
+        anime_title: string;
+        synced: boolean;
+    };
+}
+
 // API响应包装类型
 export interface ApiResponse<T = any> {
     success: boolean;

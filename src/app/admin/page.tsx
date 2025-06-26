@@ -16,6 +16,7 @@ import { CalendarModal } from '@/components/admin/CalendarModal';
 import { EditAnimeModal } from '@/components/admin/EditAnimeModal';
 import { EpisodeManagementModal } from '@/components/admin/EpisodeManagementModal';
 import { UpdateAnimeModal } from '@/components/admin/UpdateAnimeModal';
+import { DeleteAnimeModal } from '@/components/admin/DeleteAnimeModal';
 
 import { pikpakApi } from '@/services/pikpak';
 import { AnimeItem } from '@/services/types';
@@ -75,6 +76,9 @@ export default function AdminMainPage() {
 
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [currentUpdateAnime, setCurrentUpdateAnime] = useState<AnimeItem | null>(null);
+
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [currentDeleteAnime, setCurrentDeleteAnime] = useState<AnimeItem | null>(null);
 
   // 加载动漫列表
   const loadAnimeList = async () => {
@@ -243,20 +247,17 @@ export default function AdminMainPage() {
   };
 
   const handleDelete = (id: string) => {
-    // 调用 pikpak Api 删除动漫
-
-
-    const newList = animeList.filter(item => item.id !== id);
-    setAnimeList(newList);
-
-    // 如果删除后当前页没有数据且不是第一页，则回到前一页
-    const filteredCount = newList.filter(item =>
-      item.title.toLowerCase().includes(searchQuery.toLowerCase())
-    ).length;
-    const totalPages = Math.ceil(filteredCount / pageSize);
-    if (currentPage > totalPages && totalPages > 0) {
-      setCurrentPage(totalPages);
+    const anime = animeList.find(item => item.id === id);
+    if (anime) {
+      setCurrentDeleteAnime(anime);
+      setIsDeleteModalOpen(true);
     }
+  };
+
+  const handleDeleteComplete = () => {
+    // 删除完成后重新加载动漫列表
+    loadAnimeList(); // 或者调用你现有的刷新数据方法
+    message.success('动漫删除完成');
   };
 
   // 下载按钮
@@ -513,6 +514,16 @@ export default function AdminMainPage() {
           }}
           onUpdateComplete={handleUpdateComplete}
           currentAnime={currentUpdateAnime}
+        />
+
+        <DeleteAnimeModal
+          isOpen={isDeleteModalOpen}
+          onClose={() => {
+            setIsDeleteModalOpen(false);
+            setCurrentDeleteAnime(null);
+          }}
+          onDeleteComplete={handleDeleteComplete}
+          anime={currentDeleteAnime}
         />
       </div>
     </div>
