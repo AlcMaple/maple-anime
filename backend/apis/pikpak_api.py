@@ -1102,3 +1102,84 @@ class PikPakService:
         except Exception as e:
             print(f"同步数据失败: {e}")
             return False
+
+    async def update_anime_episodes(
+        self, client: PikPakApi, anime_list: List[Dict], folder_id: str
+    ) -> Dict:
+        """
+        更新动漫集数
+
+        Args:
+            client: PikPak客户端
+            anime_list: 动漫列表,每个对象包含 {id, title, magnet}
+            folder_id: 目标文件夹ID
+
+        Returns:
+            success: 是否成功
+            message: 信息
+            added_count: 成功添加的集数
+            failed_count: 失败的集数
+        """
+        try:
+            added_count = 0
+            failed_count = 0
+            failed_episodes = []
+
+            for i, anime in enumerate(anime_list, 1):
+                title = anime.title or f"集数_{i}"
+                magnet = anime.magnet
+                try:
+                    # 直接下载到指定文件夹
+                    result = await self.download_to_folder(
+                        client, magnet, folder_id, title
+                    )
+
+                    if result["success"]:
+                        added_count += 1
+                        print(f"    ✅ 下载任务添加成功")
+                    else:
+                        failed_count += 1
+                        failed_episodes.append(
+                            {"title": title, "reason": result["message"]}
+                        )
+                        print(f"    ❌ 下载任务添加失败: {result['message']}")
+
+                except Exception as e:
+                    failed_count += 1
+                    failed_episodes.append({"title": title, "reason": str(e)})
+                    print(f"    ❌ 下载异常: {str(e)}")
+
+            # 成功添加至少一个集数才算成功
+            success = added_count > 0
+
+            if success:
+                if failed_count == 0:
+                    message = f"成功添加 {added_count} 个新集数"
+                else:
+                    message = f"添加完成: 成功 {added_count} 个，失败 {failed_count} 个"
+            else:
+                message = f"所有 {failed_count} 个集数都添加失败"
+
+            # 如果有成功的下载，延时启动重命名任务
+            if added_count > 0:
+                print(f"📝 安排8秒后为文件夹 {folder_id} 执行重命名任务")
+                asyncio.create_task(
+                    self.delayed_rename_task(client, folder_id, delay_seconds=8)
+                )
+
+            return {
+                "success": success,
+                "message": message,
+                "added_count": added_count,
+                "failed_count": failed_count,
+                "failed_episodes": failed_episodes,
+            }
+
+        except Exception as e:
+            print(f"❌ 更新动漫异常: {e}")
+            return {
+                "success": False,
+                "message": f"更新动漫失败: {str(e)}",
+                "added_count": 0,
+                "failed_count": len(anime_list),
+            }

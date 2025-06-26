@@ -15,6 +15,7 @@ import { PikPakConfigModal } from '@/components/admin/PikPakConfigModal';
 import { CalendarModal } from '@/components/admin/CalendarModal';
 import { EditAnimeModal } from '@/components/admin/EditAnimeModal';
 import { EpisodeManagementModal } from '@/components/admin/EpisodeManagementModal';
+import { UpdateAnimeModal } from '@/components/admin/UpdateAnimeModal';
 
 import { pikpakApi } from '@/services/pikpak';
 import { AnimeItem } from '@/services/types';
@@ -71,6 +72,9 @@ export default function AdminMainPage() {
   //   { id: '16', title: '咒术回战第二季', status: '连载' },
   // ]);
   const [isLoadingAnimes, setIsLoadingAnimes] = useState(false);
+
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+  const [currentUpdateAnime, setCurrentUpdateAnime] = useState<AnimeItem | null>(null);
 
   // 加载动漫列表
   const loadAnimeList = async () => {
@@ -223,7 +227,19 @@ export default function AdminMainPage() {
   };
 
   const handleUpdate = (id: string) => {
-    console.log('更新:', id);
+    console.log("更新动漫的 id：", id);
+
+    const anime = animeList.find(item => item.id === id);
+    if (anime) {
+      setCurrentUpdateAnime(anime);
+      setIsUpdateModalOpen(true);
+    }
+  };
+
+  const handleUpdateComplete = () => {
+    // 更新完成后刷新动漫列表
+    loadAnimeList();
+    message.success('动漫更新完成');
   };
 
   const handleDelete = (id: string) => {
@@ -487,6 +503,16 @@ export default function AdminMainPage() {
           }}
           animeId={currentManageAnime?.id || ''}
           animeTitle={currentManageAnime?.title || ''}
+        />
+
+        <UpdateAnimeModal
+          isOpen={isUpdateModalOpen}
+          onClose={() => {
+            setIsUpdateModalOpen(false);
+            setCurrentUpdateAnime(null);
+          }}
+          onUpdateComplete={handleUpdateComplete}
+          currentAnime={currentUpdateAnime}
         />
       </div>
     </div>

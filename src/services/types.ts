@@ -189,6 +189,21 @@ export interface FileRenameRequest {
     folder_id: string;
 }
 
+export interface UpdateAnimeRequest {
+    username: string;
+    password: string;
+    folder_id: string;
+    anime_list: AnimeSearchResult[];
+}
+
+export interface UpdateAnimeResponse extends ApiResponse {
+    data: {
+        added_count: number;
+        failed_count: number;
+        folder_id: string;
+    };
+}
+
 // API响应包装类型
 export interface ApiResponse<T = any> {
     success: boolean;

@@ -93,6 +93,13 @@ class FileRenameRequest(BaseModel):
     folder_id: str
 
 
+class UpdateAnimeRequest(BaseModel):
+    username: str
+    password: str
+    folder_id: str
+    anime_list: List[AnimeItem]
+
+
 @app.post("/api/search")
 async def search_anime(request: SearchRequest):
     try:
@@ -564,8 +571,50 @@ async def update_link(request: PikPakCredentialsRequest):
         raise HTTPException(status_code=500, detail=f"更新链接失败: {str(e)}")
 
 
+@app.post("/api/anime/update")
+async def update_anime(request: UpdateAnimeRequest):
+    """
+    更新动漫
+    """
+    try:
+        if not request.username or not request.password:
+            raise HTTPException(status_code=400, detail="请配置PikPak账号密码")
+
+        if not request.folder_id:
+            raise HTTPException(status_code=400, detail="请指定要更新的动漫文件夹ID")
+
+        if not request.anime_list or len(request.anime_list) == 0:
+            raise HTTPException(status_code=400, detail="请选择要添加的集数")
+
+        pikpak_service = PikPakService()
+        client = await pikpak_service.get_client(request.username, request.password)
+
+        # 调用更新动漫方法
+        result = await pikpak_service.update_anime_episodes(
+            client, request.anime_list, request.folder_id
+        )
+
+        if result["success"]:
+            return {
+                "success": True,
+                "message": result["message"],
+                "data": {
+                    "added_count": result["added_count"],
+                    "failed_count": result["failed_count"],
+                    "folder_id": request.folder_id,
+                },
+            }
+        else:
+            raise HTTPException(status_code=500, detail=result["message"])
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"更新动漫失败: {str(e)}")
+
+
 def main():
-    uvicorn.run(app, host="0.0.0.0", port=8002)
+    uvicorn.run("main:app", host="0.0.0.0", port=8002, reload=True)
 
 
 if __name__ == "__main__":
