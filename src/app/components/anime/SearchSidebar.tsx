@@ -12,10 +12,8 @@ export const SearchSidebar: React.FC<SearchSidebarProps> = ({ isOpen, onClose })
     const [searchQuery, setSearchQuery] = useState('');
 
     // 处理搜索
-    const handleSearch = (query: string = searchQuery) => {
-        if (query.trim()) {
-            console.log('搜索:', query);
-        }
+    const handleSearch = () => {
+        console.log('搜索:', searchQuery)
     };
 
     // 热门搜索
@@ -23,13 +21,6 @@ export const SearchSidebar: React.FC<SearchSidebarProps> = ({ isOpen, onClose })
     //     setSearchQuery(keyword);
     //     handleSearch(keyword);
     // };
-
-    // 回车搜索
-    const handleKeyPress = (e: React.KeyboardEvent) => {
-        if (e.key === 'Enter') {
-            handleSearch();
-        }
-    };
 
     // 阻止背景滚动
     useEffect(() => {
@@ -48,7 +39,7 @@ export const SearchSidebar: React.FC<SearchSidebarProps> = ({ isOpen, onClose })
         <>
             {/* 背景遮罩 */}
             <div
-                className={`fixed inset-0 bg-black/30 backdrop-blur-sm z-40 transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
+                className={`fixed inset-0 bg-black/30 z-40 transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
                     }`}
                 onClick={onClose}
             />
@@ -84,42 +75,14 @@ export const SearchSidebar: React.FC<SearchSidebarProps> = ({ isOpen, onClose })
 
                 {/* 搜索内容 */}
                 <div className="p-6 space-y-6">
-                    {/* <div className="relative">
-                        <input
-                            type="text"
-                            placeholder="搜索动漫名称..."
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            onKeyPress={handleKeyPress}
-                            className="w-full px-4 py-3 pl-12 bg-white/80 backdrop-blur-sm border border-gray-300/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-800 placeholder-gray-500"
-                            autoFocus
-                        />
-                        <svg
-                            className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                            />
-                        </svg>
-                        <button
-                            onClick={() => handleSearch()}
-                            className="absolute right-2 top-1/2 transform -translate-y-1/2 px-4 py-1 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors duration-200"
-                        >
-                            搜索
-                        </button>
-                    </div> */}
 
+                    {/* 搜索框 */}
                     <Search
                         placeholder="搜索动漫..."
                         value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
+                        onChange={(e) => setSearchQuery(e)}
                         onSearch={handleSearch}
+                        variant="glassmorphism"
                     />
 
                     {/* 热门搜索 */}

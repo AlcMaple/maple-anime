@@ -7,6 +7,7 @@ interface SearchProps {
     onSearch: () => void;
     className?: string;
     disabled?: boolean;
+    variant?: 'default' | 'glassmorphism'; // 添加variant 属性，支持样式自定义
 }
 
 export const Search: React.FC<SearchProps> = ({
@@ -15,7 +16,8 @@ export const Search: React.FC<SearchProps> = ({
     onChange,
     onSearch,
     className = "",
-    disabled = false
+    disabled = false,
+    variant = 'default'
 }) => {
     const handleKeyPress = (e: React.KeyboardEvent) => {
         if (e.key === 'Enter' && !disabled) {
@@ -23,9 +25,28 @@ export const Search: React.FC<SearchProps> = ({
         }
     };
 
+    // 根据variant获取样式
+    const getContainerStyles = () => {
+        switch (variant) {
+            case 'glassmorphism':
+                return 'bg-white/80 backdrop-blur-sm border border-white/30';
+            default:
+                return 'bg-gray-100';
+        }
+    };
+
+    const getInputStyles = () => {
+        switch (variant) {
+            case 'glassmorphism':
+                return 'text-gray-800 placeholder-gray-600';
+            default:
+                return 'text-gray-900 placeholder-gray-500';
+        }
+    };
+
     return (
         <div className={`flex items-center ${className}`}>
-            <div className="flex items-center bg-gray-100 rounded-full">
+            <div className={`flex items-center rounded-full ${getContainerStyles()}`}>
                 <input
                     type="text"
                     placeholder={placeholder}
@@ -33,7 +54,7 @@ export const Search: React.FC<SearchProps> = ({
                     onChange={(e) => onChange(e.target.value)}
                     onKeyPress={handleKeyPress}
                     disabled={disabled}
-                    className="w-64 px-4 py-3 bg-transparent outline-none text-gray-900 placeholder-gray-500 rounded-l-full disabled:opacity-50"
+                    className={`w-64 px-4 py-3 bg-transparent outline-none rounded-l-full disabled:opacity-50 ${getInputStyles()}`}
                 />
                 <button
                     onClick={onSearch}

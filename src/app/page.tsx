@@ -22,7 +22,7 @@ export default function Home() {
       <div
         className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage: `url('https://images.unsplash.com/photo-1578662996442-48f60103fc96?q=80&w=2070&auto=format&fit=crop')`
+          backgroundImage: `url('/images/bg.jpg')`
         }}
       >
         {/* 背景遮罩 */}
@@ -50,7 +50,7 @@ export default function Home() {
           </p>
 
           {/* 操作按钮组 */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          {/* <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
               href="/search"
               className="px-8 py-3 bg-blue-500/80 hover:bg-blue-500 backdrop-blur-sm rounded-full text-white font-medium transition-all duration-300 hover:scale-105 hover:shadow-lg"
@@ -64,7 +64,7 @@ export default function Home() {
             >
               管理入口
             </Link>
-          </div>
+          </div> */}
         </div>
       </main>
 
