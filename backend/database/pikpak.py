@@ -257,7 +257,8 @@ class PikPakDatabase:
             # 找到文件并更新名称
             for file in files:
                 if file.get("id") == file_id:
-                    file["file_name"] = new_name
+                    file["name"] = new_name
+                    # print("name: ", file["name"])
                     break
 
             # 保存数据

@@ -574,7 +574,9 @@ class PikPakService:
         """
         try:
             # 调用PikPak重命名API
+            print("将要重命名的文件 id：", file_id)
             result = await client.file_rename(file_id, new_name)
+            print("rename_result:", result)
 
             if result and isinstance(result, dict) and "id" in result:
                 return True

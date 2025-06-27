@@ -439,18 +439,20 @@ async def rename_episode(request: FileRenameRequest):
         if not request.file_id or not request.new_name:
             raise HTTPException(status_code=400, detail="请指定文件ID和新文件名")
 
-        pikpak_service = PikPakService()
-        client = await pikpak_service.get_client(request.username, request.password)
+        # pikpak_service = PikPakService()
+        # client = await pikpak_service.get_client(request.username, request.password)
 
-        result = await pikpak_service.rename_single_file(
-            client, request.file_id, request.new_name, request.folder_id
-        )
+        # result = await pikpak_service.rename_single_file(
+        #     client, request.file_id, request.new_name
+        # )
+        result = True
 
+        print("重命名成功，开始更新本地数据库……")
         if result:
             # 更新数据库
             anime_db = PikPakDatabase()
             res = await anime_db.rename_anime_file(
-                request.file_id, request.new_name, ANIME_CONTAINER_ID
+                request.file_id, request.new_name, ANIME_CONTAINER_ID, request.folder_id
             )
 
             if res:

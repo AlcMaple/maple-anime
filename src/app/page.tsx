@@ -1,12 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Header } from '@/components/anime/Header';
 import { SearchSidebar } from '@/components/anime/SearchSidebar';
 
 export default function Home() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSearchClick = () => {
     setIsSearchOpen(true);
@@ -15,6 +16,10 @@ export default function Home() {
   const handleSearchClose = () => {
     setIsSearchOpen(false);
   };
+
+  useEffect(() => {
+
+  }, []);
 
   return (
     <div className="relative w-full h-screen overflow-hidden">
@@ -65,6 +70,8 @@ export default function Home() {
               管理入口
             </Link>
           </div> */}
+
+          {(isLoading && ())}
         </div>
       </main>
 
