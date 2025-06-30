@@ -11,7 +11,7 @@ interface AnimeScheduleProps {
 export const AnimeSchedule: React.FC<AnimeScheduleProps> = ({ className = '' }) => {
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedDay, setSelectedDay] = useState(0); // 0-6 对应周一到周日
-    const [calendarData, setCalendarData] = useState<CalendarAnime[]>([]);
+    const [calendarList, setCalendarList] = useState<CalendarAnime[]>([]);
     const [isLoading, setIsLoading] = useState(true);
 
     const weekdays = [
@@ -32,14 +32,14 @@ export const AnimeSchedule: React.FC<AnimeScheduleProps> = ({ className = '' }) 
         setSelectedDay(currentDay);
     }, []);
 
-    // 获取日历数据
-    const fetchCalendarData = async () => {
+    // 模拟获取日历数据 - 这里应该替换为实际的API调用
+    const calendarData = async () => {
         setIsLoading(true);
         try {
             // 模拟API延迟
             await new Promise(resolve => setTimeout(resolve, 1000));
 
-            // 模拟数据
+            // 模拟数据 - 实际应该从API获取
             const mockData: CalendarAnime[] = [
                 {
                     id: 1,
@@ -79,44 +79,44 @@ export const AnimeSchedule: React.FC<AnimeScheduleProps> = ({ className = '' }) 
                 }
             ];
 
-            setCalendarData(mockData);
+            setCalendarList(mockData);
         } catch (error) {
             console.error('获取日历数据失败:', error);
-            setCalendarData([]);
+            setCalendarList([]);
         } finally {
             setIsLoading(false);
         }
     };
 
     useEffect(() => {
-        fetchCalendarData();
+        calendarData();
     }, [selectedDay]);
 
     const handleSearch = () => {
         console.log('搜索番剧:', searchQuery);
     };
 
-    const filteredAnime = calendarData.filter(anime =>
+    const filteredAnime = calendarList.filter(anime =>
         anime.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         anime.name_cn.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
     return (
-        <div className={`bg-white/10 backdrop-blur-md rounded-lg p-4 h-full ${className}`}>
+        <div className={`h-full p-6 ${className}`}>
             {/* 搜索栏 */}
-            <div className="mb-4">
-                <Search
+            <div className="mb-6 bg-white/15 backdrop-blur-xl rounded-2xl p-4 border border-white/10">
+                {/* <Search
                     placeholder="搜索番剧..."
                     value={searchQuery}
                     onChange={setSearchQuery}
                     onSearch={handleSearch}
                     variant="glassmorphism"
                     className="w-full"
-                />
+                /> */}
             </div>
 
             {/* 星期选择 */}
-            <div className="mb-4">
+            <div className="mb-4 bg-white/15 backdrop-blur-xl rounded-2xl p-4 border border-white/10">
                 <div className="flex flex-wrap gap-1">
                     {weekdays.map((day) => (
                         <button
@@ -134,7 +134,7 @@ export const AnimeSchedule: React.FC<AnimeScheduleProps> = ({ className = '' }) 
             </div>
 
             {/* 当前选中日期标题 */}
-            <div className="mb-4">
+            <div className="mb-4 bg-white/15 backdrop-blur-xl rounded-2xl p-4 border border-white/10">
                 <h3 className="text-lg font-semibold text-white">
                     {weekdays[selectedDay].name}新番
                 </h3>
@@ -142,7 +142,7 @@ export const AnimeSchedule: React.FC<AnimeScheduleProps> = ({ className = '' }) 
             </div>
 
             {/* 番剧列表 */}
-            <div className="flex-1 overflow-y-auto">
+            <div className="flex-1 overflow-y-auto bg-white/15 backdrop-blur-xl rounded-2xl p-4 border border-white/10">
                 {isLoading ? (
                     <div className="flex items-center justify-center py-8">
                         <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
@@ -160,7 +160,7 @@ export const AnimeSchedule: React.FC<AnimeScheduleProps> = ({ className = '' }) 
                         {filteredAnime.map((anime) => (
                             <div
                                 key={anime.id}
-                                className="flex items-center space-x-3 p-3 bg-white/10 rounded-lg hover:bg-white/20 transition-all duration-200 cursor-pointer group"
+                                className="flex items-center space-x-4 p-4 bg-white/20 backdrop-blur-sm rounded-xl hover:bg-white/30 transition-all duration-300 cursor-pointer group border border-white/10 hover:border-white/20 hover:shadow-lg"
                             >
                                 {/* 封面 */}
                                 <div className="flex-shrink-0">
@@ -171,7 +171,7 @@ export const AnimeSchedule: React.FC<AnimeScheduleProps> = ({ className = '' }) 
                                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
                                             onError={(e) => {
                                                 const target = e.target as HTMLImageElement;
-                                                target.src = '/images/placeholder-anime.jpg';
+                                                target.src = '';
                                             }}
                                         />
                                     </div>
