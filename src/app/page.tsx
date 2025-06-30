@@ -28,6 +28,7 @@ export default function Home() {
     try {
       setIsLoading(true);
       const response = await pikpakApi.getAnimeList();
+
       setAnimeList(response.data || []);
 
       // 模拟加载时间
@@ -103,7 +104,7 @@ export default function Home() {
           >
             <div className="w-full h-full flex p-6 gap-6">
               {/* 左栏 - 番剧周期表 */}
-              <div className={`w-1/4 transition-all duration-1200 delay-400 ${showContent
+              <div className={`w-1/3 transition-all duration-1200 delay-400 ${showContent
                 ? 'opacity-100 transform translate-x-0'
                 : 'opacity-0 transform -translate-x-12'
                 }`}>

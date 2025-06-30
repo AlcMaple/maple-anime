@@ -45,8 +45,8 @@ export const Search: React.FC<SearchProps> = ({
     };
 
     return (
-        <div className={`flex items-center ${className}`}>
-            <div className={`flex items-center rounded-full ${getContainerStyles()}`}>
+        <div className={`flex items-center`}>
+            <div className={`flex items-center rounded-full ${getContainerStyles()} ${className}`}>
                 <input
                     type="text"
                     placeholder={placeholder}
@@ -54,7 +54,7 @@ export const Search: React.FC<SearchProps> = ({
                     onChange={(e) => onChange(e.target.value)}
                     onKeyPress={handleKeyPress}
                     disabled={disabled}
-                    className={`w-64 px-4 py-3 bg-transparent outline-none rounded-l-full disabled:opacity-50 ${getInputStyles()}`}
+                    className={`w-64 px-4 py-3 bg-transparent outline-none rounded-l-full disabled:opacity-50 ${getInputStyles()} ${className}`}
                 />
                 <button
                     onClick={onSearch}
