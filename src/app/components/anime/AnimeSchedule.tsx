@@ -98,11 +98,6 @@ export const AnimeSchedule: React.FC<AnimeScheduleProps> = ({ className = '' }) 
         router.push(`/search?q=${searchQuery}`);
     };
 
-    const filteredAnime = calendarList.filter(anime =>
-        anime.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        anime.name_cn.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-
     return (
         <div className={`h-full p-6 ${className}`}>
             {/* 搜索栏 */}
@@ -143,7 +138,7 @@ export const AnimeSchedule: React.FC<AnimeScheduleProps> = ({ className = '' }) 
                             <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
                             <span className="ml-2 text-white/80 text-sm">加载中...</span>
                         </div>
-                    ) : filteredAnime.length === 0 ? (
+                    ) : calendarList.length === 0 ? (
                         <div className="text-center py-8 text-white/60">
                             <svg className="w-12 h-12 mx-auto mb-2 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6 0a4 4 0 01-4-4V7a4 4 0 118 0v1a4 4 0 01-4 4z" />
@@ -151,7 +146,7 @@ export const AnimeSchedule: React.FC<AnimeScheduleProps> = ({ className = '' }) 
                             <p className="text-sm">暂无番剧</p>
                         </div>
                     ) : (
-                        filteredAnime.map((anime) => (
+                        calendarList.map((anime) => (
                             <div
                                 key={anime.id}
                                 className="flex items-center space-x-3 p-3 rounded-lg hover:bg-white/10 transition-all duration-200 cursor-pointer group"
