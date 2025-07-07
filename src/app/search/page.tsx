@@ -46,6 +46,34 @@ export default function SearchPage() {
                     cover_url: '/images/placeholder-anime.png',
                     status: '连载中',
                     description: '药屋少女的第二季，继续讲述猫猫在后宫的故事...'
+                },
+                {
+                    id: '1',
+                    title: '药屋少女第一季',
+                    cover_url: '/images/placeholder-anime.png',
+                    status: '完结',
+                    description: '在某个时代的某个国家，在后宫担任下女的少女猫猫过着平凡的日子...'
+                },
+                {
+                    id: '2',
+                    title: '药屋少女第二季',
+                    cover_url: '/images/placeholder-anime.png',
+                    status: '连载中',
+                    description: '药屋少女的第二季，继续讲述猫猫在后宫的故事...'
+                },
+                {
+                    id: '1',
+                    title: '药屋少女第一季',
+                    cover_url: '/images/placeholder-anime.png',
+                    status: '完结',
+                    description: '在某个时代的某个国家，在后宫担任下女的少女猫猫过着平凡的日子...'
+                },
+                {
+                    id: '2',
+                    title: '药屋少女第二季',
+                    cover_url: '/images/placeholder-anime.png',
+                    status: '连载中',
+                    description: '药屋少女的第二季，继续讲述猫猫在后宫的故事...'
                 }
             ];
 
@@ -88,7 +116,7 @@ export default function SearchPage() {
             <Header onSearchClick={handleSearchClick} />
 
             {/* 主要内容区域 */}
-            <main className="relative z-10 pt-20 pb-10">
+            <main className="relative z-10 pt-30 pb-10">
                 <div className="container mx-auto px-6">
 
                     {/* 加载状态 */}
@@ -120,23 +148,36 @@ export default function SearchPage() {
                                 </div>
                             )}
 
-                            {/* 搜索结果卡片网格 */}
+                            {/* 搜索结果卡片横向滚动 */}
                             {searchResults.length > 0 && (
-                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
-                                    {searchResults.map((anime, index) => (
-                                        <div
-                                            key={anime.id}
-                                            className={`transition-all duration-600 ${showContent
-                                                ? 'opacity-100 transform translate-y-0'
-                                                : 'opacity-0 transform translate-y-12'
-                                                }`}
-                                            style={{
-                                                transitionDelay: `${index * 100}ms`
-                                            }}
-                                        >
-                                            <SearchResultCard anime={anime} />
+                                <div className="relative -mx-6">
+                                    {/* 滚动容器 */}
+                                    <div
+                                        className="overflow-x-auto overflow-y-hidden pb-6 px-6"
+                                        style={{
+                                            scrollbarWidth: 'none',
+                                            msOverflowStyle: 'none',
+                                            WebkitScrollbar: { display: 'none' }
+                                        }}
+                                    >
+                                        <div className="flex gap-6" style={{ width: 'max-content' }}>
+                                            {searchResults.map((anime, index) => (
+                                                <div
+                                                    key={anime.id}
+                                                    className={`flex-shrink-0 transition-all duration-600 ${showContent
+                                                        ? 'opacity-100 transform translate-y-0'
+                                                        : 'opacity-0 transform translate-y-12'
+                                                        }`}
+                                                    style={{
+                                                        width: '280px',
+                                                        transitionDelay: `${index * 100}ms`
+                                                    }}
+                                                >
+                                                    <SearchResultCard anime={anime} />
+                                                </div>
+                                            ))}
                                         </div>
-                                    ))}
+                                    </div>
                                 </div>
                             )}
                         </div>
