@@ -2,8 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
+
 import { Header } from '@/components/anime/Header';
 import { SearchResultCard } from '@/components/anime/SearchResultCard';
+import { SearchSidebar } from '@/components/anime/SearchSidebar';
 import { pikpakApi } from '@/services/pikpak';
 import { AnimeItem } from '@/services/types';
 
@@ -184,6 +186,12 @@ export default function SearchPage() {
                     )}
                 </div>
             </main>
+
+            {/* 搜索侧边栏 */}
+            <SearchSidebar
+                isOpen={isSearchOpen}
+                onClose={handleSearchClose}
+            />
         </div>
     );
 }
