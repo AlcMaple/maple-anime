@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+
 import { Search } from '@/ui/Search';
 import { CalendarAnime } from '@/services/types';
 import { bangumiApi } from '@/services/bangumi';
@@ -10,6 +12,7 @@ interface AnimeScheduleProps {
 }
 
 export const AnimeSchedule: React.FC<AnimeScheduleProps> = ({ className = '' }) => {
+    const router = useRouter();
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedDay, setSelectedDay] = useState(0); // 0-6 对应周一到周日
     const [calendarList, setCalendarList] = useState<CalendarAnime[]>([]);
@@ -92,6 +95,7 @@ export const AnimeSchedule: React.FC<AnimeScheduleProps> = ({ className = '' }) 
 
     const handleSearch = () => {
         console.log('搜索番剧:', searchQuery);
+        router.push(`/search?q=${searchQuery}`);
     };
 
     const filteredAnime = calendarList.filter(anime =>

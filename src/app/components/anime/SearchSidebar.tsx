@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+
 import { Search } from '@/ui/Search';
 
 interface SearchSidebarProps {
@@ -9,11 +11,15 @@ interface SearchSidebarProps {
 }
 
 export const SearchSidebar: React.FC<SearchSidebarProps> = ({ isOpen, onClose }) => {
+    const router = useRouter();
     const [searchQuery, setSearchQuery] = useState('');
 
     // 处理搜索
     const handleSearch = () => {
         console.log('搜索:', searchQuery)
+        // 关闭侧边栏
+        onClose();
+        router.push(`/search?q=${searchQuery}`);
     };
 
     // 热门搜索
