@@ -73,7 +73,7 @@ export const CalendarModal: React.FC<CalendarModalProps> = ({
 
     // 获取默认封面
     const getImageUrl = (anime: CalendarAnime) => {
-        return anime.images?.medium || anime.images?.small || anime.images?.large || '/placeholder-anime.jpg';
+        return anime.images?.medium || anime.images?.small || anime.images?.large || 'images/placeholder-anime.jpg';
     };
 
     if (!isOpen) return null;
@@ -177,7 +177,7 @@ export const CalendarModal: React.FC<CalendarModalProps> = ({
                                                             alt={anime.name_cn || anime.name}
                                                             className="w-full h-full object-cover"
                                                             onError={(e) => {
-                                                                e.currentTarget.src = '/placeholder-anime.jpg';
+                                                                e.currentTarget.src = 'images/placeholder-anime.jpg';
                                                             }}
                                                         />
 

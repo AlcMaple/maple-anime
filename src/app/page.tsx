@@ -31,9 +31,6 @@ export default function Home() {
 
       setAnimeList(response.data || []);
 
-      // 模拟加载时间
-      await new Promise(resolve => setTimeout(resolve, 2000));
-
       // 数据加载完成，直接切换状态
       setIsLoading(false);
 

@@ -222,6 +222,7 @@ async def get_anime_list():
                     "id": anime_id,
                     "title": anime_info.get("title", ""),
                     "status": anime_info.get("status", "连载"),
+                    "cover_url": anime_info.get("cover_url", ""),
                 }
             )
 
