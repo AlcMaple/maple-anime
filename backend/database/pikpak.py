@@ -323,3 +323,52 @@ class PikPakDatabase:
         except Exception as e:
             print(f"更新动漫文件播放链接失败: {e}")
             return {"success": False, "message": f"更新失败: {str(e)}", "data": {}}
+
+    async def search_anime_by_title(self, title: str) -> Dict:
+        """
+        搜索动漫
+        """
+        try:
+            # 加载现有数据
+            db_data = self.load_data()
+            anime_list = []
+
+            # 遍历animes对象下的所有动漫分组
+            for anime_group_id, anime_group in db_data.get("animes", {}).items():
+                # 遍历每个分组下的具体动漫信息
+                for anime_id, anime_info in anime_group.items():
+                    anime_title = anime_info.get("title", "")
+                    # 使用模糊匹配，检查title是否包含在anime_title中
+                    if title.lower() in anime_title.lower():
+                        anime_list.append(
+                            {
+                                "group_id": anime_group_id,  # 分组ID
+                                "id": anime_id,
+                                "title": anime_title,
+                                "status": anime_info.get("status", "连载"),
+                                "summary": anime_info.get("summary", ""),
+                                "cover_url": anime_info.get("cover_url", ""),
+                                "updated_at": anime_info.get("updated_at", ""),
+                                "files_count": len(
+                                    anime_info.get("files", [])
+                                ),  # 文件数量
+                            }
+                        )
+
+            return {
+                "success": True,
+                "message": "搜索成功",
+                "data": anime_list,
+                "total": len(anime_list),
+                "keyword": title,
+            }
+
+        except Exception as e:
+            print(f"搜索动漫失败: {e}")
+            return {
+                "success": False,
+                "message": f"搜索失败: {str(e)}",
+                "data": [],
+                "total": 0,
+                "keyword": title,
+            }

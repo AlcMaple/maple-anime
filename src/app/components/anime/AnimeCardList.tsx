@@ -85,7 +85,7 @@ export const AnimeCardList: React.FC<AnimeCardListProps> = ({
 
                                 {/* hover遮罩 */}
                                 <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl flex items-center justify-center">
-                                    <div className="bg-white/20 backdrop-blur-sm rounded-full p-3">
+                                    <div className="bg-white/20 rounded-full p-3">
                                         <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
                                             <path d="M8 5v14l11-7z" />
                                         </svg>
@@ -102,18 +102,6 @@ export const AnimeCardList: React.FC<AnimeCardListProps> = ({
                         </div>
                     ))}
                 </div>
-
-                {/* 查看更多提示 */}
-                {animeList.length > 20 && (
-                    <div className="text-center mt-8 pb-4">
-                        <div className="text-white/60 text-sm">
-                            还有 {animeList.length - 20} 部动漫，
-                            <button className="text-blue-400 hover:text-blue-300 ml-1 transition-colors">
-                                查看全部
-                            </button>
-                        </div>
-                    </div>
-                )}
             </div>
         </div>
     );

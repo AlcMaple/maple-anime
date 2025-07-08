@@ -8,7 +8,7 @@ import traceback
 import logging
 import asyncio
 import time
-from fastapi import FastAPI, HTTPException, BackgroundTasks
+from fastapi import FastAPI, HTTPException, BackgroundTasks, Body
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
@@ -104,6 +104,10 @@ class DeleteAnimeRequest(BaseModel):
     username: str
     password: str
     folder_id: str
+
+
+class ClientSearchRequest(BaseModel):
+    name: str
 
 
 @app.post("/api/search")
@@ -659,6 +663,37 @@ async def delete_anime(request: DeleteAnimeRequest):
         raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"删除动漫失败: {str(e)}")
+
+
+@app.post("/api/client/search")
+async def search_client(request: ClientSearchRequest):
+    """
+    客户端搜索动漫
+    """
+    try:
+        print("开始搜索客户端动漫：", request.name)
+        anime_db = PikPakDatabase()
+        result = await anime_db.search_anime_by_title(request.name)
+        if result["success"]:
+            return {
+                "success": True,
+                "data": result["data"],
+                "total": result["total"],
+                "keyword": result["keyword"],
+                "message": result["message"],
+            }
+        else:
+            return {
+                "success": False,
+                "data": [],
+                "total": 0,
+                "keyword": request.name,
+                "message": result["message"],
+            }
+
+    except Exception as e:
+        print(f"❌ Bangumi客户端搜索动漫异常: {e}")
+        raise HTTPException(status_code=500, detail=f"客户端搜索动漫失败: {str(e)}")
 
 
 def main():

@@ -218,6 +218,11 @@ export interface DeleteAnimeResponse extends ApiResponse {
     };
 }
 
+// 客户端：搜索动漫响应
+export interface SearchResponse extends AnimeListResponse {
+    keyword: string;
+}
+
 // API响应包装类型
 export interface ApiResponse<T = any> {
     success: boolean;
