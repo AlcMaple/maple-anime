@@ -17,6 +17,7 @@ import { EditAnimeModal } from '@/components/admin/EditAnimeModal';
 import { EpisodeManagementModal } from '@/components/admin/EpisodeManagementModal';
 import { UpdateAnimeModal } from '@/components/admin/UpdateAnimeModal';
 import { DeleteAnimeModal } from '@/components/admin/DeleteAnimeModal';
+import { ConfirmModal } from '@/components/admin/ConfirmModal';
 
 import { pikpakApi } from '@/services/pikpak';
 import { AnimeItem } from '@/services/types';
@@ -45,6 +46,7 @@ export default function AdminMainPage() {
   const [isPikPakConfigOpen, setIsPikPakConfigOpen] = useState(false);
   const [isCalendarModalOpen, setIsCalendarModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isSyncConfirmOpen, setIsSyncConfirmOpen] = useState(false);
 
   // 当前编辑的动漫
   const [currentEditAnime, setCurrentEditAnime] = useState<AnimeItem | null>(null);
@@ -54,24 +56,6 @@ export default function AdminMainPage() {
 
   // 动漫列表状态
   const [animeList, setAnimeList] = useState<AnimeItem[]>([]);
-  // const [animeList, setAnimeList] = useState<AnimeItem[]>([
-  //   { id: '1', title: '小市民系列第一季', status: '完结' },
-  //   { id: '2', title: '小市民系列第二季', status: '连载' },
-  //   { id: '3', title: '药屋少女第一季', status: '完结' },
-  //   { id: '4', title: '药屋少女第二季', status: '连载' },
-  //   { id: '5', title: '间谍过家家第一季', status: '完结' },
-  //   { id: '6', title: '间谍过家家第二季', status: '连载' },
-  //   { id: '7', title: '鬼灭之刃第一季', status: '完结' },
-  //   { id: '8', title: '鬼灭之刃第二季', status: '完结' },
-  //   { id: '9', title: '鬼灭之刃第三季', status: '连载' },
-  //   { id: '10', title: '进击的巨人第一季', status: '完结' },
-  //   { id: '11', title: '进击的巨人第二季', status: '完结' },
-  //   { id: '12', title: '进击的巨人第三季', status: '完结' },
-  //   { id: '13', title: '一拳超人第一季', status: '完结' },
-  //   { id: '14', title: '一拳超人第二季', status: '完结' },
-  //   { id: '15', title: '咒术回战第一季', status: '完结' },
-  //   { id: '16', title: '咒术回战第二季', status: '连载' },
-  // ]);
   const [isLoadingAnimes, setIsLoadingAnimes] = useState(false);
 
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
@@ -205,6 +189,13 @@ export default function AdminMainPage() {
   }
 
   const synData = () => {
+    setIsSyncConfirmOpen(true);
+    // refreshData();
+  };
+
+  // 确认同步
+  const confirmSyncData = () => {
+    setIsSyncConfirmOpen(false);
     refreshData();
   };
 
@@ -524,6 +515,18 @@ export default function AdminMainPage() {
           }}
           onDeleteComplete={handleDeleteComplete}
           anime={currentDeleteAnime}
+        />
+
+        {/* 确认弹窗 */}
+        <ConfirmModal
+          isOpen={isSyncConfirmOpen}
+          onClose={() => setIsSyncConfirmOpen(false)}
+          onConfirm={confirmSyncData}
+          title="确认同步数据"
+          content="同步数据操作将会从PikPak服务器获取最新的动漫文件信息，此过程可能需要几分钟时间。确定要继续吗？"
+          confirmText="开始同步"
+          confirmVariant="success"
+          isLoading={refreshIsLoading}
         />
       </div>
     </div>

@@ -1,13 +1,17 @@
 import React, { useState, useEffect, useRef, use } from 'react';
 import { Trash2, Edit2, Download, Play, FileVideo, File, RefreshCw, Link } from 'lucide-react';
+
 import { Button } from '@/ui/Button';
 import { Table } from '@/ui/Table';
 import { Modal } from '@/ui/Modal';
 import { message } from '@/ui/Message';
 import { Input } from '@/ui/Input';
 import { Loading } from '@/ui/Loading';
+
 import { pikpakApi } from '@/services/pikpak';
 import { EpisodeFile } from '@/services/types';
+
+import { ConfirmModal } from '@/components/admin/ConfirmModal';
 
 interface EpisodeManagementModalProps {
     isOpen: boolean;
@@ -35,64 +39,6 @@ export const EpisodeManagementModal: React.FC<EpisodeManagementModalProps> = ({
     animeTitle
 }) => {
     const [episodes, setEpisodes] = useState<EpisodeFile[]>([]);
-    // 静态数据
-    // const [episodes, setEpisodes] = useState<EpisodeFile[]>([
-    //     {
-    //         id: '1',
-    //         name: '第1集.mkv',
-    //         size: 1024 * 1024 * 10,
-    //         kind: 'video',
-    //         created_time: '2021-10-10T10:10:10Z',
-    //         mime_type: 'video/x-matroska',
-    //         play_url: 'https://www.bilibili.com/video/BV1inTSzqEYJ/?spm_id_from=333.1007.tianma.1-1-1.click',
-    //         hash: '1234567890',
-    //         is_video: true
-    //     },
-    //     {
-    //         id: '2',
-    //         name: '第2集.mkv',
-    //         size: 1024 * 1024 * 10,
-    //         kind: 'video',
-    //         created_time: '2021-10-10T10:10:10Z',
-    //         mime_type: 'video/x-matroska',
-    //         play_url: 'https://via.placeholder.com/150',
-    //         hash: '1234567890',
-    //         is_video: true
-    //     },
-    //     {
-    //         id: '3',
-    //         name: '第3集.mkv',
-    //         size: 1024 * 1024 * 10,
-    //         kind: 'video',
-    //         created_time: '2021-10-10T10:10:10Z',
-    //         mime_type: 'video/x-matroska',
-    //         play_url: 'https://via.placeholder.com/150',
-    //         hash: '1234567890',
-    //         is_video: true
-    //     },
-    //     {
-    //         id: '4',
-    //         name: '第4集.mkv',
-    //         size: 1024 * 1024 * 10,
-    //         kind: 'video',
-    //         created_time: '2021-10-10T10:10:10Z',
-    //         mime_type: 'video/x-matroska',
-    //         play_url: 'https://via.placeholder.com/150',
-    //         hash: '1234567890',
-    //         is_video: true
-    //     },
-    //     {
-    //         id: '5',
-    //         name: '第5集.mkv',
-    //         size: 1024 * 1024 * 10,
-    //         kind: 'video',
-    //         created_time: '2021-10-10T10:10:10Z',
-    //         mime_type: 'video/x-matroska',
-    //         play_url: 'https://via.placeholder.com/150',
-    //         hash: '1234567890',
-    //         is_video: true
-    //     }
-    // ]);
     const [loading, setLoading] = useState(false);
     const [selectedIds, setSelectedIds] = useState<string[]>([]);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -101,6 +47,7 @@ export const EpisodeManagementModal: React.FC<EpisodeManagementModalProps> = ({
     const [newFileName, setNewFileName] = useState('');
     const [lastRequestTime, setLastRequestTime] = useState<number>(0);
     const [cacheInfo, setCacheInfo] = useState<string>('');
+    const [isUpdateConfirmOpen, setIsUpdateConfirmOpen] = useState(false);
 
     const requestTimeoutRef = useRef<NodeJS.Timeout>();
 
@@ -314,7 +261,7 @@ export const EpisodeManagementModal: React.FC<EpisodeManagementModalProps> = ({
 
     const [batchUpdateLoading, setBatchUpdateLoading] = useState(false);
     // 批量更新视频链接
-    const handleUpdateAllVideoLinks = async () => {
+    const confirmUpdateAllVideoLinks = async () => {
         if (episodes.length === 0) {
             message.warning('没有可更新的视频文件');
             return;
@@ -360,11 +307,17 @@ export const EpisodeManagementModal: React.FC<EpisodeManagementModalProps> = ({
 
                 setEpisodes(updatedEpisodes);
 
-                if (success_count > 0) {
-                    message.success(`批量更新完成: 成功 ${success_count} 个，失败 ${failed_count} 个`);
+                // 显示结果消息
+                if (success_count > 0 && failed_count > 0) {
+                    message.success(`成功更新 ${success_count} 个视频连接，${failed_count} 个失败`);
+                } else if (success_count > 0) {
+                    message.success(`成功更新 ${success_count} 个视频连接`);
                 } else {
-                    message.error(`批量更新失败: 所有 ${failed_count} 个文件都更新失败`);
+                    message.error(`更新失败，${failed_count} 个视频连接更新失败`);
                 }
+
+                // 更新缓存
+                setCache(animeId, updatedEpisodes);
             } else {
                 message.error(response.message || '批量更新失败');
             }
@@ -374,6 +327,15 @@ export const EpisodeManagementModal: React.FC<EpisodeManagementModalProps> = ({
         } finally {
             setBatchUpdateLoading(false);
         }
+    };
+
+    const handleUpdateAllVideoLinks = () => {
+        setIsUpdateConfirmOpen(true);
+    };
+
+    const confirmBatchUpdate = () => {
+        setIsUpdateConfirmOpen(false);
+        confirmUpdateAllVideoLinks();
     };
 
     // 批量删除
@@ -820,6 +782,18 @@ export const EpisodeManagementModal: React.FC<EpisodeManagementModalProps> = ({
                     )}
                 </div>
             </Modal>
+
+            {/* 批量更新确认弹窗 */}
+            <ConfirmModal
+                isOpen={isUpdateConfirmOpen}
+                onClose={() => setIsUpdateConfirmOpen(false)}
+                onConfirm={confirmBatchUpdate}
+                title="确认批量更新视频链接"
+                content={`即将批量更新 ${episodes.length} 个视频文件的播放链接，此过程可能需要几分钟时间，系统会每处理3个文件延时8秒以保护服务器。确定要继续吗？`}
+                confirmText="开始更新"
+                confirmVariant="warning"
+                isLoading={batchUpdateLoading}
+            />
         </>
     );
 };
