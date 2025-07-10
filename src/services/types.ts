@@ -22,6 +22,21 @@ export interface PikPakConfig extends PikPakCredentials {
     rememberCredentials: boolean;
 }
 
+// 集数文件类型
+export interface EpisodeFile {
+    id: string;
+    name: string;
+    size?: number;
+    kind?: string;
+    created_time?: string;
+    updated_time?: string;
+    mime_type?: string;
+    play_url?: string;
+    hash?: string;
+    is_video?: boolean;
+    folder_id?: string;
+}
+
 // 动漫项目类型
 export interface AnimeItem {
     id: string;
@@ -30,6 +45,7 @@ export interface AnimeItem {
     summary?: string;
     cover_url?: string;
     updated_at?: string;
+    files?: EpisodeFile[];
 }
 
 // 动漫详细信息类型
@@ -155,20 +171,7 @@ export interface CalendarResponse {
     error?: string;
 }
 
-// 集数文件类型
-export interface EpisodeFile {
-    id: string;
-    name: string;
-    size?: number;
-    kind?: string;
-    created_time?: string;
-    updated_time?: string;
-    mime_type?: string;
-    play_url?: string;
-    hash?: string;
-    is_video?: boolean;
-    folder_id?: string;
-}
+
 
 export interface EpisodeListRequest {
     folder_id: string;
@@ -221,6 +224,12 @@ export interface DeleteAnimeResponse extends ApiResponse {
 // 客户端：搜索动漫响应
 export interface SearchResponse extends AnimeListResponse {
     keyword: string;
+}
+
+// 客户端：动漫数据响应
+export interface AnimeDetailResponse extends AnimeItem {
+    success: boolean;
+    message: string;
 }
 
 // API响应包装类型

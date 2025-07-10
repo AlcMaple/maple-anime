@@ -372,3 +372,31 @@ class PikPakDatabase:
                 "total": 0,
                 "keyword": title,
             }
+
+    async def get_anime_all(self, folder_id, my_pack_id):
+        """
+        获取动漫全部信息
+        """
+        try:
+            # 加载现有数据
+            db_data = self.load_data()
+            anime_data = (
+                db_data.get("animes", {}).get(my_pack_id, {}).get(folder_id, {})
+            )
+
+            if not anime_data:
+                print(f"数据库不存在该动漫，需要同步数据")
+                return False
+
+            # 数据处理
+            files = anime_data.get("files", [])
+            for file in files:
+                file_name = file.get("name", "")
+                file_name = file_name.split(".")[0]
+                file["name"] = file_name
+
+            return anime_data
+
+        except Exception as e:
+            print(f"获取动漫全部信息失败: {e}")
+            return {}

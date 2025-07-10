@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { AnimeItem } from '@/services/types';
+import { useRouter } from 'next/navigation';
 
 interface AnimeCardListProps {
     animeList: AnimeItem[];
@@ -13,6 +14,7 @@ export const AnimeCardList: React.FC<AnimeCardListProps> = ({
     className = ''
 }) => {
     const [imageErrors, setImageErrors] = useState<Set<string>>(new Set());
+    const router = useRouter();
 
     const handleImageError = (animeId: string) => {
         setImageErrors(prev => new Set(prev).add(animeId));
@@ -20,6 +22,7 @@ export const AnimeCardList: React.FC<AnimeCardListProps> = ({
 
     const handleCardClick = (anime: AnimeItem) => {
         console.log('点击动漫卡片:', anime);
+        router.push(`/watch/${anime.id}`);
     };
 
     // 限制显示数量，只显示前10个

@@ -34,56 +34,8 @@ export default function SearchPage() {
             setIsLoading(true);
             setShowContent(false);
 
-            // // 模拟搜索结果 - 这里应该根据实际API返回结果
-            // const mockResults: AnimeItem[] = [
-            //     {
-            //         id: '1',
-            //         title: '药屋少女第一季',
-            //         cover_url: '/images/placeholder-anime.png',
-            //         status: '完结',
-            //         description: '在某个时代的某个国家，在后宫担任下女的少女猫猫过着平凡的日子...'
-            //     },
-            //     {
-            //         id: '2',
-            //         title: '药屋少女第二季',
-            //         cover_url: '/images/placeholder-anime.png',
-            //         status: '连载中',
-            //         description: '药屋少女的第二季，继续讲述猫猫在后宫的故事...'
-            //     },
-            //     {
-            //         id: '1',
-            //         title: '药屋少女第一季',
-            //         cover_url: '/images/placeholder-anime.png',
-            //         status: '完结',
-            //         description: '在某个时代的某个国家，在后宫担任下女的少女猫猫过着平凡的日子...'
-            //     },
-            //     {
-            //         id: '2',
-            //         title: '药屋少女第二季',
-            //         cover_url: '/images/placeholder-anime.png',
-            //         status: '连载中',
-            //         description: '药屋少女的第二季，继续讲述猫猫在后宫的故事...'
-            //     },
-            //     {
-            //         id: '1',
-            //         title: '药屋少女第一季',
-            //         cover_url: '/images/placeholder-anime.png',
-            //         status: '完结',
-            //         description: '在某个时代的某个国家，在后宫担任下女的少女猫猫过着平凡的日子...'
-            //     },
-            //     {
-            //         id: '2',
-            //         title: '药屋少女第二季',
-            //         cover_url: '/images/placeholder-anime.png',
-            //         status: '连载中',
-            //         description: '药屋少女的第二季，继续讲述猫猫在后宫的故事...'
-            //     }
-            // ];
-
-            // setSearchResults(mockResults);
-
             const response = await clientApi.clientSearch({ name: searchQuery });
-            console.log("搜搜动漫响应数据:", response.data);
+            console.log("搜索动漫响应数据:", response.data);
             setSearchResults(response.data);
 
 

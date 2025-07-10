@@ -1,11 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Header } from '@/components/anime/Header';
 
 import { SearchSidebar } from '@/components/anime/SearchSidebar';
-import { pikpakApi } from '@/services/pikpak';
+import { clientApi } from '@/services/client';
 import { AnimeItem, EpisodeFile } from '@/services/types';
 
 export default function WatchPage() {
@@ -19,7 +19,9 @@ export default function WatchPage() {
     const [currentEpisode, setCurrentEpisode] = useState<EpisodeFile | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
+    const [isPlaying, setIsPlaying] = useState(false);
     const [showContent, setShowContent] = useState(false);
+    const videoRef = useRef<HTMLVideoElement>(null);
 
     // 搜索功能
     const handleSearchClick = () => {
@@ -37,32 +39,18 @@ export default function WatchPage() {
         try {
             setIsLoading(true);
 
-            // 模拟数据，实际应该从API获取
-            const mockAnime: AnimeItem = {
-                id: animeId,
-                title: '药屋少女的独白',
-                status: '连载'
-            };
-
-            const mockEpisodes: EpisodeFile[] = [
-                { id: '1', name: '第01集 - 猫猫', play_url: '' },
-                { id: '2', name: '第02集 - 解毒', play_url: '' },
-                { id: '3', name: '第03集 - 幽灵', play_url: '' },
-                { id: '4', name: '第04集 - 恩赏', play_url: '' },
-                { id: '5', name: '第05集 - 里树', play_url: '' },
-                { id: '6', name: '第06集 - 园游会', play_url: '' },
-                { id: '7', name: '第07集 - 里宫', play_url: '' },
-                { id: '8', name: '第08集 - 麦稈', play_url: '' },
-                { id: '9', name: '第09集 - 天国', play_url: '' },
-                { id: '10', name: '第10集 - 结尾', play_url: '' }
-            ];
-
-            setAnimeInfo(mockAnime);
-            setEpisodes(mockEpisodes);
-            setCurrentEpisode(mockEpisodes[0]);
-
-            setIsLoading(false);
-            setTimeout(() => setShowContent(true), 100);
+            const response = await clientApi.clientAnimeData(animeId);
+            console.log("客户端动漫数据：", response);
+            if (response.success) {
+                setAnimeInfo(response.data);
+                setEpisodes(response.data.files);
+                setCurrentEpisode(response.data.files[0]);
+                setIsLoading(false);
+                setTimeout(() => setShowContent(true), 100);
+            } else {
+                console.error('客户端获取动漫数据失败:', response.message);
+                setIsLoading(false);
+            }
 
         } catch (error) {
             console.error('加载动漫数据失败:', error);
@@ -73,7 +61,35 @@ export default function WatchPage() {
     // 选择集数
     const handleEpisodeSelect = (episode: EpisodeFile) => {
         setCurrentEpisode(episode);
+        // setIsPlaying(false);
+        // if (videoRef.current) {
+        //     videoRef.current.pause();
+        //     videoRef.current.currentTime = 0;
+        // }
     };
+
+    // 切换播放状态
+    const togglePlay = () => {
+        if (!videoRef.current) return;
+
+        if (videoRef.current.paused) {
+            videoRef.current.play()
+                .then(() => setIsPlaying(true))
+                .catch(error => {
+                    console.error('播放失败:', error);
+                });
+        } else {
+            videoRef.current.pause();
+            setIsPlaying(false);
+        }
+    };
+
+    // 当视频播放结束时
+    const handleVideoEnded = () => {
+        setIsPlaying(false);
+    };
+
+    const testVideoUrl = "/videos/01.mp4";
 
     useEffect(() => {
         loadAnimeData();
@@ -81,19 +97,19 @@ export default function WatchPage() {
 
     return (
         <div className="relative w-full min-h-screen overflow-hidden">
-            {/* 动态背景 */}
+            {/* 背景 */}
             <div className="absolute inset-0 w-full h-full">
-                {/* 渐变背景 */}
+                {/* 渐变 */}
                 <div className="absolute inset-0 bg-gradient-to-br from-indigo-900/30 via-purple-900/20 to-pink-900/30"></div>
 
-                {/* 动态几何图形 */}
+                {/* 几何图形 */}
                 <div className="absolute inset-0 overflow-hidden">
                     <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl animate-pulse"></div>
                     <div className="absolute top-1/2 -left-20 w-60 h-60 bg-purple-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
                     <div className="absolute bottom-20 right-1/3 w-40 h-40 bg-pink-500/10 rounded-full blur-3xl animate-pulse delay-2000"></div>
                 </div>
 
-                {/* 网格背景 */}
+                {/* 网格 */}
                 <div className="absolute inset-0 opacity-5">
                     <div className="w-full h-full" style={{
                         backgroundImage: `
@@ -123,7 +139,7 @@ export default function WatchPage() {
                 ) : (
                     <div className={`transition-all duration-1000 ease-out ${showContent ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
                         }`}>
-                        {/* 动漫标题区域 - 独特的悬浮设计 */}
+                        {/* 动漫标题区域 */}
                         <div className="mb-8">
                             <div className="relative max-w-4xl mx-auto">
                                 {/* 标题容器 */}
@@ -137,21 +153,36 @@ export default function WatchPage() {
 
                         {/* 视频播放和集数选择区域 */}
                         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-4 gap-6">
-                            {/* 视频播放器区域 */}
+                            {/* 视频播放区域 */}
                             <div className="lg:col-span-3">
                                 <div className="relative">
-                                    {/* 播放器装饰背景 */}
+                                    {/* 播放器背景 */}
                                     <div className="absolute -inset-2 bg-gradient-to-br from-white/10 to-white/5 rounded-2xl blur-sm"></div>
 
                                     {/* 播放器容器 */}
                                     <div className="relative backdrop-blur-md bg-black/30 border border-white/20 rounded-xl overflow-hidden">
                                         <div className="aspect-video flex items-center justify-center bg-black/40">
                                             {currentEpisode ? (
-                                                <div className="text-center text-white">
-                                                    <div className="text-8xl mb-4">▶</div>
-                                                    <p className="text-xl mb-2">{currentEpisode.name}</p>
-                                                    <p className="text-white/60">点击播放</p>
-                                                </div>
+                                                <>
+                                                    <video
+                                                        ref={videoRef}
+                                                        className="w-full h-full"
+                                                        src={testVideoUrl} // 视频URL
+                                                        onClick={(e) => {
+                                                            e.stopPropagation(); // 阻止事件冒泡
+                                                            togglePlay();
+                                                        }}
+                                                        onEnded={handleVideoEnded}
+                                                        controls={isPlaying} // 播放控制条
+                                                    />
+                                                    {!isPlaying && (
+                                                        <div className="absolute inset-0 flex items-center justify-center cursor-default" onClick={togglePlay}>
+                                                            <div className="text-center text-white">
+                                                                <div className="text-8xl mb-4">▶</div>
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                </>
                                             ) : (
                                                 <div className="text-white/60">
                                                     <p>请选择集数</p>
@@ -165,7 +196,7 @@ export default function WatchPage() {
                             {/* 集数选择区域 */}
                             <div className="lg:col-span-1">
                                 <div className="relative">
-                                    {/* 集数列表装饰背景 */}
+                                    {/* 集数列表背景 */}
                                     <div className="absolute -inset-2 bg-gradient-to-b from-white/10 to-white/5 rounded-2xl blur-sm"></div>
 
                                     {/* 集数列表容器 */}
