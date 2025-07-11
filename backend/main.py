@@ -15,12 +15,50 @@ from pydantic import BaseModel
 import uvicorn
 import httpx
 from pikpakapi import PikPakApi
+import os
+from contextlib import asynccontextmanager
+from dotenv import load_dotenv
+
+from scheduler import LinksScheduler
 from apis.anime_garden_api import AnimeSearch
 from apis.pikpak_api import PikPakService
 from apis.bangumi_api import BangumiApi
 from database.pikpak import PikPakDatabase
 
-app = FastAPI()
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """FastAPI 应用生命周期管理"""
+    global video_scheduler
+
+    # 加载 .env 文件
+    load_dotenv()
+
+    # 初始化调度器
+    pikpak_username = os.getenv("PIKPAK_USERNAME")
+    pikpak_password = os.getenv("PIKPAK_PASSWORD")
+
+    if pikpak_username and pikpak_password:
+        try:
+            video_scheduler = LinksScheduler(pikpak_username, pikpak_password)
+            await video_scheduler.start()
+            print("链接调度器已启动")
+        except Exception as e:
+            print(f"调度器启动失败: {str(e)}")
+            video_scheduler = None
+    else:
+        print("未配置 PikPak 账号，跳过调度器启动")
+        print("   请设置环境变量: PIKPAK_USERNAME 和 PIKPAK_PASSWORD")
+
+    yield
+
+    # 关闭时清理
+    if video_scheduler:
+        await video_scheduler.stop()
+        print("动态视频链接调度器已停止")
+
+
+app = FastAPI(lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
@@ -31,6 +69,9 @@ app.add_middleware(
 )
 
 ANIME_CONTAINER_ID = "VOQqzYAEiKo3JmMhSvj6UYvto2"
+
+# 调度器实例
+video_scheduler: LinksScheduler = None
 
 
 class SearchRequest(BaseModel):
@@ -481,6 +522,15 @@ async def syn_data(request: PikPakCredentialsRequest):
         pikpak_service = PikPakService()
         client = await pikpak_service.get_client(request.username, request.password)
         await pikpak_service.sync_data(client, blocking_wait=True)
+
+        # 同步后重新初始化调度器
+        if video_scheduler:
+            try:
+                await video_scheduler.reinitialize()
+                print("同步后已重新初始化调度任务")
+            except Exception as scheduler_error:
+                print(f"重新初始化调度失败: {str(scheduler_error)}")
+
         return {"success": True, "message": "同步数据成功"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"同步数据失败: {str(e)}")
@@ -571,12 +621,52 @@ async def update_link(request: PikPakCredentialsRequest):
                 folder_update_result = await anime_db.update_anime_info(
                     request.folder_id, {}, ANIME_CONTAINER_ID
                 )
+
+                # 更新视频链接时间记录
+                video_time_update_result = (
+                    await anime_db.update_folder_video_links_time(
+                        request.folder_id, ANIME_CONTAINER_ID
+                    )
+                )
+
+                if video_scheduler:
+                    try:
+                        # 重新安排该文件夹的下次更新（20小时后）
+                        from datetime import datetime, timedelta
+
+                        next_update_time = datetime.now() + timedelta(hours=20)
+
+                        job_id = f"update_folder_{request.folder_id}"
+
+                        # 移除旧任务
+                        if video_scheduler.scheduler.get_job(job_id):
+                            video_scheduler.scheduler.remove_job(job_id)
+
+                        # 添加新任务
+                        video_scheduler.scheduler.add_job(
+                            func=video_scheduler._update_folder,
+                            trigger="date",
+                            run_date=next_update_time,
+                            args=[request.folder_id],
+                            id=job_id,
+                            name=f"更新文件夹 {request.folder_id}",
+                            replace_existing=True,
+                        )
+
+                        # 重新计算下次检查时间
+                        await video_scheduler._schedule_next_check()
+
+                        print(f"已重新安排文件夹 {request.folder_id} 的调度")
+                    except Exception as scheduler_error:
+                        print(f"重新安排调度失败: {str(scheduler_error)}")
+
                 if folder_update_result:
                     print(f"已更新动漫文件夹的更新时间")
-                else:
-                    print(f"更新动漫文件夹时间失败")
+                if video_time_update_result:
+                    print(f"✅ 已记录视频链接更新时间")
+
             except Exception as e:
-                print(f"更新动漫文件夹时间时发生错误: {str(e)}")
+                print(f"更新时间记录时发生错误:: {str(e)}")
 
         # 返回批量操作结果
         message = f"更新完成: 成功 {success_count} 个，失败 {failed_count} 个"

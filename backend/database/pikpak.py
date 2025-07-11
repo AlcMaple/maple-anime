@@ -1,7 +1,7 @@
 import json
 import os
 from typing import Dict, List, Any, Optional
-from datetime import datetime
+from datetime import datetime, timedelta
 from pikpakapi import PikPakApi
 import asyncio
 import time
@@ -400,3 +400,83 @@ class PikPakDatabase:
         except Exception as e:
             print(f"获取动漫全部信息失败: {e}")
             return {}
+
+    async def update_folder_video_links_time(
+        self, folder_id: str, my_pack_id: str, update_time: str = None
+    ) -> bool:
+        """
+        更新动漫文件夹的视频链接的更新时间
+        """
+        try:
+            # 加载现有数据
+            db_data = self.load_data()
+            anime_data = (
+                db_data.get("animes", {}).get(my_pack_id, {}).get(folder_id, {})
+            )
+
+            if not anime_data:
+                print(f"数据库不存在该动漫，需要同步数据")
+                return False
+
+            # 设置视频链接更新时间
+            if update_time is None:
+                update_time = datetime.now().isoformat()
+
+            anime_data["last_video_update_time"] = update_time
+
+            # 保存数据
+            return self.save_data(db_data)
+
+        except Exception as e:
+            print(f"更新动漫文件夹的视频链接的更新时间失败: {e}")
+            return False
+
+    def get_all_folders_schedule_info(self, my_pack_id: str) -> List[Dict]:
+        """
+        获取所有文件夹的调度信息
+        """
+        try:
+            # 加载现有数据
+            db_data = self.load_data()
+            anime_folders = db_data.get("animes", {}).get(my_pack_id, {})
+            folders_info = []
+            current_time = datetime.now()
+
+            for folder_id, anime_info in anime_folders.items():
+                files = anime_info.get("files", [])
+                if not files:
+                    continue
+
+                # 获取最后更新时间
+                last_update = anime_info.get("last_video_update_time", "")
+                last_update_time = None
+
+                if last_update:
+                    try:
+                        last_update_time = datetime.fromisoformat(last_update)
+                    except ValueError:
+                        pass
+
+                # 计算下次更新时间
+                if last_update_time:
+                    next_update_time = last_update_time + timedelta(hours=20)
+                else:
+                    # 从未更新，立即更新
+                    next_update_time = current_time + timedelta(minutes=1)
+
+                folders_info.append(
+                    {
+                        "folder_id": folder_id,
+                        "title": anime_info.get("title", ""),
+                        "file_count": len(files),
+                        "last_update_time": last_update_time,
+                        "next_update_time": next_update_time,
+                        "file_ids": [f["id"] for f in files],
+                    }
+                )
+
+            return folders_info
+
+        except Exception as e:
+            print(f"获取所有文件夹的调度信息失败: {e}")
+            return []
