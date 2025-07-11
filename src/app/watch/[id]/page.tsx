@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, use } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Header } from '@/components/anime/Header';
 
@@ -22,6 +22,7 @@ export default function WatchPage() {
     const [isPlaying, setIsPlaying] = useState(false);
     const [showContent, setShowContent] = useState(false);
     const videoRef = useRef<HTMLVideoElement>(null);
+    const [VideoUrl, setVideoUrl] = useState<string | null>(null);
 
     // 搜索功能
     const handleSearchClick = () => {
@@ -45,6 +46,7 @@ export default function WatchPage() {
                 setAnimeInfo(response.data);
                 setEpisodes(response.data.files);
                 setCurrentEpisode(response.data.files[0]);
+                setVideoUrl(response.data.files[0].play_url);
                 setIsLoading(false);
                 setTimeout(() => setShowContent(true), 100);
             } else {
@@ -61,11 +63,12 @@ export default function WatchPage() {
     // 选择集数
     const handleEpisodeSelect = (episode: EpisodeFile) => {
         setCurrentEpisode(episode);
-        // setIsPlaying(false);
-        // if (videoRef.current) {
-        //     videoRef.current.pause();
-        //     videoRef.current.currentTime = 0;
-        // }
+        setVideoUrl(episode.play_url);
+        setIsPlaying(false);
+        if (videoRef.current) {
+            videoRef.current.pause();
+            videoRef.current.currentTime = 0;
+        }
     };
 
     // 切换播放状态
@@ -88,8 +91,6 @@ export default function WatchPage() {
     const handleVideoEnded = () => {
         setIsPlaying(false);
     };
-
-    const testVideoUrl = "/videos/01.mp4";
 
     useEffect(() => {
         loadAnimeData();
@@ -167,7 +168,7 @@ export default function WatchPage() {
                                                     <video
                                                         ref={videoRef}
                                                         className="w-full h-full"
-                                                        src={testVideoUrl} // 视频URL
+                                                        src={VideoUrl} // 视频URL
                                                         onClick={(e) => {
                                                             e.stopPropagation(); // 阻止事件冒泡
                                                             togglePlay();
