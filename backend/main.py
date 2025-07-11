@@ -644,10 +644,16 @@ async def update_link(request: PikPakCredentialsRequest):
 
                         # 添加新任务
                         video_scheduler.scheduler.add_job(
-                            func=video_scheduler._update_folder,
+                            func=LinksScheduler.update_folder_task,
                             trigger="date",
                             run_date=next_update_time,
-                            args=[request.folder_id],
+                            args=[
+                                request.folder_id,
+                                video_scheduler.pikpak_username,
+                                video_scheduler.pikpak_password,
+                                video_scheduler.ANIME_CONTAINER_ID,
+                                video_scheduler.UPDATE_INTERVAL_HOURS,
+                            ],
                             id=job_id,
                             name=f"更新文件夹 {request.folder_id}",
                             replace_existing=True,

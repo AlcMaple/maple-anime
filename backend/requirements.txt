@@ -6,3 +6,4 @@ requests==2.31.0
 python-dotenv==1.0.1
 lxml==5.1.0
 pikpakapi==0.1.11
+pytz==2025.2
