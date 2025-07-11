@@ -23,6 +23,9 @@ export default function WatchPage() {
     const [showContent, setShowContent] = useState(false);
     const videoRef = useRef<HTMLVideoElement>(null);
     const [VideoUrl, setVideoUrl] = useState<string | null>(null);
+    const [volume, setVolume] = useState(1);
+    const [showVolumeIndicator, setShowVolumeIndicator] = useState(false);
+    const volumeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
     // 搜索功能
     const handleSearchClick = () => {
@@ -44,9 +47,9 @@ export default function WatchPage() {
             console.log("客户端动漫数据：", response);
             if (response.success) {
                 setAnimeInfo(response.data);
-                setEpisodes(response.data.files);
-                setCurrentEpisode(response.data.files[0]);
-                setVideoUrl(response.data.files[0].play_url);
+                setEpisodes(response.data.files || []);
+                setCurrentEpisode(response.data.files?.[0] || null);
+                setVideoUrl(response.data.files?.[0]?.play_url || null);
                 setIsLoading(false);
                 setTimeout(() => setShowContent(true), 100);
             } else {
@@ -63,7 +66,7 @@ export default function WatchPage() {
     // 选择集数
     const handleEpisodeSelect = (episode: EpisodeFile) => {
         setCurrentEpisode(episode);
-        setVideoUrl(episode.play_url);
+        setVideoUrl(episode.play_url || null);
         setIsPlaying(false);
         if (videoRef.current) {
             videoRef.current.pause();
@@ -107,6 +110,20 @@ export default function WatchPage() {
         if (!videoRef.current) return;
         const newVolume = Math.max(0, Math.min(1, videoRef.current.volume + delta));
         videoRef.current.volume = newVolume;
+        setVolume(newVolume);
+        
+        // 显示音量指示器
+        setShowVolumeIndicator(true);
+        
+        // 清除之前的定时器
+        if (volumeTimeoutRef.current) {
+            clearTimeout(volumeTimeoutRef.current);
+        }
+        
+        // 2秒后隐藏指示器
+        volumeTimeoutRef.current = setTimeout(() => {
+            setShowVolumeIndicator(false);
+        }, 2000);
     };
 
     // 键盘事件处理
@@ -159,6 +176,13 @@ export default function WatchPage() {
     useEffect(() => {
         loadAnimeData();
     }, [animeId]);
+
+    // 初始化音量状态
+    useEffect(() => {
+        if (videoRef.current) {
+            setVolume(videoRef.current.volume);
+        }
+    }, [VideoUrl]);
 
     return (
         <div className="relative w-full min-h-screen overflow-hidden">
@@ -232,7 +256,7 @@ export default function WatchPage() {
                                                     <video
                                                         ref={videoRef}
                                                         className="w-full h-full"
-                                                        src={VideoUrl} // 视频URL
+                                                        src={VideoUrl || ''} // 视频URL
                                                         onClick={(e) => {
                                                             e.stopPropagation(); // 阻止事件冒泡
                                                             togglePlay();
@@ -244,6 +268,21 @@ export default function WatchPage() {
                                                         <div className="absolute inset-0 flex items-center justify-center cursor-default" onClick={togglePlay}>
                                                             <div className="text-center text-white">
                                                                 <div className="text-8xl mb-4">▶</div>
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                    {/* 音量指示器 */}
+                                                    {showVolumeIndicator && (
+                                                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                                            <div className="bg-black/70 backdrop-blur-sm rounded-lg px-6 py-4 text-white text-center">
+                                                                {/* <div className="text-2xl mb-2">🔊</div> */}
+                                                                <div className="text-lg font-semibold">{Math.round(volume * 100)}%</div>
+                                                                <div className="w-20 h-2 bg-white/20 rounded-full mt-2">
+                                                                    <div 
+                                                                        className="h-full bg-white rounded-full transition-all duration-150"
+                                                                        style={{ width: `${volume * 100}%` }}
+                                                                    ></div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     )}

@@ -66,3 +66,6 @@ next-env.d.ts
 ./backend/venv/
 ./backend/venv/lib/
 ./backend/data/
+
+# Claude
+CLAUDE.md
