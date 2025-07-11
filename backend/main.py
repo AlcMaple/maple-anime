@@ -565,6 +565,19 @@ async def update_link(request: PikPakCredentialsRequest):
                 )
                 failed_count += 1
 
+        # 如果有成功更新的文件，更新动漫文件夹的更新时间
+        if success_count > 0:
+            try:
+                folder_update_result = await anime_db.update_anime_info(
+                    request.folder_id, {}, ANIME_CONTAINER_ID
+                )
+                if folder_update_result:
+                    print(f"已更新动漫文件夹的更新时间")
+                else:
+                    print(f"更新动漫文件夹时间失败")
+            except Exception as e:
+                print(f"更新动漫文件夹时间时发生错误: {str(e)}")
+
         # 返回批量操作结果
         message = f"更新完成: 成功 {success_count} 个，失败 {failed_count} 个"
 
