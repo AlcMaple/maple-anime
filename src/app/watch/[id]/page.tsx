@@ -87,10 +87,74 @@ export default function WatchPage() {
         }
     };
 
+    // 切换到下一集
+    const nextEpisode = () => {
+        if (!currentEpisode || !episodes.length) return;
+        const currentIndex = episodes.findIndex(ep => ep.id === currentEpisode.id);
+        if (currentIndex < episodes.length - 1) {
+            handleEpisodeSelect(episodes[currentIndex + 1]);
+        }
+    };
+
+    // 快进/后退
+    const seekVideo = (seconds: number) => {
+        if (!videoRef.current) return;
+        videoRef.current.currentTime += seconds;
+    };
+
+    // 调整音量
+    const adjustVolume = (delta: number) => {
+        if (!videoRef.current) return;
+        const newVolume = Math.max(0, Math.min(1, videoRef.current.volume + delta));
+        videoRef.current.volume = newVolume;
+    };
+
+    // 键盘事件处理
+    const handleKeyDown = (e: KeyboardEvent) => {
+        // 防止在输入框中触发
+        const target = e.target as HTMLElement;
+        if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
+            return;
+        }
+
+        switch (e.key) {
+            case ' ':
+                e.preventDefault();
+                togglePlay();
+                break;
+            case 'ArrowLeft':
+                e.preventDefault();
+                seekVideo(-10); // 后退10秒
+                break;
+            case 'ArrowRight':
+                e.preventDefault();
+                seekVideo(10); // 快进10秒
+                break;
+            case 'ArrowUp':
+                e.preventDefault();
+                adjustVolume(0.1); // 音量+10%
+                break;
+            case 'ArrowDown':
+                e.preventDefault();
+                adjustVolume(-0.1); // 音量-10%
+                break;
+        }
+    };
+
     // 当视频播放结束时
     const handleVideoEnded = () => {
         setIsPlaying(false);
+        // 自动播放下一集
+        nextEpisode();
     };
+
+    // 键盘事件监听
+    useEffect(() => {
+        document.addEventListener('keydown', handleKeyDown);
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [currentEpisode, episodes]); // 依赖当前集数和集数列表
 
     useEffect(() => {
         loadAnimeData();
