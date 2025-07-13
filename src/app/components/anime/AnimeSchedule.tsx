@@ -149,7 +149,7 @@ export const AnimeSchedule: React.FC<AnimeScheduleProps> = ({ className = '' }) 
                         calendarList.map((anime) => (
                             <div
                                 key={anime.id}
-                                className="flex items-center space-x-3 p-3 rounded-lg hover:bg-white/10 transition-all duration-200 cursor-pointer group"
+                                className="flex items-center space-x-3 p-3 rounded-lg hover:bg-white/10 transition-all duration-200 cursor-default group"
                             >
                                 {/* 封面 */}
                                 <div className="flex-shrink-0">

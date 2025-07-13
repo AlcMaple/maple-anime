@@ -14,7 +14,7 @@ export interface ApiResponse<T = any> {
 
 // 创建 axios 实例
 const api: AxiosInstance = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8002',
+    baseURL: 'http://localhost:8002',
     timeout: 600000,
     headers: {
         'Content-Type': 'application/json',

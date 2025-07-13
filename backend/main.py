@@ -26,39 +26,40 @@ from apis.bangumi_api import BangumiApi
 from database.pikpak import PikPakDatabase
 
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    """FastAPI 应用生命周期管理"""
-    global video_scheduler
+# @asynccontextmanager
+# async def lifespan(app: FastAPI):
+#     """FastAPI 应用生命周期管理"""
+#     global video_scheduler
 
-    # 加载 .env 文件
-    load_dotenv()
+#     # 加载 .env 文件
+#     load_dotenv()
 
-    # 初始化调度器
-    pikpak_username = os.getenv("PIKPAK_USERNAME")
-    pikpak_password = os.getenv("PIKPAK_PASSWORD")
+#     # 初始化调度器
+#     pikpak_username = os.getenv("PIKPAK_USERNAME")
+#     pikpak_password = os.getenv("PIKPAK_PASSWORD")
 
-    if pikpak_username and pikpak_password:
-        try:
-            video_scheduler = LinksScheduler(pikpak_username, pikpak_password)
-            await video_scheduler.start()
-            print("链接调度器已启动")
-        except Exception as e:
-            print(f"调度器启动失败: {str(e)}")
-            video_scheduler = None
-    else:
-        print("未配置 PikPak 账号，跳过调度器启动")
-        print("   请设置环境变量: PIKPAK_USERNAME 和 PIKPAK_PASSWORD")
+#     if pikpak_username and pikpak_password:
+#         try:
+#             video_scheduler = LinksScheduler(pikpak_username, pikpak_password)
+#             await video_scheduler.start()
+#             print("链接调度器已启动")
+#         except Exception as e:
+#             print(f"调度器启动失败: {str(e)}")
+#             video_scheduler = None
+#     else:
+#         print("未配置 PikPak 账号，跳过调度器启动")
+#         print("   请设置环境变量: PIKPAK_USERNAME 和 PIKPAK_PASSWORD")
 
-    yield
+#     yield
 
-    # 关闭时清理
-    if video_scheduler:
-        await video_scheduler.stop()
-        print("动态视频链接调度器已停止")
+#     # 关闭时清理
+#     if video_scheduler:
+#         await video_scheduler.stop()
+#         print("动态视频链接调度器已停止")
 
 
-app = FastAPI(lifespan=lifespan)
+# app = FastAPI(lifespan=lifespan)
+app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
