@@ -54,7 +54,7 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
 
                 <div className="flex justify-end space-x-3">
                     <Button
-                        variant="secondary"
+                        variant="info"
                         onClick={handleCancel}
                         disabled={isLoading}
                     >
