@@ -6,7 +6,7 @@ import { Input } from '@/ui/Input';
 import { message } from '@/ui/Message';
 import { Loading } from '@/ui/Loading';
 import { pikpakApi } from '@/services/pikpak';
-import { AnimeSearchResult } from '@/services/types';
+import { AnimeSearchResult, DownloadRequest } from '@/services/types';
 
 interface AnimeGroup {
     title: string;
@@ -151,7 +151,7 @@ export const DownloadConfigModal: React.FC<DownloadConfigModalProps> = ({
         setIsDownloading(true);
 
         try {
-            let downloadData;
+            let downloadData: DownloadRequest;
 
             if (hasMultipleSeasons) {
                 // 多季模式：按分组下载

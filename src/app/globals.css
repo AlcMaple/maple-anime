@@ -84,6 +84,19 @@ body {
   background: rgba(255, 255, 255, 0.5);
 }
 
+.hide-scrollbar {
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE 10+ */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+  /* Chrome, Safari, Edge */
+}
+
+
 /* 毛玻璃效果增强 */
 .backdrop-blur-sm {
   backdrop-filter: blur(4px);

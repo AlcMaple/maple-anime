@@ -49,7 +49,7 @@ export const EpisodeManagementModal: React.FC<EpisodeManagementModalProps> = ({
     const [cacheInfo, setCacheInfo] = useState<string>('');
     const [isUpdateConfirmOpen, setIsUpdateConfirmOpen] = useState(false);
 
-    const requestTimeoutRef = useRef<NodeJS.Timeout>();
+    // const requestTimeoutRef = useRef<NodeJS.Timeout>();
 
     // 从缓存获取数据
     const getFromCache = (animeId: string): CacheItem | null => {
@@ -221,8 +221,8 @@ export const EpisodeManagementModal: React.FC<EpisodeManagementModalProps> = ({
 
             // 调用 API 更新视频连接
             const response = await pikpakApi.getVideoUrl({
-                username: pikpakUsername,
-                password: pikpakPassword,
+                username: pikpakUsername || '',
+                password: pikpakPassword || '',
                 file_ids: [episodeId],
                 folder_id: animeId
             });
@@ -294,7 +294,7 @@ export const EpisodeManagementModal: React.FC<EpisodeManagementModalProps> = ({
 
                 // 更新成功的视频数据
                 const updatedEpisodes = episodes.map(ep => {
-                    const result = results.find(r => r.file_id === ep.id);
+                    const result = (results as any[]).find(r => r.file_id === ep.id);
                     if (result && result.success) {
                         return {
                             ...ep,
@@ -528,7 +528,7 @@ export const EpisodeManagementModal: React.FC<EpisodeManagementModalProps> = ({
         // ),
         updated_time: (
             <span className="text-sm text-gray-600">
-                {formatTime(episode.update_time || '')}
+                {formatTime(episode.updated_time || '')}
             </span>
         ),
         actions: (
@@ -656,7 +656,6 @@ export const EpisodeManagementModal: React.FC<EpisodeManagementModalProps> = ({
                             columns={columns}
                             data={tableData}
                             loading={loading}
-                            emptyText="暂无文件"
                         />
                     </div>
                 </div>
@@ -675,7 +674,7 @@ export const EpisodeManagementModal: React.FC<EpisodeManagementModalProps> = ({
                     </p>
                     <div className="flex justify-end space-x-3">
                         <Button
-                            variant="secondary"
+                            variant="info"
                             onClick={() => setIsDeleteModalOpen(false)}
                         >
                             取消
@@ -728,7 +727,7 @@ export const EpisodeManagementModal: React.FC<EpisodeManagementModalProps> = ({
                     </div>
                     <div className="flex justify-end space-x-3">
                         <Button
-                            variant="secondary"
+                            variant="info"
                             onClick={() => setIsRenameModalOpen(false)}
                         >
                             取消

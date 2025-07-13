@@ -3,7 +3,7 @@ import { Loading } from './Loading';
 
 interface Column {
     key: string;
-    title: string;
+    title: string | React.ReactNode;
     width?: string;
 }
 

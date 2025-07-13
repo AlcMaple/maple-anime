@@ -90,9 +90,9 @@ export const SearchResultCard: React.FC<SearchResultCardProps> = ({ anime }) => 
                         </h3>
 
                         {/* 简介 */}
-                        {anime.description && (
+                        {anime.summary && (
                             <p className="text-white/70 text-xs leading-relaxed line-clamp-3 mb-3">
-                                {anime.description}
+                                {anime.summary}
                             </p>
                         )}
 

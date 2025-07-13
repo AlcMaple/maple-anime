@@ -111,15 +111,15 @@ export default function WatchPage() {
         const newVolume = Math.max(0, Math.min(1, videoRef.current.volume + delta));
         videoRef.current.volume = newVolume;
         setVolume(newVolume);
-        
+
         // 显示音量指示器
         setShowVolumeIndicator(true);
-        
+
         // 清除之前的定时器
         if (volumeTimeoutRef.current) {
             clearTimeout(volumeTimeoutRef.current);
         }
-        
+
         // 2秒后隐藏指示器
         volumeTimeoutRef.current = setTimeout(() => {
             setShowVolumeIndicator(false);
@@ -278,7 +278,7 @@ export default function WatchPage() {
                                                                 {/* <div className="text-2xl mb-2">🔊</div> */}
                                                                 <div className="text-lg font-semibold">{Math.round(volume * 100)}%</div>
                                                                 <div className="w-20 h-2 bg-white/20 rounded-full mt-2">
-                                                                    <div 
+                                                                    <div
                                                                         className="h-full bg-white rounded-full transition-all duration-150"
                                                                         style={{ width: `${volume * 100}%` }}
                                                                     ></div>

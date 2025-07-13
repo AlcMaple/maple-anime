@@ -184,7 +184,7 @@ export const DeleteAnimeModal: React.FC<DeleteAnimeModalProps> = ({
                 {/* 模态框底部 */}
                 <div className="px-6 py-4 border-t border-gray-200 flex justify-end space-x-3">
                     <Button
-                        variant="secondary"
+                        variant="info"
                         onClick={handleCancel}
                         disabled={isDeleting}
                     >

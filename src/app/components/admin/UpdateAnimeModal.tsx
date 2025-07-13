@@ -247,7 +247,7 @@ export const UpdateAnimeModal: React.FC<UpdateAnimeModalProps> = ({
                                     </div>
                                     <div className="flex items-center space-x-2">
                                         <Button
-                                            variant="secondary"
+                                            variant="info"
                                             className="text-xs px-3 py-1"
                                             onClick={handleSelectCurrentPage}
                                             disabled={isUpdating}
@@ -255,7 +255,7 @@ export const UpdateAnimeModal: React.FC<UpdateAnimeModalProps> = ({
                                             {currentPageResults.every(anime => selectedAnimes.has(String(anime.id))) ? '取消当前页' : '选择当前页'}
                                         </Button>
                                         <Button
-                                            variant="secondary"
+                                            variant="info"
                                             className="text-xs px-3 py-1"
                                             onClick={handleSelectAll}
                                             disabled={isUpdating}
@@ -298,7 +298,7 @@ export const UpdateAnimeModal: React.FC<UpdateAnimeModalProps> = ({
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center space-x-2">
                                             <Button
-                                                variant="secondary"
+                                                variant="info"
                                                 onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
                                                 disabled={currentPage === 1 || isUpdating}
                                                 className="text-sm px-3 py-1"
@@ -309,7 +309,7 @@ export const UpdateAnimeModal: React.FC<UpdateAnimeModalProps> = ({
                                                 第 {currentPage} 页，共 {totalPages} 页
                                             </span>
                                             <Button
-                                                variant="secondary"
+                                                variant="info"
                                                 onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
                                                 disabled={currentPage === totalPages || isUpdating}
                                                 className="text-sm px-3 py-1"
@@ -357,7 +357,7 @@ export const UpdateAnimeModal: React.FC<UpdateAnimeModalProps> = ({
                     </div>
                     <div className="flex space-x-3">
                         <Button
-                            variant="secondary"
+                            variant="info"
                             onClick={handleClose}
                             disabled={isUpdating}
                         >

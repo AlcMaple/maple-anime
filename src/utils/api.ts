@@ -1,7 +1,10 @@
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios from 'axios';
 import { message } from '@/ui/Message';
 
-// API接口
+// 获取 Axios 实例类型
+type AxiosInstance = ReturnType<typeof axios.create>;
+
+// API 接口响应结构
 export interface ApiResponse<T = any> {
     success: boolean;
     data?: T;
@@ -9,10 +12,10 @@ export interface ApiResponse<T = any> {
     error?: string;
 }
 
-// 创建axios实例
+// 创建 axios 实例
 const api: AxiosInstance = axios.create({
     baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8002',
-    timeout: 600000, // 请求超时时间 10分钟
+    timeout: 600000,
     headers: {
         'Content-Type': 'application/json',
     },
@@ -20,9 +23,7 @@ const api: AxiosInstance = axios.create({
 
 // 请求拦截器
 api.interceptors.request.use(
-    (config) => {
-        return config;
-    },
+    (config) => config,
     (error) => {
         console.error('Request Error:', error);
         return Promise.reject(error);
@@ -31,9 +32,7 @@ api.interceptors.request.use(
 
 // 响应拦截器
 api.interceptors.response.use(
-    (response: AxiosResponse) => {
-        return response;
-    },
+    (response) => response,
     (error) => {
         let errorMessage = '请求失败';
 
@@ -56,18 +55,18 @@ api.interceptors.response.use(
     }
 );
 
-// 封装HTTP方法
+// 封装 HTTP 方法
 export const apiClient = {
-    get: <T = any>(url: string, config?: AxiosRequestConfig) =>
+    get: <T = any>(url: string, config?: Parameters<typeof api.get>[1]) =>
         api.get<T>(url, config).then(res => res.data),
 
-    post: <T = any>(url: string, data?: any, config?: AxiosRequestConfig) =>
+    post: <T = any>(url: string, data?: any, config?: Parameters<typeof api.post>[2]) =>
         api.post<T>(url, data, config).then(res => res.data),
 
-    put: <T = any>(url: string, data?: any, config?: AxiosRequestConfig) =>
+    put: <T = any>(url: string, data?: any, config?: Parameters<typeof api.put>[2]) =>
         api.put<T>(url, data, config).then(res => res.data),
 
-    delete: <T = any>(url: string, config?: AxiosRequestConfig) =>
+    delete: <T = any>(url: string, config?: Parameters<typeof api.delete>[1]) =>
         api.delete<T>(url, config).then(res => res.data),
 };
 
