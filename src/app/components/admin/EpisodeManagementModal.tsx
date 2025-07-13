@@ -528,7 +528,7 @@ export const EpisodeManagementModal: React.FC<EpisodeManagementModalProps> = ({
         // ),
         updated_time: (
             <span className="text-sm text-gray-600">
-                {formatTime(episode.updated_time || '')}
+                {formatTime(episode.update_time || '')}
             </span>
         ),
         actions: (

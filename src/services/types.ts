@@ -28,8 +28,8 @@ export interface EpisodeFile {
     name: string;
     size?: number;
     kind?: string;
-    created_time?: string;
-    updated_time?: string;
+    create_time?: string;
+    update_time?: string;
     mime_type?: string;
     play_url?: string;
     hash?: string;
