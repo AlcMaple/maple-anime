@@ -10,7 +10,7 @@ import {
 export class AnimeService {
     // 搜索动漫
     static async searchAnime(request: AnimeSearchRequest): Promise<AnimeSearchResult[]> {
-        return apiClient.post<AnimeSearchResult[]>('/api/search', request);
+        return apiClient.post<AnimeSearchResult[]>('/api/anime/search', request);
     }
 
     // 通过名称获取动漫信息（bangumi）
