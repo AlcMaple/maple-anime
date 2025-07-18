@@ -277,14 +277,11 @@ async def update_anime_episode(request: UpdateAnimeRequest):
         pikpak_service = PikPakService()
         client = await pikpak_service.get_client(request.username, request.password)
 
-        # Convert AnimeItem models to dictionaries
         anime_list_dict = []
         for anime in request.anime_list:
-            anime_list_dict.append({
-                "id": anime.id,
-                "title": anime.title,
-                "magnet": anime.magnet
-            })
+            anime_list_dict.append(
+                {"id": anime.id, "title": anime.title, "magnet": anime.magnet}
+            )
 
         result = await pikpak_service.update_anime_episodes(
             client, anime_list_dict, request.folder_id
