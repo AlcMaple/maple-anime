@@ -431,9 +431,9 @@ class PikPakDatabase:
             print(f"更新动漫文件夹的视频链接的更新时间失败: {e}")
             return False
 
-    def get_all_folders_schedule_info(self, my_pack_id: str) -> List[Dict]:
+    def get_all_anime_schedule_info(self, my_pack_id: str) -> List[Dict]:
         """
-        获取所有文件夹的调度信息
+        获取所有动漫的调度信息
         """
         try:
             # 加载现有数据

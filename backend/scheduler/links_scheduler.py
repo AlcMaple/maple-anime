@@ -12,23 +12,24 @@ from apscheduler.executors.asyncio import AsyncIOExecutor
 
 from database.pikpak import PikPakDatabase
 from api.pikpak import PikPakService
+from config.settings import settings
 
 
 # 全局静态函数避免序列化问题
-async def update_folder_task(
+async def update_anime_task(
     folder_id: str, username: str, password: str, container_id: str, update_hours: int
 ):
-    """更新文件夹任务"""
+    """更新动漫任务"""
     try:
         anime_db = PikPakDatabase()
         pikpak_service = PikPakService()
 
-        # 获取文件夹信息
+        # 获取动漫信息
         anime_detail = anime_db.get_anime_detail(folder_id, container_id)
         if not anime_detail:
             return
 
-        # 获取文件列表
+        # 获取动漫列表
         db_data = anime_db.load_data()
         anime_data = db_data.get("animes", {}).get(container_id, {}).get(folder_id, {})
         files = anime_data.get("files", [])
@@ -62,7 +63,7 @@ async def update_folder_task(
                     failed_count += 1
 
                 # API 限流
-                await asyncio.sleep(2)
+                await asyncio.sleep(8)
 
             except Exception as e:
                 failed_count += 1
@@ -87,16 +88,13 @@ async def dynamic_check_task(
     try:
         anime_db = PikPakDatabase()
 
-        # 获取所有文件夹信息
-        folders_info = anime_db.get_all_folders_schedule_info(container_id)
+        # 获取所有动漫信息
+        folders_info = anime_db.get_all_anime_schedule_info(container_id)
 
         if not folders_info:
             return
 
-        print(f"动态检查: 找到 {len(folders_info)} 个文件夹需要调度")
-
-        # 这里需要重新调度，但为了避免复杂，暂时只打印
-        # 实际重新调度会在LinksScheduler.reinitialize()中处理
+        print(f"动态检查: 找到 {len(folders_info)} 个动漫需要调度")
 
     except Exception as e:
         print(f"动态检查失败: {e}")
@@ -111,7 +109,7 @@ class LinksScheduler:
         self.scheduler = None  # 调度器
 
         # 配置常量
-        self.ANIME_CONTAINER_ID = "VOQqzYAEiKo3JmMhSvj6UYvto2"
+        self.ANIME_CONTAINER_ID = settings.ANIME_CONTAINER_ID
         self.UPDATE_INTERVAL_HOURS = 20  # 20小时更新间隔
 
         # 时区配置
@@ -145,37 +143,37 @@ class LinksScheduler:
 
         self.scheduler.start()
 
-        # 初始化所有文件夹的调度
-        await self._initialize_all_folders()
+        # 初始化所有动漫的调度
+        await self._initialize_all_anime()
 
     async def stop(self):
         """停止调度器"""
         if self.scheduler:
             self.scheduler.shutdown()
 
-    async def _initialize_all_folders(self):
-        """初始化所有文件夹的调度任务"""
+    async def _initialize_all_anime(self):
+        """初始化所有动漫的调度任务"""
         try:
-            # 获取所有文件夹信息
-            folders_info = self.anime_db.get_all_folders_schedule_info(
+            # 获取所有动漫信息
+            folders_info = self.anime_db.get_all_anime_schedule_info(
                 self.ANIME_CONTAINER_ID
             )
 
             if not folders_info:
                 return
 
-            # 为每个文件夹安排更新任务
+            # 为每个动漫安排更新任务
             for folder_info in folders_info:
-                await self._schedule_folder_update(folder_info)
+                await self._schedule_anime_update(folder_info)
 
             # 下次检查时间
             await self._schedule_next_check()
 
         except Exception as e:
-            print(f"初始化文件夹失败: {e}")
+            print(f"初始化动漫调度任务失败: {e}")
 
-    async def _schedule_folder_update(self, folder_info: Dict):
-        """为文件夹安排更新任务"""
+    async def _schedule_anime_update(self, folder_info: Dict):
+        """为动漫安排更新任务"""
         try:
             folder_id = folder_info["folder_id"]
             next_update_time = folder_info["next_update_time"]
@@ -198,7 +196,7 @@ class LinksScheduler:
 
             # 添加新任务 - 使用全局函数
             self.scheduler.add_job(
-                func=update_folder_task,
+                func=update_anime_task,
                 trigger="date",
                 run_date=next_update_time,
                 args=[
@@ -266,7 +264,7 @@ class LinksScheduler:
     async def reinitialize(self):
         """初始化所有调度"""
         try:
-            await self._initialize_all_folders()
+            await self._initialize_all_anime()
         except Exception as e:
             print(f"链接调度初始化失败: {e}")
 
@@ -293,8 +291,8 @@ class LinksScheduler:
         return {"status": "running", "total_jobs": len(jobs), "jobs": jobs}
 
     # 手动调度方法
-    async def schedule_folder_now(self, folder_id: str):
-        """立即调度某个文件夹"""
+    async def schedule_anime_now(self, folder_id: str):
+        """立即调度某个动漫"""
         try:
             job_id = f"update_folder_{folder_id}"
 
@@ -306,7 +304,7 @@ class LinksScheduler:
             next_update_time = datetime.now(self.timezone) + timedelta(minutes=1)
 
             self.scheduler.add_job(
-                func=update_folder_task,
+                func=update_anime_task,
                 trigger="date",
                 run_date=next_update_time,
                 args=[
@@ -324,5 +322,5 @@ class LinksScheduler:
             return True
 
         except Exception as e:
-            print(f"调度文件夹失败: {e}")
+            print(f"调度动漫失败: {e}")
             return False

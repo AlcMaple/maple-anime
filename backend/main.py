@@ -17,8 +17,8 @@ from middleware.exception_handler import (
 # 创建应用实例
 app = FastAPI(title=settings.APP_NAME, version=settings.VERSION)
 
-# 配置生命周期管理器
-setup_lifespan(app)
+# # 配置生命周期管理器
+# setup_lifespan(app)
 
 # 配置中间件
 setup_cors(app)
