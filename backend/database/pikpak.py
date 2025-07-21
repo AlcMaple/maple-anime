@@ -103,51 +103,6 @@ class PikPakDatabase:
         anime_info = data["animes"].get(anime_id, {})
         return anime_info.get("status", "连载")
 
-    # def sync_with_pikpak_folders(self, pikpak_folders: List[Dict]) -> List[Dict]:
-    #     """
-    #     同步 pikpak 数据
-
-    #     Args:
-    #         pikpak_folders: PikPak 文件夹列表 [{"name": "动漫名", "id": "文件夹ID"}]
-
-    #     Returns:
-    #         合并后的动漫列表
-    #     """
-    #     result = []
-
-    #     # 处理 PikPak 中的文件夹
-    #     for folder in pikpak_folders:
-    #         folder_id = folder["id"]
-    #         folder_name = folder["name"]
-
-    #         # 获取动漫详细信息
-    #         anime_detail = self.get_anime_detail(folder_id)
-
-    #         # 新动漫
-    #         if not anime_detail:
-    #             anime_detail = {
-    #                 "id": folder_id,
-    #                 "title": folder_name,
-    #                 "status": "连载",
-    #                 "summary": "",
-    #                 "cover_url": "",
-    #                 "updated_at": datetime.now().isoformat(),
-    #             }
-
-    #         result.append(
-    #             {
-    #                 "id": folder_id,
-    #                 "title": anime_detail.get("title", folder_name),
-    #                 "status": anime_detail.get("status", "连载"),
-    #                 "summary": anime_detail.get("summary", ""),
-    #                 "cover_url": anime_detail.get("cover_url", ""),
-    #                 "updated_at": anime_detail.get("updated_at", ""),
-    #             }
-    #         )
-
-    #     print(f"同步完成，共 {len(result)} 个动漫")
-    #     return result
-
     def get_all_animes(self) -> List[Dict]:
         """获取所有动漫列表"""
         data = self.load_data()

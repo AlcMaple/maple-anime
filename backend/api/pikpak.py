@@ -325,7 +325,7 @@ async def delete_anime(request: DeleteAnimeRequest):
 
         if delete_result:
             # 同步数据以更新本地数据库
-            print(f"🔄 开始同步数据以更新本地数据库...")
+            print(f"开始同步数据以更新本地数据库...")
             sync_result = await pikpak_service.sync_data(client, blocking_wait=True)
 
             return {

@@ -1,13 +1,13 @@
-import re
 import asyncio
 from typing import Dict, List, Any, Optional
 from pikpakapi import PikPakApi
-from utils.analyzer import Analyzer
 import time
-from pathlib import Path
-import json
+
 from database.pikpak import PikPakDatabase
 from datetime import datetime
+from config import settings
+from utils.analyzer import Analyzer
+from scheduler import LinksScheduler
 
 
 class PikPakService:
@@ -16,9 +16,9 @@ class PikPakService:
     def __init__(self):
         self.clients = {}  # 客户端连接
         self.analyzer = Analyzer()
-        # self._back_mask = {}  # 后台任务
-        self.my_pack_id = "VOQqzYAEiKo3JmMhSvj6UYvto2"
+        self.my_pack_id = settings.ANIME_CONTAINER_ID
         self.anime_db = PikPakDatabase()
+        self.links_scheduler = LinksScheduler()
 
     async def get_client(self, username: str, password: str) -> PikPakApi:
         """获取或创建PikPak客户端"""
@@ -364,7 +364,7 @@ class PikPakService:
             results: 下载结果列表
         """
         try:
-            # 1. 创建或获取目标文件夹ID
+            # 创建或获取目标文件夹ID
             folder_id = await self.create_anime_folder(client, target_folder_name)
             if not folder_id:
                 # 如果创建失败是因为文件夹已存在，这应该是一个错误，因为此函数用于新下载
@@ -377,7 +377,6 @@ class PikPakService:
             collection_items = []
             single_items = []
             for anime in anime_list:
-                # anime is of type AnimeItem (Pydantic model), use attribute access
                 if self.analyzer.is_collection(anime.title):
                     collection_items.append(anime)
                 else:
@@ -583,12 +582,10 @@ class PikPakService:
             delay_seconds: 延时秒数，默认8秒
         """
         try:
-            print(
-                f"🕐 将在 {delay_seconds} 秒后开始重命名文件夹 {folder_id} 中的文件..."
-            )
+            print(f"将在 {delay_seconds} 秒后开始重命名文件夹 {folder_id} 中的文件...")
             await asyncio.sleep(delay_seconds)
 
-            print(f"🚀 开始重命名文件夹 {folder_id} 中的文件...")
+            print(f"开始重命名文件夹 {folder_id} 中的文件...")
             rename_result = await self.batch_rename_file(client, folder_id)
 
             if rename_result["success"]:
@@ -597,12 +594,12 @@ class PikPakService:
                 asyncio.create_task(
                     self.delayed_sync_data_task(client, delay_seconds=8)
                 )
-                print(f"📝 已安排8秒后同步数据任务")
+                print(f"已安排8秒后同步数据任务")
             else:
-                print(f"❌ 文件夹 {folder_id} 重命名失败: {rename_result['message']}")
+                print(f"文件夹 {folder_id} 重命名失败: {rename_result['message']}")
 
         except Exception as e:
-            print(f"❌ 延时重命名任务异常: {e}")
+            print(f"延时重命名任务异常: {e}")
 
     async def delayed_sync_data_task(self, client: PikPakApi, delay_seconds: int = 8):
         """
@@ -613,19 +610,19 @@ class PikPakService:
             delay_seconds: 延时秒数，默认8秒
         """
         try:
-            print(f"🕐 将在 {delay_seconds} 秒后开始同步数据...")
+            print(f"将在 {delay_seconds} 秒后开始同步数据...")
             await asyncio.sleep(delay_seconds)
 
-            print(f"🚀 开始同步数据...")
+            print(f"开始同步数据...")
             sync_result = await self.sync_data(client)
 
             if sync_result:
-                print(f"✅ 数据同步完成")
+                print(f"数据同步完成")
             else:
-                print(f"❌ 数据同步失败")
+                print(f"数据同步失败")
 
         except Exception as e:
-            print(f"❌ 延时同步数据任务异常: {e}")
+            print(f"延时同步数据任务异常: {e}")
 
     async def get_folder_list(self, client: PikPakApi) -> List[Dict]:
         """
@@ -902,7 +899,7 @@ class PikPakService:
             # 加载数据
             data = self.anime_db.load_data()
             if "animes" not in data:
-                print("❌ 数据格式错误，缺少animes字段")
+                print("数据格式错误，缺少animes字段")
                 return
 
             # 获取mypack_id
@@ -914,7 +911,7 @@ class PikPakService:
             api_batch_size = 3
             api_delay = 8
 
-            print(f"📊 开始同步数据")
+            print(f"开始同步数据")
 
             # 获取云端 mypack的所有文件夹 id
             # { id:id_value,name:name_value }
@@ -933,13 +930,16 @@ class PikPakService:
             # 删除本地多余的
             for folder_id in del_folder_ids:
                 folder_name = anime_folders[folder_id].get("title", "未知")
-                print(f"  ➖ 删除本地多余的 {folder_name} 文件夹")
+                print(f"  删除本地多余的 {folder_name} 文件夹")
                 del anime_folders[folder_id]
+                if self.links_scheduler:
+                    # 如果有链接调度器，删除对应的调度任务
+                    self.links_scheduler.remove_anime_schedule(folder_id)
 
             # 处理新增的文件夹
             for folder_id in new_folder_ids:
                 folder_name = cloud_folder_map[folder_id]["name"]
-                print(f"  ➕ 新增 {folder_name} 文件夹")
+                print(f"  新增 {folder_name} 文件夹")
                 anime_folders[folder_id] = {
                     "title": folder_name,
                     "status": "连载",
@@ -965,16 +965,16 @@ class PikPakService:
                 folder_result = await self.get_folder_files(client, folder_id)
 
                 if not folder_result["success"]:
-                    print(f"  ❌ 获取文件夹内容失败: {folder_result['message']}")
+                    print(f"  获取文件夹内容失败: {folder_result['message']}")
                     continue
 
                 files = folder_result["files"]
 
                 if not files:
-                    print(f"  ⚠️  文件夹为空")
+                    print(f"  文件夹为空")
                     continue
 
-                print(f"  📝 找到 {len(files)} 个文件")
+                print(f"  找到 {len(files)} 个文件")
                 result = []
 
                 # 为每个文件夹获取播放连接
@@ -997,7 +997,7 @@ class PikPakService:
                         # 检查是否需要延时
                         if api_call_count % api_batch_size == 0:
                             print(
-                                f"      ⏱️  已调用 {api_call_count} 次API，延时 {api_delay} 秒..."
+                                f"      ⏱已调用 {api_call_count} 次API，延时 {api_delay} 秒..."
                             )
                             if blocking_wait:
                                 time.sleep(api_delay)
@@ -1018,7 +1018,11 @@ class PikPakService:
             # 保存数据
             data["metadata"]["last_updated"] = datetime.now().isoformat()
             self.anime_db.save_data(data)
-            print("✅ 同步成功")
+            print("同步成功")
+
+            # 初始化调度器
+            if self.links_scheduler:
+                self.links_scheduler.reinitialize()
             return True
         except Exception as e:
             print(f"同步数据失败: {e}")
