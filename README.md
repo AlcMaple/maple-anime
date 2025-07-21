@@ -32,6 +32,18 @@ npm install
 npm run dev
 ```
 
+# 配置环境变量
+
+```bash
+# 新建.env文件
+
+# 配置常量
+PIKPAK_USERNAME=your_pikpak_username
+PIKPAK_PASSWORD=your_pikpak_password
+ANIME_CONTAINER_ID=your_mypack_folder_id
+```
+
+
 # 后端
 
 ```bash
