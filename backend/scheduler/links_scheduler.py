@@ -118,11 +118,15 @@ class LinksScheduler:
     def create_scheduler(self):
         """创建调度器"""
         # 任务存储（宕机重启后恢复）
+        '''
+        这是一个记事本，记录所有的待办事项，使用的是data/scheduler.sqlite数据库
+            当程序关闭或者重启，它会打开这个记事本，回忆起所有未完成的任务
+        '''
         jobstores = {
             "default": SQLAlchemyJobStore(url="sqlite:///data/scheduler.sqlite")
         }
 
-        # 异步执行器
+        # 异步执行器，用于异步等待 pikpak 服务器响应
         executors = {"default": AsyncIOExecutor()}
 
         # 调度器配置
@@ -194,11 +198,12 @@ class LinksScheduler:
             if self.scheduler.get_job(job_id):
                 self.scheduler.remove_job(job_id)
 
-            # 添加新任务 - 使用全局函数
+            # 添加新任务（给记事本添加待办事项）
             self.scheduler.add_job(
-                func=update_anime_task,
-                trigger="date",
-                run_date=next_update_time,
+                func=update_anime_task, # 时间到时更新该动漫的链接
+                trigger="date", # run_date 触发器
+                run_date=next_update_time, # 具体的执行时间
+                # 传递给 next_update_task 的参数
                 args=[
                     folder_id,
                     self.pikpak_username,
@@ -206,7 +211,7 @@ class LinksScheduler:
                     self.ANIME_CONTAINER_ID,
                     self.UPDATE_INTERVAL_HOURS,
                 ],
-                id=job_id,
+                id=job_id, # 任务唯一编号
                 name=f'更新 {folder_info["title"]}',
                 replace_existing=True,
             )
