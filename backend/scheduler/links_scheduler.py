@@ -36,11 +36,10 @@ async def update_anime_task(
     folder_id: str, username: str, password: str, container_id: str, update_hours: int
 ):
     """更新动漫任务的静态函数"""
-    # 使用全局信号量管理器
     semaphore = SemaphoreManager.get_api_semaphore()
 
     async with semaphore:
-        print(f"获取到 API 锁，开始更新动漫: {folder_id}")
+        print(f"获取到 API 锁，开始更新动漫的 ID 是: {folder_id}")
         try:
             anime_db = PikPakDatabase()
             pikpak_service = PikPakService()
@@ -103,7 +102,7 @@ async def update_anime_task(
         except Exception as e:
             print(f"更新失败: {e}")
         finally:
-            print(f"释放 API 锁，更新动漫: {folder_id} 完成")
+            print(f"释放 API 锁，更新动漫: {anime_detail.get('title', '未知')} 完成")
 
 
 class LinksScheduler:
@@ -119,8 +118,6 @@ class LinksScheduler:
 
         # 时区配置
         self.timezone = pytz.timezone("Asia/Shanghai")
-
-        # 不再在实例中保存不可序列化的对象
 
     def create_scheduler(self):
         """创建调度器"""
@@ -238,10 +235,10 @@ class LinksScheduler:
 
             # 添加新任务（给记事本添加待办事项）
             self.scheduler.add_job(
-                func=update_anime_task,  # 使用静态函数避免序列化问题
+                func=update_anime_task,  # 时间到时更新该动漫的链接
                 trigger="date",  # run_date 触发器
                 run_date=next_update_time,  # 具体的执行时间
-                # 传递给静态函数的参数
+                # 传递给 update_anime_task 的参数
                 args=[
                     folder_id,
                     self.pikpak_username,
@@ -263,5 +260,3 @@ class LinksScheduler:
             await self._initialize_all_anime()
         except Exception as e:
             print(f"链接调度初始化失败: {e}")
-
-    # 原有的实例方法已被静态函数替代，避免序列化问题

@@ -35,7 +35,7 @@ npm run dev
 # 配置环境变量
 
 ```bash
-# 新建.env文件
+# 根目录新建.env文件
 
 # 配置常量
 PIKPAK_USERNAME=your_pikpak_username
@@ -129,6 +129,7 @@ python main.py
 | 🟡 | 优化代码结构 |   |
 | ⬜ | 管理端更新动漫 | 支持更新合集，以及能够存储重复的集数 |
 | ⬜ | 日志追踪系统 |  |
+| ⬜ | 视频播放添加对非魔法支持 |  |
 
 # 感谢
 
