@@ -15,77 +15,101 @@ from api.pikpak import PikPakService
 from config.settings import settings
 
 
-# 全局静态函数避免序列化问题
+# 信号量管理器
+class SemaphoreManager:
+    _instance = None
+    _semaphore = None
+
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+        return cls._instance
+
+    @classmethod
+    def get_api_semaphore(cls):
+        if cls._semaphore is None:
+            cls._semaphore = asyncio.Semaphore(1)
+        return cls._semaphore
+
+
 async def update_anime_task(
     folder_id: str, username: str, password: str, container_id: str, update_hours: int
 ):
-    """更新动漫任务"""
-    try:
-        anime_db = PikPakDatabase()
-        pikpak_service = PikPakService()
+    """更新动漫任务的静态函数"""
+    # 使用全局信号量管理器
+    semaphore = SemaphoreManager.get_api_semaphore()
 
-        # 获取动漫信息
-        anime_detail = anime_db.get_anime_detail(folder_id, container_id)
-        if not anime_detail:
-            return
+    async with semaphore:
+        print(f"获取到 API 锁，开始更新动漫: {folder_id}")
+        try:
+            anime_db = PikPakDatabase()
+            pikpak_service = PikPakService()
 
-        # 获取动漫列表
-        db_data = anime_db.load_data()
-        anime_data = db_data.get("animes", {}).get(container_id, {}).get(folder_id, {})
-        files = anime_data.get("files", [])
+            # 获取动漫信息
+            anime_detail = anime_db.get_anime_detail(folder_id, container_id)
+            if not anime_detail:
+                return
 
-        if not files:
-            return
+            # 获取动漫列表
+            db_data = anime_db.load_data()
+            anime_data = (
+                db_data.get("animes", {}).get(container_id, {}).get(folder_id, {})
+            )
+            files = anime_data.get("files", [])
 
-        # 获取 PikPak 客户端
-        client = await pikpak_service.get_client(username, password)
+            if not files:
+                return
 
-        # 更新所有视频链接
-        success_count = 0
-        failed_count = 0
+            # 获取 PikPak 客户端
+            client = await pikpak_service.get_client(username, password)
 
-        for file_info in files:
-            try:
-                file_id = file_info["id"]
-                play_url = await pikpak_service.get_video_play_url(file_id, client)
+            success_count = 0
+            failed_count = 0
 
-                if play_url:
-                    # 更新数据库
-                    res = await anime_db.update_anime_file_link(
-                        file_id, play_url, container_id, folder_id
-                    )
+            # 更新所有视频链接
+            for file_info in files:
+                try:
+                    file_id = file_info["id"]
+                    play_url = await pikpak_service.get_video_play_url(file_id, client)
 
-                    if res["success"]:
-                        success_count += 1
+                    if play_url:
+                        # 更新数据库
+                        res = await anime_db.update_anime_file_link(
+                            file_id, play_url, container_id, folder_id
+                        )
+
+                        if res["success"]:
+                            success_count += 1
+                        else:
+                            failed_count += 1
                     else:
                         failed_count += 1
-                else:
+
+                    # API 限流
+                    await asyncio.sleep(8)
+
+                except Exception as e:
                     failed_count += 1
 
-                # API 限流
-                await asyncio.sleep(8)
+            # 更新时间记录
+            if success_count > 0:
+                await anime_db.update_folder_video_links_time(folder_id, container_id)
+                await anime_db.update_anime_info(folder_id, {}, container_id)
 
-            except Exception as e:
-                failed_count += 1
+            print(
+                f"更新完成: {anime_detail.get('title', '未知')} 成功 {success_count}, 失败 {failed_count}"
+            )
 
-        # 更新时间记录
-        if success_count > 0:
-            await anime_db.update_folder_video_links_time(folder_id, container_id)
-            await anime_db.update_anime_info(folder_id, {}, container_id)
-
-        print(
-            f"更新完成: {anime_detail.get('title', '未知')} 成功 {success_count}, 失败 {failed_count}"
-        )
-
-    except Exception as e:
-        print(f"更新失败: {e}")
+        except Exception as e:
+            print(f"更新失败: {e}")
+        finally:
+            print(f"释放 API 锁，更新动漫: {folder_id} 完成")
 
 
 class LinksScheduler:
     def __init__(self, pikpak_username: str, pikpak_password: str):
         self.pikpak_username = pikpak_username
         self.pikpak_password = pikpak_password
-        self.pikpak_service = PikPakService()
         self.anime_db = PikPakDatabase()
         self.scheduler = None  # 调度器
 
@@ -95,6 +119,8 @@ class LinksScheduler:
 
         # 时区配置
         self.timezone = pytz.timezone("Asia/Shanghai")
+
+        # 不再在实例中保存不可序列化的对象
 
     def create_scheduler(self):
         """创建调度器"""
@@ -212,10 +238,10 @@ class LinksScheduler:
 
             # 添加新任务（给记事本添加待办事项）
             self.scheduler.add_job(
-                func=update_anime_task,  # 时间到时更新该动漫的链接
+                func=update_anime_task,  # 使用静态函数避免序列化问题
                 trigger="date",  # run_date 触发器
                 run_date=next_update_time,  # 具体的执行时间
-                # 传递给 next_update_task 的参数
+                # 传递给静态函数的参数
                 args=[
                     folder_id,
                     self.pikpak_username,
@@ -237,3 +263,5 @@ class LinksScheduler:
             await self._initialize_all_anime()
         except Exception as e:
             print(f"链接调度初始化失败: {e}")
+
+    # 原有的实例方法已被静态函数替代，避免序列化问题

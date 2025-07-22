@@ -10,6 +10,7 @@ from services.anime import AnimeSearch
 from services.bangumi import BangumiApi
 from database.pikpak import PikPakDatabase
 from config.settings import settings
+from services.pikpak import PikPakService
 
 router = APIRouter(prefix="/anime", tags=["动漫"])
 
@@ -156,8 +157,6 @@ async def get_anime_info_by_id(request: AnimeInfoRequest):
 async def save_anime_info(request: AnimeInfoRequest):
     """更新动漫信息"""
     try:
-        from services.pikpak import PikPakService
-
         # 获取更新前的动漫信息
         anime_db = PikPakDatabase()
         old_anime_info = anime_db.get_anime_detail(

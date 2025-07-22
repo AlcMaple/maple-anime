@@ -7,7 +7,6 @@ from database.pikpak import PikPakDatabase
 from datetime import datetime
 from config import settings
 from utils.analyzer import Analyzer
-from scheduler import LinksScheduler
 
 
 class PikPakService:
@@ -18,7 +17,20 @@ class PikPakService:
         self.analyzer = Analyzer()
         self.my_pack_id = settings.ANIME_CONTAINER_ID
         self.anime_db = PikPakDatabase()
-        self.links_scheduler = LinksScheduler()
+        self.links_scheduler = None
+
+    def _get_links_scheduler(self):
+        """延迟导入并获取链接调度器实例"""
+        if self.links_scheduler is None:
+            try:
+                from scheduler.links_scheduler import LinksScheduler
+
+                # 这里需要从配置或其他地方获取用户名密码
+                # 暂时返回None，需要外部设置
+                pass
+            except ImportError:
+                pass
+        return self.links_scheduler
 
     async def get_client(self, username: str, password: str) -> PikPakApi:
         """获取或创建PikPak客户端"""
@@ -859,7 +871,7 @@ class PikPakService:
             else:
                 return None
         except Exception as e:
-            print(f"❌ 获取视频播放连接异常: {e}")
+            print(f"获取视频播放连接异常: {e}")
             return None
 
     async def get_mypack_folder_id(self, client: PikPakApi) -> Optional[str]:
@@ -932,9 +944,10 @@ class PikPakService:
                 folder_name = anime_folders[folder_id].get("title", "未知")
                 print(f"  删除本地多余的 {folder_name} 文件夹")
                 del anime_folders[folder_id]
-                if self.links_scheduler:
+                links_scheduler = self._get_links_scheduler()
+                if links_scheduler:
                     # 如果有链接调度器，删除对应的调度任务
-                    self.links_scheduler.remove_anime_schedule(folder_id)
+                    links_scheduler.remove_anime_schedule(folder_id)
 
             # 处理新增的文件夹
             for folder_id in new_folder_ids:
@@ -980,7 +993,7 @@ class PikPakService:
                 # 为每个文件夹获取播放连接
                 for file in files:
                     if file["id"] in existing_file_map:
-                        # print(f"      ♻️  使用本地已有播放链接")
+                        # print(f"      使用本地已有播放链接")
                         original_file = existing_file_map[file["id"]]
                         file_data = {
                             "id": file["id"],
@@ -991,13 +1004,13 @@ class PikPakService:
                     else:
                         # 获取播放连接
                         play_url = await self.get_video_play_url(file["id"], client)
-                        # print(f"      📡 成功获取播放链接: {play_url}")
+                        # print(f"      成功获取播放链接: {play_url}")
                         api_call_count += 1
 
                         # 检查是否需要延时
                         if api_call_count % api_batch_size == 0:
                             print(
-                                f"      ⏱已调用 {api_call_count} 次API，延时 {api_delay} 秒..."
+                                f"      已调用 {api_call_count} 次API，延时 {api_delay} 秒..."
                             )
                             if blocking_wait:
                                 time.sleep(api_delay)
@@ -1021,8 +1034,9 @@ class PikPakService:
             print("同步成功")
 
             # 初始化调度器
-            if self.links_scheduler:
-                self.links_scheduler.reinitialize()
+            links_scheduler = self._get_links_scheduler()
+            if links_scheduler:
+                await links_scheduler.reinitialize()
             return True
         except Exception as e:
             print(f"同步数据失败: {e}")
@@ -1150,17 +1164,17 @@ class PikPakService:
                 magnet = anime.get("magnet", "")
 
                 try:
-                    print(f"📦 处理合集: {title}")
+                    print(f"处理合集: {title}")
 
                     # 下载合集到 My Pack 根目录
                     result = await self.download_to_root(client, magnet, title)
                     if result["success"]:
-                        print(f"    ✅ 合集下载任务添加成功")
+                        print(f"    合集下载任务添加成功")
 
                         # 等待并查找新生成的文件夹
                         new_folder = await self.find_new_folder(client, before_folders)
                         if new_folder:
-                            print(f"    📁 找到新合集文件夹: {new_folder['name']}")
+                            print(f"    找到新合集文件夹: {new_folder['name']}")
 
                             # 将合集文件夹内容移动到目标文件夹
                             move_result = await self.move_folder_contents(
@@ -1169,18 +1183,14 @@ class PikPakService:
 
                             if move_result["success"]:
                                 added_count += 1
-                                print(
-                                    f"    ✅ 合集内容移动成功: {move_result['message']}"
-                                )
+                                print(f"    合集内容移动成功: {move_result['message']}")
 
                                 # 删除空的合集文件夹
                                 try:
                                     await client.delete_to_trash(ids=[new_folder["id"]])
-                                    print(
-                                        f"    🗑️ 删除空合集文件夹: {new_folder['name']}"
-                                    )
+                                    print(f"    删除空合集文件夹: {new_folder['name']}")
                                 except Exception as e:
-                                    print(f"    ⚠️ 删除空合集文件夹失败: {str(e)}")
+                                    print(f"    删除空合集文件夹失败: {str(e)}")
 
                                 # 更新 before_folders 以避免重复检测
                                 before_folders.append(new_folder["name"])
@@ -1189,26 +1199,24 @@ class PikPakService:
                                 failed_episodes.append(
                                     {"title": title, "reason": move_result["message"]}
                                 )
-                                print(
-                                    f"    ❌ 合集内容移动失败: {move_result['message']}"
-                                )
+                                print(f"    合集内容移动失败: {move_result['message']}")
                         else:
                             failed_count += 1
                             failed_episodes.append(
                                 {"title": title, "reason": "未找到新生成的合集文件夹"}
                             )
-                            print(f"    ❌ 未找到新生成的合集文件夹")
+                            print(f"    未找到新生成的合集文件夹")
                     else:
                         failed_count += 1
                         failed_episodes.append(
                             {"title": title, "reason": result["message"]}
                         )
-                        print(f"    ❌ 合集下载任务添加失败: {result['message']}")
+                        print(f"    合集下载任务添加失败: {result['message']}")
 
                 except Exception as e:
                     failed_count += 1
                     failed_episodes.append({"title": title, "reason": str(e)})
-                    print(f"    ❌ 合集处理异常: {str(e)}")
+                    print(f"    合集处理异常: {str(e)}")
 
             # 处理单集
             for i, anime in enumerate(single_items, 1):
@@ -1216,7 +1224,7 @@ class PikPakService:
                 magnet = anime.get("magnet", "")
 
                 try:
-                    print(f"📺 处理单集: {title}")
+                    print(f"处理单集: {title}")
 
                     # 直接下载到指定文件夹
                     result = await self.download_to_folder(
@@ -1225,18 +1233,18 @@ class PikPakService:
 
                     if result["success"]:
                         added_count += 1
-                        print(f"    ✅ 单集下载任务添加成功")
+                        print(f"    单集下载任务添加成功")
                     else:
                         failed_count += 1
                         failed_episodes.append(
                             {"title": title, "reason": result["message"]}
                         )
-                        print(f"    ❌ 单集下载任务添加失败: {result['message']}")
+                        print(f"    单集下载任务添加失败: {result['message']}")
 
                 except Exception as e:
                     failed_count += 1
                     failed_episodes.append({"title": title, "reason": str(e)})
-                    print(f"    ❌ 单集下载异常: {str(e)}")
+                    print(f"    单集下载异常: {str(e)}")
 
             # 成功添加至少一个集数才算成功
             success = added_count > 0
@@ -1251,7 +1259,7 @@ class PikPakService:
 
             # 如果有成功的下载，延时启动重命名任务
             if added_count > 0:
-                print(f"📝 安排8秒后为文件夹 {folder_id} 执行重命名任务")
+                print(f"安排8秒后为文件夹 {folder_id} 执行重命名任务")
                 asyncio.create_task(
                     self.delayed_rename_task(client, folder_id, delay_seconds=8)
                 )
@@ -1265,7 +1273,7 @@ class PikPakService:
             }
 
         except Exception as e:
-            print(f"❌ 更新动漫异常: {e}")
+            print(f"更新动漫异常: {e}")
             return {
                 "success": False,
                 "message": f"更新动漫失败: {str(e)}",

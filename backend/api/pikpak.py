@@ -240,7 +240,7 @@ async def update_anime_links(request: VideoUrlUpdateRequest):
                 if folder_update_result:
                     print(f"已更新动漫文件夹的更新时间")
                 if video_time_update_result:
-                    print(f"✅ 已记录视频链接更新时间")
+                    print(f"已记录视频链接更新时间")
 
             except Exception as e:
                 print(f"更新时间记录时发生错误: {str(e)}")

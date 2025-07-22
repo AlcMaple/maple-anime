@@ -9,10 +9,7 @@ from config import settings
 from middleware import setup_cors
 from api import api_router
 from lifecycle import setup_lifespan
-from middleware import (
-    ExceptionHandlerMiddleware,
-    set_exception_handlers,
-)
+from middleware import exception_middleware
 
 # 创建应用实例
 app = FastAPI(title=settings.APP_NAME, version=settings.VERSION)
@@ -23,11 +20,8 @@ setup_lifespan(app)
 # 配置中间件
 setup_cors(app)
 
-# 异常处理中间件
-app.add_middleware(ExceptionHandlerMiddleware)
-
-# 异常处理器
-set_exception_handlers(app)
+# 异常处理器中间件
+exception_middleware(app)
 
 # 注册路由
 app.include_router(api_router)
