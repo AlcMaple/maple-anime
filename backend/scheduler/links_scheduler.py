@@ -15,30 +15,38 @@ from api.pikpak import PikPakService
 from config.settings import settings
 
 
-# 信号量管理器
-class SemaphoreManager:
-    _instance = None
-    _semaphore = None
+# 全局异步锁管理器，使用单例模式确保整个程序中只有一个API访问锁
+class LockManager:
+    _instance = None  # 存储唯一的实例
+    _lock = None  # 存储唯一的异步锁
 
     def __new__(cls):
+        """
+        重写__new__方法，实现单例模式
+        无论调用多少次 LockManager()，都返回同一个实例
+        """
         if cls._instance is None:
+            # 第一次创建时，调用父类的 __new__ 创建实例
             cls._instance = super().__new__(cls)
         return cls._instance
 
     @classmethod
-    def get_api_semaphore(cls):
-        if cls._semaphore is None:
-            cls._semaphore = asyncio.Semaphore(1)
-        return cls._semaphore
+    def get_api_lock(cls):
+        # 使用类方法，可通过类名直接调用，确保唯一锁
+        if cls._lock is None:
+            cls._lock = asyncio.Lock()
+        return cls._lock
 
 
+# 使用静态函数解决APScheduler 调度器需要调用独立的函数，不能直接调用类方法问题
+# 使用静态函数解决无法序列化存储到数据库的问题
 async def update_anime_task(
     folder_id: str, username: str, password: str, container_id: str, update_hours: int
 ):
     """更新动漫任务的静态函数"""
-    semaphore = SemaphoreManager.get_api_semaphore()
+    lock = LockManager.get_api_lock()
 
-    async with semaphore:
+    async with lock:
         print(f"获取到 API 锁，开始更新动漫的 ID 是: {folder_id}")
         try:
             anime_db = PikPakDatabase()
