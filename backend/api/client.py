@@ -2,11 +2,12 @@
 客户端路由
 """
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter
 
 from database.pikpak import PikPakDatabase
 from config.settings import settings
 from schemas.client import SearchRequest
+from exceptions import SystemException
 
 router = APIRouter(prefix="/client", tags=["客户端"])
 
@@ -36,9 +37,10 @@ async def search_client(request: SearchRequest):
                 "message": result["message"],
             }
 
+    except SystemException:
+        raise
     except Exception as e:
-        print(f"❌ 客户端搜索动漫异常: {e}")
-        raise HTTPException(status_code=500, detail=f"客户端搜索动漫失败: {str(e)}")
+        raise SystemException(message="搜索客户端动漫失败", original_error=e)
 
 
 @router.get("/anime/{anime_id}")
@@ -62,6 +64,7 @@ async def get_client_anime(anime_id: str):
                 "message": "获取客户端动漫信息失败",
             }
 
+    except SystemException:
+        raise
     except Exception as e:
-        print(f"获取动漫信息异常: {e}")
-        raise HTTPException(status_code=500, detail=f"获取动漫信息失败: {str(e)}")
+        raise SystemException(message="获取客户端动漫信息失败", original_error=e)
