@@ -1,64 +1,107 @@
-from fastapi import Request, HTTPException, FastAPI
-from fastapi.exceptions import RequestValidationError, HTTPException
-from sqlalchemy.exc import IntegrityError
-import traceback
 import logging
+import traceback
+from fastapi import Request, FastAPI
+from fastapi.responses import JSONResponse
+from starlette.exceptions import HTTPException
+from fastapi.exceptions import RequestValidationError
+from sqlalchemy.exc import IntegrityError
 
 from exceptions import (
     BaseException,
+    ExceptionType,
     NotFoundException,
     DuplicateException,
     ValidationException,
+    SystemException,
 )
 from utils.responses import api_response
+
 
 logger = logging.getLogger(__name__)
 
 
-def exception_middleware(app: FastAPI):
-    """
-    异常处理器
-    """
+def add_exception_handlers(app: FastAPI):
+    """异常处理器"""
 
     @app.exception_handler(BaseException)
-    async def handle_base_exception(request: Request, exc: BaseException):
-        logger.warning(f"Business exception: {exc.message}")
-        if isinstance(exc, NotFoundException):
-            return api_response(404, exc.message)
-        elif isinstance(exc, DuplicateException):
-            return api_response(400, exc.message)
-        elif isinstance(exc, ValidationException):
-            return api_response(400, exc.message)
+    async def custom_base_exception_handler(request: Request, exc: BaseException):
+        """
+        处理所有继承自 BaseException 的自定义异常
+        """
+        # 系统异常
+        if exc.exception_type == ExceptionType.SYSTEM:
+            # 后端记录详细日志
+            error_details = (
+                f"System exception occurred: {exc.message} | Request: {request.url}"
+            )
+            if hasattr(exc, "original_error") and exc.original_error:
+                error_details += f" | Original Error: {type(exc.original_error).__name__}: {exc.original_error}"
+            logger.error(error_details)
+            logger.error(f"Traceback: {traceback.format_exc()}")
+
+            # 前端返回通用错误信息
+            return api_response(500, "服务器内部错误")
+
         else:
-            return api_response(400, exc.message)
+            # 根据不同的业务异常类型，返回不同的状态码
+            if isinstance(exc, NotFoundException):
+                status_code = 404
+            elif isinstance(exc, DuplicateException):
+                status_code = 409
+            elif isinstance(exc, ValidationException):
+                status_code = 400
+            else:  # 其他业务异常默认为 400
+                status_code = 400
+
+            logger.warning(
+                f"Business exception: {exc.message} | Request: {request.url}"
+            )
+            return api_response(status_code, exc.message)
 
     @app.exception_handler(HTTPException)
-    async def handle_http_exception(request: Request, exc: HTTPException):
+    async def http_exception_handler(request: Request, exc: HTTPException):
+        """处理 FastAPI/Starlette 抛出的 HTTP 异常"""
         return api_response(exc.status_code, exc.detail)
 
     @app.exception_handler(RequestValidationError)
-    async def handle_validation_exception(
+    async def pydantic_validation_exception_handler(
         request: Request, exc: RequestValidationError
     ):
-        error_messages = []
-        for error in exc.errors():
-            field = " -> ".join(str(loc) for loc in error["loc"])
-            message = error["msg"]
-            error_messages.append(f"{field}: {message}")
-        return api_response(400, f"参数验证失败: {'; '.join(error_messages)}")
+        """处理 Pydantic 模型验证失败的异常"""
+        error_messages = [
+            f"{'.'.join(map(str, err['loc']))}: {err['msg']}" for err in exc.errors()
+        ]
+        full_message = f"参数验证失败: {'; '.join(error_messages)}"
+        logger.warning(
+            f"Pydantic validation failed: {full_message} for request: {request.url}"
+        )
+        return api_response(400, full_message)
 
     @app.exception_handler(IntegrityError)
-    async def handle_integrity_error(request: Request, exc: IntegrityError):
-        error_msg = str(exc.orig) if hasattr(exc, "orig") else str(exc)
-        if "UNIQUE constraint failed" in error_msg or "Duplicate entry" in error_msg:
-            return api_response(400, "数据重复，请检查唯一性约束")
-        elif "FOREIGN KEY constraint failed" in error_msg:
-            return api_response(400, "外键约束错误，相关数据不存在")
+    async def sqlalchemy_integrity_handler(request: Request, exc: IntegrityError):
+        """处理 SQLAlchemy 数据库完整性异常，通常视为业务逻辑错误"""
+        error_msg = str(exc.orig).lower() if hasattr(exc, "orig") else str(exc).lower()
+
+        # 业务错误信息
+        if "unique constraint" in error_msg or "duplicate entry" in error_msg:
+            message = "数据已存在，请勿重复添加"
+        elif "foreign key constraint" in error_msg:
+            message = "关联资源不存在，请检查提交的数据"
         else:
-            return api_response(400, "数据库约束错误")
+            message = "数据库操作失败，请检查数据完整性"
+
+        logger.error(
+            f"Database Integrity Error: {message} | Details: {exc.orig} | Request: {request.url}"
+        )
+        return api_response(400, message)
 
     @app.exception_handler(Exception)
-    async def handle_general_exception(request: Request, exc: Exception):
-        logger.error(f"Unhandled exception: {type(exc).__name__}: {str(exc)}")
+    async def generic_exception_handler(request: Request, exc: Exception):
+        """
+        其他异常
+        """
+        logger.error(
+            f"Unhandled internal server error: {type(exc).__name__}: {exc} for request: {request.url}"
+        )
         logger.error(f"Traceback: {traceback.format_exc()}")
         return api_response(500, "服务器内部错误")
