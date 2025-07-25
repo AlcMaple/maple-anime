@@ -34,9 +34,10 @@ async def search(request: SearchRequest):
             }
         return data
 
-    except Exception as e:
-        print(f" 动漫搜索异常: {e}")
+    except SystemException:
         raise
+    except Exception as e:
+        raise SystemException(message="动漫搜索服务异常", original_error=e)
 
 
 @router.get("/list")
@@ -67,9 +68,10 @@ async def get_anime_list():
             "message": "获取动漫列表成功",
         }
 
-    except Exception as e:
-        print(f" 动漫列表获取异常: {e}")
+    except SystemException:
         raise
+    except Exception as e:
+        raise SystemException(message="动漫列表获取服务异常", original_error=e)
 
 
 @router.post("/info")
@@ -99,9 +101,10 @@ async def get_anime_info(request: SearchRequest):
                 "message": result["message"],
             }
 
-    except Exception as e:
-        print(f" Bangumi获取动漫信息异常: {e}")
+    except SystemException:
         raise
+    except Exception as e:
+        raise SystemException(message="动漫信息获取服务异常", original_error=e)
 
 
 @router.post("/info/id")
@@ -124,9 +127,10 @@ async def get_anime_info_by_id(request: AnimeInfoRequest):
                 "message": f"未找到 {request.title} 信息",
             }
 
-    except Exception as e:
-        print(f" 数据库获取动漫信息异常: {e}")
+    except SystemException:
         raise
+    except Exception as e:
+        raise SystemException(message="动漫信息获取服务异常", original_error=e)
 
 
 @router.post("/info/save")
@@ -141,13 +145,25 @@ async def save_anime_info(request: AnimeInfoRequest):
 
         # 检查标题是否一致
         if old_anime_info.get("title") != request.title:
-            pikpak_service = PikPakService()
-            client = await pikpak_service.get_client(request.username, request.password)
-            result = await pikpak_service.rename_folder(
-                client, request.id, request.title
-            )
-            if not result:
-                raise HTTPException(status_code=500, detail=f"重命名失败: {result}")
+            try:
+                pikpak_service = PikPakService()
+                client = await pikpak_service.get_client(
+                    request.username, request.password
+                )
+                result = await pikpak_service.rename_folder(
+                    client, request.id, request.title
+                )
+                if not result:
+                    raise SystemException(
+                        message="PikPak文件夹重命名操作失败",
+                        original_error=Exception(
+                            f"rename_folder returned False for folder_id: {request.id}, new_name: {request.title}"
+                        ),
+                    )
+            except SystemException:
+                raise
+            except Exception as e:
+                raise SystemException(message="PikPak重命名服务异常", original_error=e)
 
         # 更新数据库
         result = await anime_db.update_anime_info(
@@ -174,6 +190,7 @@ async def save_anime_info(request: AnimeInfoRequest):
                 "message": f"更新 {request.title} 失败",
             }
 
-    except Exception as e:
-        print(f" 更新动漫信息异常: {e}")
+    except SystemException:
         raise
+    except Exception as e:
+        raise SystemException(message="动漫信息更新服务异常", original_error=e)
