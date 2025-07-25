@@ -21,7 +21,7 @@ class BangumiApi:
             response.raise_for_status()
 
             data = response.json()
-            print(f"✅ 成功获取番剧每日放送表，共 {len(data)} 天")
+            print(f" 成功获取番剧每日放送表，共 {len(data)} 天")
 
             # 保存数据
             self.save_calendar_data(data)
@@ -33,7 +33,7 @@ class BangumiApi:
             }
 
         except Exception as e:
-            print(f"❌ 番剧每日放送表获取失败：{e}")
+            print(f" 番剧每日放送表获取失败：{e}")
             return {"data": [], "last_update": "", "success": False}
 
     def save_calendar_data(self, data: Dict[str, Any]) -> bool:
@@ -43,11 +43,11 @@ class BangumiApi:
             with open(self.news_data, "w", encoding="utf-8") as f:
                 json.dump(data, f, ensure_ascii=False, indent=4)
 
-            print(f"✅ 成功保存番剧每日放送表数据")
+            print(f" 成功保存番剧每日放送表数据")
             return True
 
         except Exception as e:
-            print(f"❌ 番剧每日放送表数据保存失败：{e}")
+            print(f" 番剧每日放送表数据保存失败：{e}")
             return False
 
     async def load_calendar_data(self) -> Optional[List[Dict[str, Any]]]:
@@ -62,12 +62,12 @@ class BangumiApi:
             )
 
             print(
-                f"✅ 成功加载番剧每日放送表数据，共 {len(data)} 天，{total_items} 部番剧"
+                f" 成功加载番剧每日放送表数据，共 {len(data)} 天，{total_items} 部番剧"
             )
             return {"data": data, "success": True}
 
         except Exception as e:
-            print(f"❌ 番剧每日放送表数据加载失败：{e}")
+            print(f" 番剧每日放送表数据加载失败：{e}")
             return {"data": [], "success": False}
 
     async def get_subject_detail(self, subject_id: int) -> Dict[str, Any]:

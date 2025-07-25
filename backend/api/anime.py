@@ -2,7 +2,7 @@
 动漫相关路由
 """
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter
 
 from services.anime import AnimeSearch
 from services.bangumi import BangumiApi
@@ -10,7 +10,7 @@ from database.pikpak import PikPakDatabase
 from config.settings import settings
 from services.pikpak import PikPakService
 from schemas.anime import SearchRequest, AnimeInfoRequest
-from exceptions import ValidationException, NotFoundException, SystemException
+from exceptions import ValidationException, SystemException
 
 router = APIRouter(prefix="/anime", tags=["动漫"])
 
