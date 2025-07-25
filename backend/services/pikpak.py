@@ -827,7 +827,7 @@ class PikPakService:
             failed_count: 删除失败的文件数量
         """
         try:
-            print(f"🗑️ 批量删除 {len(file_ids)} 个文件...")
+            print(f" 批量删除 {len(file_ids)} 个文件...")
 
             deleted_count = 0
             failed_count = 0
@@ -840,10 +840,10 @@ class PikPakService:
                     else:
                         failed_count += 1
                 except Exception as e:
-                    print(f"❌ 删除文件 {file_id} 失败: {e}")
+                    print(f" 删除文件 {file_id} 失败: {e}")
                     failed_count += 1
 
-            print(f"✅ 批量删除完成: 成功 {deleted_count} 个，失败 {failed_count} 个")
+            print(f" 批量删除完成: 成功 {deleted_count} 个，失败 {failed_count} 个")
 
             return {
                 "success": deleted_count > 0,
@@ -853,7 +853,7 @@ class PikPakService:
             }
 
         except Exception as e:
-            print(f"❌ 批量删除异常: {e}")
+            print(f" 批量删除异常: {e}")
             return {
                 "success": False,
                 "message": f"批量删除失败: {str(e)}",

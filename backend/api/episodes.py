@@ -8,6 +8,7 @@ from services.pikpak import PikPakService
 from database.pikpak import PikPakDatabase
 from config.settings import settings
 from schemas.episodes import EpisodeListRequest, FileDeleteRequest, FileRenameRequest
+from exceptions import SystemException, ValidationException
 
 router = APIRouter(prefix="/episodes", tags=["集数管理"])
 
@@ -17,7 +18,7 @@ async def get_episode_list(request: EpisodeListRequest):
     """获取动漫文件夹内的所有集数"""
     try:
         if not request.folder_id:
-            raise HTTPException(status_code=400, detail="请指定文件夹ID")
+            raise ValidationException("请指定动漫")
 
         anime_db = PikPakDatabase()
         result = anime_db.load_data()
@@ -47,10 +48,10 @@ async def get_episode_list(request: EpisodeListRequest):
                 "message": "暂无集数",
             }
 
-    except HTTPException:
+    except SystemException:
         raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"获取集数列表失败: {str(e)}")
+        raise SystemException(message="获取集数列表失败", original_error=e)
 
 
 @router.post("/delete")
@@ -58,10 +59,10 @@ async def delete_episodes(request: FileDeleteRequest):
     """批量删除集数文件"""
     try:
         if not request.username or not request.password:
-            raise HTTPException(status_code=400, detail="请配置PikPak账号密码")
+            raise ValidationException("请配置 pikpak 账号密码")
 
         if not request.file_ids or len(request.file_ids) == 0:
-            raise HTTPException(status_code=400, detail="请选择要删除的文件")
+            raise ValidationException("请选择要删除的动漫")
 
         pikpak_service = PikPakService()
         client = await pikpak_service.get_client(request.username, request.password)
@@ -70,7 +71,7 @@ async def delete_episodes(request: FileDeleteRequest):
 
         if result["success"]:
             # 同步数据以更新本地数据库
-            print(f"🔄 开始同步数据以更新本地数据库...")
+            print(f" 开始同步数据以更新本地数据库...")
             sync_result = await pikpak_service.sync_data(client, blocking_wait=True)
 
             return {
@@ -83,10 +84,10 @@ async def delete_episodes(request: FileDeleteRequest):
         else:
             raise HTTPException(status_code=500, detail=result["message"])
 
-    except HTTPException:
+    except SystemException:
         raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"删除文件失败: {str(e)}")
+        raise SystemException(message="删除集数失败", original_error=e)
 
 
 @router.post("/rename")

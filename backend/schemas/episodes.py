@@ -6,16 +6,14 @@ class EpisodeListRequest(BaseModel):
     folder_id: str
 
 
-class FileDeleteRequest(BaseModel):
+class FileDeleteRequest(EpisodeListRequest):
     username: str
     password: str
-    folder_id: str
     file_ids: List[str]
 
 
-class FileRenameRequest(BaseModel):
+class FileRenameRequest(EpisodeListRequest):
     username: str
     password: str
-    folder_id: str
     file_id: str
     new_name: str
