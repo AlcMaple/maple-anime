@@ -2,7 +2,7 @@
 集数管理路由
 """
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter
 
 from services.pikpak import PikPakService
 from database.pikpak import PikPakDatabase
@@ -82,7 +82,9 @@ async def delete_episodes(request: FileDeleteRequest):
                 "synced": sync_result,
             }
         else:
-            raise HTTPException(status_code=500, detail=result["message"])
+            raise SystemException(
+                message="删除集数失败", original_error=result["message"]
+            )
 
     except SystemException:
         raise
@@ -95,19 +97,27 @@ async def rename_episode(request: FileRenameRequest):
     """重命名单个集数文件"""
     try:
         if not request.username or not request.password:
-            raise HTTPException(status_code=400, detail="请配置PikPak账号密码")
+            raise ValidationException("请配置 pikpak 账号密码")
 
         if not request.file_id or not request.new_name:
-            raise HTTPException(status_code=400, detail="请指定文件ID和新文件名")
+            raise ValidationException("请指定某个动漫文件和新名称")
 
-        # 重命名
-        pikpak_service = PikPakService()
-        client = await pikpak_service.get_client(request.username, request.password)
-        result = await pikpak_service.rename_single_file(
-            client, request.file_id, request.new_name
-        )
-        result = True
-
+        #
+        try:
+            pikpak_service = PikPakService()
+            client = await pikpak_service.get_client(request.username, request.password)
+            result = await pikpak_service.rename_single_file(
+                client, request.file_id, request.new_name
+            )
+            if not result:
+                raise SystemException(
+                    message="文件重命名失败",
+                    original_error=f"文件 {request.file_id} 不存在或者 pikpak 服务异常或者代码内部逻辑出错",
+                )
+        except SystemException:
+            raise
+        except Exception as e:
+            raise SystemException(message="文件重命名失败", original_error=e)
         print("重命名成功，开始更新本地数据库……")
         if result:
             # 更新数据库
@@ -123,9 +133,12 @@ async def rename_episode(request: FileRenameRequest):
                 return {"success": True, "message": "文件重命名成功"}
             return {"success": False, "message": "文件重命名成功，但更新数据库失败"}
         else:
-            raise HTTPException(status_code=500, detail="文件重命名失败")
+            raise SystemException(
+                message="文件重命名失败",
+                original_error="代码内部逻辑出错或者数据库没有该动漫",
+            )
 
-    except HTTPException:
+    except SystemException:
         raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"重命名文件失败: {str(e)}")
+        raise SystemException(message="文件重命名失败", original_error=e)

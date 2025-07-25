@@ -210,7 +210,6 @@ class PikPakDatabase:
             for file in files:
                 if file.get("id") == file_id:
                     file["name"] = new_name
-                    # print("name: ", file["name"])
                     break
 
             # 保存数据
