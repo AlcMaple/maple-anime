@@ -6,7 +6,10 @@ import time
 from database.pikpak import PikPakDatabase
 from datetime import datetime
 from config import settings
-from utils.analyzer import Analyzer
+from utils import (
+    is_collection,
+    get_anime_episodes,
+)
 
 
 class PikPakService:
@@ -14,7 +17,6 @@ class PikPakService:
 
     def __init__(self):
         self.clients = {}  # 客户端连接
-        self.analyzer = Analyzer()
         self.my_pack_id = settings.ANIME_CONTAINER_ID
         self.anime_db = PikPakDatabase()
         self.links_scheduler = None
@@ -389,7 +391,7 @@ class PikPakService:
             collection_items = []
             single_items = []
             for anime in anime_list:
-                if self.analyzer.is_collection(anime.title):
+                if is_collection(anime.title):
                     collection_items.append(anime)
                 else:
                     single_items.append(anime)
@@ -554,7 +556,7 @@ class PikPakService:
                     continue
 
                 # 获取新文件名
-                episode_num = self.analyzer.get_anime_episodes(original_name)
+                episode_num = get_anime_episodes(original_name)
                 if episode_num == original_name:
                     # 无法获取新的文件名
                     failed_files.append(file)
@@ -1147,7 +1149,7 @@ class PikPakService:
 
             for anime in anime_list:
                 title = anime.get("title", "")
-                if self.analyzer.is_collection(title):
+                if is_collection(title):
                     collection_items.append(anime)
                 else:
                     single_items.append(anime)

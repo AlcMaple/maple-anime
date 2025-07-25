@@ -1,8 +1,7 @@
 import httpx
 import json
-import os
 from typing import Dict, List, Any, Optional
-from datetime import datetime, timedelta
+from datetime import datetime
 
 
 class BangumiApi:
