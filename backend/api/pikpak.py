@@ -2,12 +2,9 @@
 PikPak相关路由
 """
 
-from typing import List, Optional, Union
 from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel
 
 from services.pikpak import PikPakService
-from services.anime import AnimeSearch
 from database.pikpak import PikPakDatabase
 from config.settings import settings
 from schemas.pikpak import (

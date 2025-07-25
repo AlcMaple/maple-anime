@@ -10,6 +10,7 @@ from database.pikpak import PikPakDatabase
 from config.settings import settings
 from services.pikpak import PikPakService
 from schemas.anime import SearchRequest, AnimeInfoRequest
+from exceptions import ValidationException, NotFoundException, SystemException
 
 router = APIRouter(prefix="/anime", tags=["动漫"])
 
@@ -19,7 +20,7 @@ async def search(request: SearchRequest):
     """搜索动漫资源"""
     try:
         if not request.name:
-            raise HTTPException(status_code=400, detail="请输入动漫名称")
+            raise ValidationException("请指定动漫名称")
 
         anime_search = AnimeSearch()
         data = await anime_search.search_anime(request.name)
@@ -33,10 +34,9 @@ async def search(request: SearchRequest):
             }
         return data
 
-    except HTTPException:
-        raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"搜索失败: {str(e)}")
+        print(f" 动漫搜索异常: {e}")
+        raise
 
 
 @router.get("/list")
@@ -46,7 +46,7 @@ async def get_anime_list():
         db = PikPakDatabase()
         result = db.load_data()
 
-        # 解析成表格需要的数据
+        # 解析成表格数据
         animes_container = result.get("animes", {}).get(settings.ANIME_CONTAINER_ID, {})
 
         anime_list = []
@@ -68,15 +68,16 @@ async def get_anime_list():
         }
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"获取动漫列表失败: {str(e)}")
+        print(f" 动漫列表获取异常: {e}")
+        raise
 
 
 @router.post("/info")
 async def get_anime_info(request: SearchRequest):
-    """获取动漫信息（从Bangumi）"""
+    """获取动漫信息（Bangumi）"""
     try:
         if not request.name:
-            raise HTTPException(status_code=400, detail="请指定动漫名称")
+            raise ValidationException("请指定动漫名称")
 
         bangumi_api = BangumiApi()
         result = await bangumi_api.search_anime_by_title(request.name)
@@ -99,13 +100,13 @@ async def get_anime_info(request: SearchRequest):
             }
 
     except Exception as e:
-        print(f"❌ Bangumi获取动漫信息异常: {e}")
-        raise HTTPException(status_code=500, detail=f"获取动漫信息失败: {str(e)}")
+        print(f" Bangumi获取动漫信息异常: {e}")
+        raise
 
 
 @router.post("/info/id")
 async def get_anime_info_by_id(request: AnimeInfoRequest):
-    """根据ID获取动漫信息（从本地数据库）"""
+    """根据ID获取动漫信息（数据库）"""
     try:
         anime_db = PikPakDatabase()
         anime_info = anime_db.get_anime_detail(request.id, settings.ANIME_CONTAINER_ID)
@@ -124,7 +125,8 @@ async def get_anime_info_by_id(request: AnimeInfoRequest):
             }
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"获取动漫信息失败: {str(e)}")
+        print(f" 数据库获取动漫信息异常: {e}")
+        raise
 
 
 @router.post("/info/save")
@@ -172,7 +174,6 @@ async def save_anime_info(request: AnimeInfoRequest):
                 "message": f"更新 {request.title} 失败",
             }
 
-    except HTTPException:
-        raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"更新动漫信息失败: {str(e)}")
+        print(f" 更新动漫信息异常: {e}")
+        raise
