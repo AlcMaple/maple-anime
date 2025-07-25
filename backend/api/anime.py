@@ -2,42 +2,16 @@
 动漫相关路由
 """
 
-from typing import List, Optional
-from fastapi import APIRouter, HTTPException, Body
-from pydantic import BaseModel
+from fastapi import APIRouter, HTTPException
 
 from services.anime import AnimeSearch
 from services.bangumi import BangumiApi
 from database.pikpak import PikPakDatabase
 from config.settings import settings
 from services.pikpak import PikPakService
+from schemas.anime import SearchRequest, AnimeInfoRequest
 
 router = APIRouter(prefix="/anime", tags=["动漫"])
-
-
-class SearchRequest(BaseModel):
-    name: str
-
-
-class AnimeInfoRequest(BaseModel):
-    id: str
-    title: str
-    status: str
-    summary: Optional[str] = None
-    cover_url: Optional[str] = None
-    username: Optional[str] = None
-    password: Optional[str] = None
-
-
-class AnimeItem(BaseModel):
-    id: int
-    title: str
-    magnet: str
-
-
-class SeasonGroup(BaseModel):
-    title: str
-    anime_list: List[AnimeItem]
 
 
 @router.post("/search")

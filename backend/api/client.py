@@ -3,16 +3,12 @@
 """
 
 from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel
 
 from database.pikpak import PikPakDatabase
 from config.settings import settings
+from schemas.client import SearchRequest
 
 router = APIRouter(prefix="/client", tags=["客户端"])
-
-
-class SearchRequest(BaseModel):
-    name: str
 
 
 @router.post("/search")

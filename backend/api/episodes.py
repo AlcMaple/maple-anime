@@ -2,34 +2,14 @@
 集数管理路由
 """
 
-from typing import List
 from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel
 
 from services.pikpak import PikPakService
 from database.pikpak import PikPakDatabase
 from config.settings import settings
+from schemas.episodes import EpisodeListRequest, FileDeleteRequest, FileRenameRequest
 
 router = APIRouter(prefix="/episodes", tags=["集数管理"])
-
-
-class EpisodeListRequest(BaseModel):
-    folder_id: str
-
-
-class FileDeleteRequest(BaseModel):
-    username: str
-    password: str
-    folder_id: str
-    file_ids: List[str]
-
-
-class FileRenameRequest(BaseModel):
-    username: str
-    password: str
-    folder_id: str
-    file_id: str
-    new_name: str
 
 
 @router.post("/list")

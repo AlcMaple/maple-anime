@@ -10,57 +10,15 @@ from services.pikpak import PikPakService
 from services.anime import AnimeSearch
 from database.pikpak import PikPakDatabase
 from config.settings import settings
+from schemas.pikpak import (
+    DownloadRequest,
+    PikPakCredentials,
+    UpdateAnimeRequest,
+    VideoUrlUpdateRequest,
+    DeleteAnimeRequest,
+)
 
 router = APIRouter(prefix="/pikpak", tags=["PikPak"])
-
-
-class AnimeItem(BaseModel):
-    id: int
-    title: str
-    magnet: str
-
-
-class SeasonGroup(BaseModel):
-    title: str
-    anime_list: List[AnimeItem]
-
-
-class DownloadRequest(BaseModel):
-    username: str
-    password: str
-    mode: str
-    title: Optional[str] = None
-    anime_list: Optional[List[AnimeItem]] = None
-    groups: Optional[List[SeasonGroup]] = None
-
-
-class PikPakCredentials(BaseModel):
-    username: str
-    password: str
-
-
-class UpdateAnimeRequest(BaseModel):
-    username: str
-    password: str
-    folder_id: str
-    anime_list: List[AnimeItem]
-
-
-class VideoUrlUpdateRequest(BaseModel):
-    username: str
-    password: str
-    file_ids: List[str]
-    folder_id: str
-
-
-class DeleteAnimeRequest(BaseModel):
-    username: str
-    password: str
-    folder_id: str
-
-
-class SearchIdRequest(BaseModel):
-    id: str
 
 
 @router.post("/batch-download")
