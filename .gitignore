@@ -236,3 +236,4 @@ secrets.json
 
 # Claude 相关
 CLAUDE.md
+.env.production

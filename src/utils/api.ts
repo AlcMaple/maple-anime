@@ -12,9 +12,25 @@ export interface ApiResponse<T = any> {
     error?: string;
 }
 
+// 根据环境获取 API 基础 URL
+const getApiBaseUrl = (): string => {
+    // 开发环境
+    if (process.env.NODE_ENV === 'development') {
+        return process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8002';
+    }
+
+    // 生产环境
+    if (process.env.NODE_ENV === 'production') {
+        return process.env.NEXT_PUBLIC_API_URL || '';
+    }
+
+    // 默认使用生产环境地址
+    return '';
+};
+
 // 创建 axios 实例
 const api: AxiosInstance = axios.create({
-    baseURL: 'http://localhost:8002',
+    baseURL: getApiBaseUrl(),
     timeout: 600000,
     headers: {
         'Content-Type': 'application/json',

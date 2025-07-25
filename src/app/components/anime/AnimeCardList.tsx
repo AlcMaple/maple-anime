@@ -36,7 +36,7 @@ export const AnimeCardList: React.FC<AnimeCardListProps> = ({
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2h4a1 1 0 110 2h-1v10a2 2 0 01-2 2H6a2 2 0 01-2-2V6H3a1 1 0 110-2h4zM6 6v10h12V6H6z" />
                     </svg>
                     <p className="text-lg">暂无动漫数据</p>
-                    <p className="text-sm mt-2 opacity-75">请稍后再试或联系管理员添加动漫</p>
+                    <p className="text-sm mt-2 opacity-75">请稍后再试或联系管理员</p>
                 </div>
             </div>
         );
