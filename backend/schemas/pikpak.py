@@ -13,35 +13,27 @@ class SeasonGroup(BaseModel):
     anime_list: List[AnimeItem]
 
 
-class DownloadRequest(BaseModel):
+class PikPakCredentials(BaseModel):
     username: str
     password: str
+
+
+class DownloadRequest(PikPakCredentials):
     mode: str
     title: Optional[str] = None
     anime_list: Optional[List[AnimeItem]] = None
     groups: Optional[List[SeasonGroup]] = None
 
 
-class PikPakCredentials(BaseModel):
-    username: str
-    password: str
-
-
-class UpdateAnimeRequest(BaseModel):
-    username: str
-    password: str
+class UpdateAnimeRequest(PikPakCredentials):
     folder_id: str
     anime_list: List[AnimeItem]
 
 
-class VideoUrlUpdateRequest(BaseModel):
-    username: str
-    password: str
+class VideoUrlUpdateRequest(PikPakCredentials):
     file_ids: List[str]
     folder_id: str
 
 
-class DeleteAnimeRequest(BaseModel):
-    username: str
-    password: str
+class DeleteAnimeRequest(PikPakCredentials):
     folder_id: str

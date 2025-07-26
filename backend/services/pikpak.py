@@ -381,13 +381,12 @@ class PikPakService:
             # 创建或获取目标文件夹ID
             folder_id = await self.create_anime_folder(client, target_folder_name)
             if not folder_id:
-                # 如果创建失败是因为文件夹已存在，这应该是一个错误，因为此函数用于新下载
                 return {
                     "success": False,
                     "message": f"文件夹 '{target_folder_name}' 已存在或创建失败，请使用更新功能或检查名称。",
                 }
 
-            # 分类处理：合集和单集
+            # 合集和单集处理
             collection_items = []
             single_items = []
             for anime in anime_list:
@@ -603,7 +602,7 @@ class PikPakService:
             rename_result = await self.batch_rename_file(client, folder_id)
 
             if rename_result["success"]:
-                print(f"✅ 文件夹 {folder_id} 重命名完成: {rename_result['message']}")
+                print(f" 文件夹 {folder_id} 重命名完成: {rename_result['message']}")
                 # 重命名完成后，启动延时同步数据任务
                 asyncio.create_task(
                     self.delayed_sync_data_task(client, delay_seconds=8)
@@ -802,14 +801,14 @@ class PikPakService:
             result = await client.delete_to_trash(ids=[file_id])
 
             if result:
-                print(f"✅ 文件删除成功")
+                print(f" 文件删除成功")
                 return {"success": True, "message": "文件删除成功"}
             else:
-                print(f"❌ 文件删除失败")
+                print(f" 文件删除失败")
                 return {"success": False, "message": "文件删除失败"}
 
         except Exception as e:
-            print(f"❌ 删除文件异常: {e}")
+            print(f" 删除文件异常: {e}")
             return {"success": False, "message": f"删除文件失败: {str(e)}"}
 
     async def batch_delete_files(self, client: PikPakApi, file_ids: List[str]) -> Dict:

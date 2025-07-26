@@ -14,6 +14,7 @@ from schemas.pikpak import (
     VideoUrlUpdateRequest,
     DeleteAnimeRequest,
 )
+from exceptions import ValidationException, SystemException
 
 router = APIRouter(prefix="/pikpak", tags=["PikPak"])
 
@@ -32,7 +33,9 @@ async def batch_download_anime(request: DownloadRequest):
             )
 
             if not result["success"]:
-                raise HTTPException(status_code=500, detail=result["message"])
+                raise SystemException(
+                    message="下载失败", original_error=result["message"]
+                )
 
             return result
 
@@ -48,17 +51,19 @@ async def batch_download_anime(request: DownloadRequest):
 
                 if not result["success"]:
                     # 如果任何一个失败，立即抛出异常
-                    raise HTTPException(status_code=500, detail=result["message"])
+                    raise SystemException(
+                        message="下载失败", original_error=result["message"]
+                    )
 
             return result
 
         else:
-            raise HTTPException(status_code=400, detail="请选择下载的动漫")
+            raise ValidationException("请选择下载的动漫")
 
-    except HTTPException:
+    except SystemException:
         raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"下载失败: {str(e)}")
+        raise SystemException(message="下载动漫失败", original_error=e)
 
 
 @router.post("/sync")
@@ -77,34 +82,10 @@ async def sync_pikpak_data(credentials: PikPakCredentials):
         else:
             return {"success": False, "message": "同步失败"}
 
+    except SystemException:
+        raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"同步失败: {str(e)}")
-
-
-@router.get("/play/{folder_id}/{file_id}")
-async def get_play_url(folder_id: str, file_id: str):
-    """获取视频播放链接"""
-    try:
-        anime_db = PikPakDatabase()
-        play_url = anime_db.get_play_url(
-            folder_id, file_id, settings.ANIME_CONTAINER_ID
-        )
-
-        if play_url:
-            return {
-                "success": True,
-                "data": {
-                    "play_url": play_url,
-                    "file_id": file_id,
-                    "folder_id": folder_id,
-                },
-                "message": "获取播放链接成功",
-            }
-        else:
-            return {"success": False, "data": None, "message": "播放链接不存在或已过期"}
-
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"获取播放链接失败: {str(e)}")
+        raise SystemException(message="同步PikPak数据失败", original_error=e)
 
 
 @router.post("/update-links")
@@ -112,13 +93,13 @@ async def update_anime_links(request: VideoUrlUpdateRequest):
     """更新指定动漫的播放链接"""
     try:
         if not request.username or not request.password:
-            raise HTTPException(status_code=400, detail="请配置PikPak账号密码")
+            raise ValidationException("请配置PikPak账号密码")
 
         if not request.folder_id:
-            raise HTTPException(status_code=400, detail="请指定文件夹ID")
+            raise ValidationException("请指定动漫")
 
         if not request.file_ids or len(request.file_ids) == 0:
-            raise HTTPException(status_code=400, detail="请指定要更新连接的文件")
+            raise ValidationException("请指定要更新连接的视频")
 
         pikpak_service = PikPakService()
         client = await pikpak_service.get_client(request.username, request.password)
@@ -132,16 +113,30 @@ async def update_anime_links(request: VideoUrlUpdateRequest):
         for file_id in request.file_ids:
             try:
                 # 获取视频播放链接
-                play_url = await pikpak_service.get_video_play_url(file_id, client)
+                try:
+                    play_url = await pikpak_service.get_video_play_url(file_id, client)
+                except SystemException:
+                    raise
+                except Exception as e:
+                    raise SystemException(
+                        message="获取视频播放链接服务异常", original_error=e
+                    )
 
                 if play_url:
                     # 更新数据库
-                    res = await anime_db.update_anime_file_link(
-                        file_id,
-                        play_url,
-                        settings.ANIME_CONTAINER_ID,
-                        request.folder_id,
-                    )
+                    try:
+                        res = await anime_db.update_anime_file_link(
+                            file_id,
+                            play_url,
+                            settings.ANIME_CONTAINER_ID,
+                            request.folder_id,
+                        )
+                    except SystemException:
+                        raise
+                    except Exception as e:
+                        raise SystemException(
+                            message="更新动漫文件链接数据库异常", original_error=e
+                        )
 
                     if res["success"]:
                         results.append(
@@ -172,11 +167,12 @@ async def update_anime_links(request: VideoUrlUpdateRequest):
                     )
                     failed_count += 1
 
+            except SystemException:
+                raise
             except Exception as e:
-                results.append(
-                    {"file_id": file_id, "success": False, "message": str(e)}
+                raise SystemException(
+                    message=f"处理文件{file_id}时发生系统异常", original_error=e
                 )
-                failed_count += 1
 
         # 如果有成功更新的文件，更新动漫文件夹的更新时间
         if success_count > 0:
@@ -198,7 +194,9 @@ async def update_anime_links(request: VideoUrlUpdateRequest):
                     print(f"已记录视频链接更新时间")
 
             except Exception as e:
-                print(f"更新时间记录时发生错误: {str(e)}")
+                raise SystemException(
+                    message="更新时间记录时发生系统异常", original_error=e
+                )
 
         return {
             "success": success_count > 0,
@@ -210,10 +208,10 @@ async def update_anime_links(request: VideoUrlUpdateRequest):
             },
         }
 
-    except HTTPException:
+    except SystemException:
         raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"更新播放链接失败: {str(e)}")
+        raise SystemException(message="更新动漫播放链接服务异常", original_error=e)
 
 
 @router.post("/update-episode")
@@ -221,13 +219,13 @@ async def update_anime_episode(request: UpdateAnimeRequest):
     """更新动漫集数"""
     try:
         if not request.username or not request.password:
-            raise HTTPException(status_code=400, detail="请配置PikPak账号密码")
+            raise ValidationException("请配置PikPak账号密码")
 
         if not request.folder_id:
-            raise HTTPException(status_code=400, detail="请指定要更新的动漫文件夹ID")
+            raise ValidationException("请指定动漫")
 
         if not request.anime_list or len(request.anime_list) == 0:
-            raise HTTPException(status_code=400, detail="请选择要添加的集数")
+            raise ValidationException("请指定要更新的集数")
 
         pikpak_service = PikPakService()
         client = await pikpak_service.get_client(request.username, request.password)
@@ -238,9 +236,14 @@ async def update_anime_episode(request: UpdateAnimeRequest):
                 {"id": anime.id, "title": anime.title, "magnet": anime.magnet}
             )
 
-        result = await pikpak_service.update_anime_episodes(
-            client, anime_list_dict, request.folder_id
-        )
+        try:
+            result = await pikpak_service.update_anime_episodes(
+                client, anime_list_dict, request.folder_id
+            )
+        except SystemException:
+            raise
+        except Exception as e:
+            raise SystemException(message="更新动漫集数服务异常", original_code=e)
 
         if result["success"]:
             return {
@@ -253,12 +256,14 @@ async def update_anime_episode(request: UpdateAnimeRequest):
                 },
             }
         else:
-            raise HTTPException(status_code=500, detail=result["message"])
+            raise SystemException(
+                message="更新动漫集数失败", original_error=result["message"]
+            )
 
-    except HTTPException:
+    except SystemException:
         raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"更新动漫失败: {str(e)}")
+        raise SystemException(message="更新动漫集数服务异常", original_error=e)
 
 
 @router.post("/delete-anime")
@@ -267,10 +272,10 @@ async def delete_anime(request: DeleteAnimeRequest):
     try:
 
         if not request.username or not request.password:
-            raise HTTPException(status_code=400, detail="请配置PikPak账号密码")
+            raise ValidationException("请配置PikPak账号密码")
 
         if not request.folder_id:
-            raise HTTPException(status_code=400, detail="请指定要删除的动漫ID")
+            raise ValidationException("请指定要删除的动漫")
 
         pikpak_service = PikPakService()
         client = await pikpak_service.get_client(request.username, request.password)
