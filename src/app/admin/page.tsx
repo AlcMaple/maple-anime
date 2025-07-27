@@ -51,9 +51,6 @@ export default function AdminMainPage() {
   // 当前编辑的动漫
   const [currentEditAnime, setCurrentEditAnime] = useState<AnimeItem | null>(null);
 
-  // 下载状态
-  const [hasDownloading, setHasDownloading] = useState(false);
-
   // 动漫列表状态
   const [animeList, setAnimeList] = useState<AnimeItem[]>([]);
   const [isLoadingAnimes, setIsLoadingAnimes] = useState(false);
@@ -77,8 +74,10 @@ export default function AdminMainPage() {
     setIsLoadingAnimes(true);
     try {
       const response = await pikpakApi.getAnimeList();
+      console.log("加载动漫列表数据：", response);
 
-      if (response.success) {
+
+      if (response.code == 200) {
         setAnimeList(response.data);
         message.success(`成功加载 ${response.data.length} 个动漫`);
       } else {
@@ -208,6 +207,8 @@ export default function AdminMainPage() {
   const handleEdit = (id: string) => {
     const anime = animeList.find(item => item.id === id);
     if (anime) {
+      console.log("当前的动漫数据：", anime);
+
       setCurrentEditAnime(anime);
       setIsEditModalOpen(true);
     }
@@ -333,12 +334,6 @@ export default function AdminMainPage() {
     }
   };
 
-  // 模拟下载状态
-  useEffect(() => {
-    // 模拟有下载任务的情况
-    setHasDownloading(true);
-  }, []);
-
   // 加载中状态
   if (isLoading) {
     return (
@@ -434,29 +429,6 @@ export default function AdminMainPage() {
             </div>
           </div>
         )}
-
-        {/* 下载按钮 */}
-        {/* {hasDownloading && (
-          <button
-            onClick={handleDownloadCenter}
-            className="fixed bottom-6 right-6 bg-gradient-to-r from-blue-500 to-blue-600 text-white p-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 z-50 w-16 h-16 flex items-center justify-center"
-            title="下载中心"
-          >
-            <svg
-              className="w-8 h-8"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-              />
-            </svg>
-          </button>
-        )} */}
 
         {/* 添加动漫模态框 */}
         <AddAnimeModal

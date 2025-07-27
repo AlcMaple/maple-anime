@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+
 import { Button } from '@/ui/Button';
 import { Input } from '@/ui/Input';
 import { Search } from '@/ui/Search';
@@ -76,8 +77,10 @@ export const EditAnimeModal: React.FC<EditAnimeModalProps> = ({
                 username: '',
                 password: ''
             });
+            console.log("加载动漫详细信息：", response);
 
-            if (response.success && response.data) {
+
+            if (response.data) {
                 setFormData({
                     title: response.data.title || anime.title,
                     status: response.data.status || anime.status,
@@ -121,8 +124,10 @@ export const EditAnimeModal: React.FC<EditAnimeModalProps> = ({
 
         try {
             const response = await animeApi.getAnimeInfo({ name: searchQuery });
+            console.log("搜索Bangumi返回结果：", response);
 
-            if (response.success && response.data) {
+
+            if (response.data) {
                 setBangumiResults(response.data);
                 message.success(`找到 ${response.data.length} 个相关动漫`);
             } else {
@@ -176,6 +181,8 @@ export const EditAnimeModal: React.FC<EditAnimeModalProps> = ({
                 username: pikpakUsername,
                 password: pikpakPassword
             });
+            console.log("保存动漫信息返回结果：", response);
+
 
             if (response.success) {
                 message.success(response.message);

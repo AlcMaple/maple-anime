@@ -4,6 +4,13 @@ import { message } from '@/ui/Message';
 // 获取 Axios 实例类型
 type AxiosInstance = ReturnType<typeof axios.create>;
 
+// 统一API响应结构
+export interface BackendApiResponse<T = any> {
+    code: number;
+    msg: string;
+    data?: T;
+}
+
 // API 接口响应结构
 export interface ApiResponse<T = any> {
     success: boolean;
@@ -73,6 +80,28 @@ api.interceptors.response.use(
 
 // 封装 HTTP 方法
 export const apiClient = {
+    get: <T = any>(url: string, config?: Parameters<typeof api.get>[1]) =>
+        api.get<BackendApiResponse<T>>(url, config).then(res => {
+            return res.data as T;
+        }),
+
+    post: <T = any>(url: string, data?: any, config?: Parameters<typeof api.post>[2]) =>
+        api.post<BackendApiResponse<T>>(url, data, config).then(res => {
+            return res.data as T;
+        }),
+
+    put: <T = any>(url: string, data?: any, config?: Parameters<typeof api.put>[2]) =>
+        api.put<BackendApiResponse<T>>(url, data, config).then(res => {
+            return res.data as T;
+        }),
+
+    delete: <T = any>(url: string, config?: Parameters<typeof api.delete>[1]) =>
+        api.delete<BackendApiResponse<T>>(url, config).then(res => {
+            return res.data as T;
+        }),
+};
+
+export const legacyApiClient = {
     get: <T = any>(url: string, config?: Parameters<typeof api.get>[1]) =>
         api.get<T>(url, config).then(res => res.data),
 

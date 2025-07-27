@@ -3,6 +3,8 @@ import os
 from typing import Dict, List, Any
 from datetime import datetime, timedelta
 
+from exceptions import NotFoundException, SystemException
+
 
 class PikPakDatabase:
     """PikPak 数据库管理"""

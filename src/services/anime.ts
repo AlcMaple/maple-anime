@@ -1,4 +1,4 @@
-import { apiClient } from '@/utils/api';
+import { apiClient, legacyApiClient } from '@/utils/api';
 import {
     AnimeSearchRequest,
     AnimeSearchResult,
@@ -25,7 +25,7 @@ export class AnimeService {
 
     // 保存/更新动漫信息
     static async saveAnimeInfo(request: AnimeInfoRequest): Promise<{ success: boolean; message: string }> {
-        return apiClient.post<{ success: boolean; message: string }>('/api/anime/info/save', request);
+        return legacyApiClient.post<{ success: boolean; message: string }>('/api/anime/info/save', request);
     }
 }
 

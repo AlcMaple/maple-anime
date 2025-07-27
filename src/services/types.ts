@@ -87,12 +87,6 @@ export interface AnimeInfoResponse {
     message: string;
 }
 
-export interface AnimeDetailResponse {
-    success: boolean;
-    data: AnimeItem;
-    message: string;
-}
-
 // 动漫列表响应类型
 export interface AnimeListResponse {
     success: boolean;
@@ -227,9 +221,11 @@ export interface SearchResponse extends AnimeListResponse {
 }
 
 // 客户端：动漫数据响应
-export interface AnimeDetailResponse extends AnimeItem {
-    success: boolean;
+export interface AnimeDetailResponse {
     message: string;
+    data: AnimeItem;
+    code: number;
+    success?: boolean;
 }
 
 // API响应包装类型

@@ -3,6 +3,8 @@ import json
 from typing import Dict, List, Any, Optional
 from datetime import datetime
 
+from exceptions import NotFoundException, SystemException, DatabaseException
+
 
 class BangumiApi:
     """Bangumi API"""
@@ -14,7 +16,12 @@ class BangumiApi:
         self.news_data = "data/news.json"
 
     async def get_calendar(self) -> Dict[str, Any]:
-        """获取番剧每日放送表"""
+        """
+        获取番剧每日放送表
+
+        Returns:
+            包含番剧每日放送表的字典
+        """
         url = f"{self.base_url}/calendar"
         try:
             response = await self.client.get(url)
@@ -239,7 +246,7 @@ class BangumiApi:
         Returns:
             包含所有匹配结果的字典
         """
-        print(f"🔍 搜索包含 '{title}' 的所有动漫...")
+        print(f" 搜索包含 '{title}' 的所有动漫...")
 
         all_results = []
         offset = 0
@@ -287,7 +294,7 @@ class BangumiApi:
 
                 all_results.extend(filtered_results)
                 print(
-                    f"📄 第{offset//limit + 1}页: 获取{len(current_results)}个，过滤后{len(filtered_results)}个"
+                    f" 第{offset//limit + 1}页: 获取{len(current_results)}个，过滤后{len(filtered_results)}个"
                 )
 
                 # 没有更多数据了
@@ -304,22 +311,9 @@ class BangumiApi:
             if len(all_results) > max_results:
                 all_results = all_results[:max_results]
 
-            print(f"✅ 搜索完成: 找到 {len(all_results)} 个包含 '{title}' 的动漫")
+            print(f" 搜索完成: 找到 {len(all_results)} 个包含 '{title}' 的动漫")
 
-            return {
-                "data": all_results,
-                "total": len(all_results),
-                "keyword": title,
-                "success": True,
-                "message": f"找到 {len(all_results)} 个包含 '{title}' 的动漫",
-            }
+            return all_results
 
         except Exception as e:
-            print(f"❌ 搜索失败: {e}")
-            return {
-                "data": [],
-                "total": 0,
-                "keyword": title,
-                "success": False,
-                "message": f"搜索失败: {str(e)}",
-            }
+            raise SystemException(message="搜索 banguni 动漫信息失败", original_error=e)

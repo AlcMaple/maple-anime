@@ -1,11 +1,7 @@
 import httpx
-from typing import Dict, List, Set
+from typing import Dict, List
 
-from utils import (
-    is_include_subtitles,
-    get_anime_episodes,
-    filter_low_quality,
-)
+from exceptions import NotFoundException, SystemException
 
 
 class AnimeSearch:
@@ -15,16 +11,17 @@ class AnimeSearch:
         self.base_url = "https://api.animes.garden"
         self.client = httpx.AsyncClient(timeout=30.0)
 
-    async def main(self):
-        """主函数"""
-        anime_name = input("请输入要搜索的动漫名称：")
-        result = await self.search_anime(anime_name)
-        if not result:
-            print("没有找到相关的动漫")
-            return
-
     async def search_anime(self, name: str, max_results: int = None) -> List[Dict]:
-        """搜索动漫"""
+        """
+        搜索动漫
+
+        Args:
+            name: 动漫名
+            max_results: 最大结果数，默认不限制
+
+        Returns:
+            动漫搜索结果列表
+        """
         try:
             url = f"{self.base_url}/resources"
             query = {"search": [name]}
@@ -43,6 +40,8 @@ class AnimeSearch:
                     params=params,
                     headers={"Content-Type": "application/json"},
                 )
+
+                # 检查 HTTP 响应状态码，如果不是 2xx 成功状态，则抛出 HTTPStatusError 异常
                 response.raise_for_status()
 
                 data = response.json()
@@ -73,69 +72,20 @@ class AnimeSearch:
 
                 page += 1
 
+            if not all_results:
+                raise NotFoundException("动漫资源", name)
+
             print(f" 总共获取到 {len(all_results)} 个结果")
             return all_results
 
+        except httpx.HTTPStatusError as e:
+            raise SystemException(
+                message=f"搜素API请求失败：HTTP {e.response.status_code}",
+                original_error=e,
+            )
+        except httpx.RequestError as e:
+            raise SystemException(message="搜索 API 网络请求异常", original_error=e)
+        except NotFoundException:
+            raise
         except Exception as e:
-            print(f" 搜索动漫失败: {e}")
-            return []
-
-    def get_anime_seasons(self, data: List[Dict], name: str) -> Set[str]:
-        """获取动漫季度类型"""
-        print(f" 扫描 {name} 的季度信息...")
-
-        seasons = set()
-        all_seasons = ["第一季", "第二季", "第三季", "剧场版"]
-
-        for resource in data:
-            title = resource.get("title", "")
-
-            # 查找季度
-            for season in all_seasons:
-                if season in title:
-                    seasons.add(season)
-                    print(f" 发现: {season}")
-
-                    if len(seasons) >= len(all_seasons):
-                        return seasons
-
-        # 只有单季或电影
-        if not seasons:
-            print(f" 未发现季度标识，判定为单季动漫")
-            return seasons
-
-        print(f" 发现的季度: {', '.join(seasons)}")
-        return seasons
-
-    def process_anime_data(self, data: Dict, name: str) -> Dict:
-        """筛选动漫"""
-        result = []
-        episodes = set()
-        for d in data:
-            title = d.get("title", "")
-            if filter_low_quality(title) or not is_include_subtitles(title):
-                continue
-
-            # 获取集数
-            episode = get_anime_episodes(title)
-            if episode == -1 or episode > 100:
-                continue
-
-            if episode in episodes:
-                continue
-            episodes.add(episode)
-            print(f" 发现: {name} {episode}集")
-            resource = {
-                "id": d.get("id"),
-                "title": d.get("title", ""),
-                "magnet": d.get("magnet", ""),
-                "episodes": episode,
-            }
-            result.append(resource)
-
-        # 按集数排序
-        result = sorted(result, key=lambda x: x["episodes"])
-
-        print("process_anime_data result: ", result)
-
-        return result
+            raise SystemException(message="搜索动漫时发生未知异常", original_error=e)

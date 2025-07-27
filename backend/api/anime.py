@@ -10,7 +10,8 @@ from database.pikpak import PikPakDatabase
 from config.settings import settings
 from services.pikpak import PikPakService
 from schemas.anime import SearchRequest, AnimeInfoRequest
-from exceptions import ValidationException, SystemException
+from exceptions import ValidationException, SystemException, NotFoundException
+from utils import success
 
 router = APIRouter(prefix="/anime", tags=["动漫"])
 
@@ -18,119 +19,65 @@ router = APIRouter(prefix="/anime", tags=["动漫"])
 @router.post("/search")
 async def search(request: SearchRequest):
     """搜索动漫资源"""
-    try:
-        if not request.name:
-            raise ValidationException("请指定动漫名称")
 
-        anime_search = AnimeSearch()
-        data = await anime_search.search_anime(request.name)
+    if not request.name:
+        raise ValidationException("请指定动漫名称")
 
-        if not data:
-            return {
-                "success": False,
-                "data": [],
-                "total": 0,
-                "message": f"未找到 {request.name} 相关资源",
-            }
-        return data
+    anime_search = AnimeSearch()
+    data = await anime_search.search_anime(request.name)
 
-    except SystemException:
-        raise
-    except Exception as e:
-        raise SystemException(message="动漫搜索服务异常", original_error=e)
+    return success(data, f"找到 {len(data)} 个 {request.name} 相关资源")
 
 
 @router.get("/list")
 async def get_anime_list():
     """获取动漫列表"""
-    try:
-        db = PikPakDatabase()
-        result = db.load_data()
+    db = PikPakDatabase()
+    result = db.load_data()
 
-        # 解析成表格数据
-        animes_container = result.get("animes", {}).get(settings.ANIME_CONTAINER_ID, {})
+    # 解析成表格数据
+    animes_container = result.get("animes", {}).get(settings.ANIME_CONTAINER_ID, {})
 
-        anime_list = []
-        for anime_id, anime_info in animes_container.items():
-            anime_list.append(
-                {
-                    "id": anime_id,
-                    "title": anime_info.get("title", ""),
-                    "status": anime_info.get("status", "连载"),
-                    "cover_url": anime_info.get("cover_url", ""),
-                }
-            )
+    if not animes_container:
+        raise NotFoundException("动漫列表", "任何动漫")
 
-        return {
-            "success": True,
-            "data": anime_list,
-            "total": len(anime_list),
-            "message": "获取动漫列表成功",
-        }
+    anime_list = []
+    for anime_id, anime_info in animes_container.items():
+        anime_list.append(
+            {
+                "id": anime_id,
+                "title": anime_info.get("title", ""),
+                "status": anime_info.get("status", "连载"),
+                "cover_url": anime_info.get("cover_url", ""),
+                "summary": anime_info.get("summary", ""),
+            }
+        )
 
-    except SystemException:
-        raise
-    except Exception as e:
-        raise SystemException(message="动漫列表获取服务异常", original_error=e)
+    return success(anime_list, "获取动漫列表成功")
 
 
 @router.post("/info")
 async def get_anime_info(request: SearchRequest):
     """获取动漫信息（Bangumi）"""
-    try:
-        if not request.name:
-            raise ValidationException("请指定动漫名称")
+    if not request.name:
+        raise ValidationException("请指定动漫名称")
 
-        bangumi_api = BangumiApi()
-        result = await bangumi_api.search_anime_by_title(request.name)
+    bangumi_api = BangumiApi()
+    result = await bangumi_api.search_anime_by_title(request.name)
 
-        if result["success"]:
-            return {
-                "success": True,
-                "data": result["data"],
-                "total": result["total"],
-                "keyword": result["keyword"],
-                "message": result["message"],
-            }
-        else:
-            return {
-                "success": False,
-                "data": [],
-                "total": 0,
-                "keyword": request.name,
-                "message": result["message"],
-            }
-
-    except SystemException:
-        raise
-    except Exception as e:
-        raise SystemException(message="动漫信息获取服务异常", original_error=e)
+    return success(result, f"找到 {len(result)} 个相关动漫")
 
 
 @router.post("/info/id")
 async def get_anime_info_by_id(request: AnimeInfoRequest):
     """根据ID获取动漫信息（数据库）"""
-    try:
-        anime_db = PikPakDatabase()
-        anime_info = anime_db.get_anime_detail(request.id, settings.ANIME_CONTAINER_ID)
+    anime_db = PikPakDatabase()
+    anime_info = anime_db.get_anime_detail(request.id, settings.ANIME_CONTAINER_ID)
 
-        if anime_info:
-            return {
-                "success": True,
-                "data": anime_info,
-                "message": f"获取到 {request.title} 信息",
-            }
-        else:
-            return {
-                "success": False,
-                "data": {},
-                "message": f"未找到 {request.title} 信息",
-            }
+    if not anime_info:
+        raise NotFoundException("动漫信息", f"ID: {request.id}")
 
-    except SystemException:
-        raise
-    except Exception as e:
-        raise SystemException(message="动漫信息获取服务异常", original_error=e)
+    return success(anime_info, f"获取到 {request.title} 信息")
 
 
 @router.post("/info/save")
