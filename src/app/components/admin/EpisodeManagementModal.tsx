@@ -516,16 +516,6 @@ export const EpisodeManagementModal: React.FC<EpisodeManagementModalProps> = ({
                 </span>
             </div>
         ),
-        // size: (
-        //     <span className="text-sm text-gray-600">
-        //         {formatFileSize(episode.size)}
-        //     </span>
-        // ),
-        // time: (
-        //     <span className="text-sm text-gray-600">
-        //         {formatTime(episode.created_time)}
-        //     </span>
-        // ),
         updated_time: (
             <span className="text-sm text-gray-600">
                 {formatTime(episode.update_time || '')}
@@ -588,19 +578,6 @@ export const EpisodeManagementModal: React.FC<EpisodeManagementModalProps> = ({
                         </div>
                     )}
 
-                    {/* 缓存状态信息 */}
-                    {/* <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
-                        <div className="flex items-center justify-between">
-                            <div className="text-sm text-blue-700">
-                                <span className="font-medium">数据状态：</span>
-                                {cacheInfo} {getCacheStatusInfo()}
-                            </div>
-                            <div className="text-xs text-blue-600">
-                                缓存有效期: 5分钟，防抖间隔: 2秒
-                            </div>
-                        </div>
-                    </div> */}
-
                     {/* 操作栏 */}
                     <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center space-x-3">
@@ -613,16 +590,6 @@ export const EpisodeManagementModal: React.FC<EpisodeManagementModalProps> = ({
                                 <span>删除 ({selectedIds.length})</span>
                             </Button>
                         </div>
-                        {/* <div className="flex items-center space-x-2">
-                            <Button
-                                variant="primary"
-                                onClick={handleForceRefresh}
-                                disabled={loading}
-                                className="flex items-center space-x-2 text-sm"
-                            >
-                                <span>刷新</span>
-                            </Button>
-                        </div> */}
                         <div className="flex items-center space-x-2">
                             <Button
                                 variant="primary"
@@ -641,12 +608,6 @@ export const EpisodeManagementModal: React.FC<EpisodeManagementModalProps> = ({
                                 <div className="text-xl font-bold text-blue-600">{episodes.length}</div>
                                 <div className="text-xs text-gray-600">总文件数</div>
                             </div>
-                            {/* <div>
-                                <div className="text-xl font-bold text-purple-600">
-                                    {formatFileSize(episodes.reduce((total, ep) => total + ep.size, 0))}
-                                </div>
-                                <div className="text-xs text-gray-600">总大小</div>
-                            </div> */}
                         </div>
                     </div>
 

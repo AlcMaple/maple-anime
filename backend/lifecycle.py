@@ -1,5 +1,8 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
+import logging
+import sys
+from loguru import logger
 
 from scheduler import LinksScheduler
 from config.settings import settings
@@ -8,9 +11,53 @@ from config.settings import settings
 video_scheduler: LinksScheduler = None
 
 
+class InterceptHandler(logging.Handler):
+    def emit(self, record: logging.LogRecord):
+        try:
+            level = logger.level(record.levelname).name
+        except ValueError:
+            level = record.levelno
+
+        frame, depth = logging.currentframe(), 2
+        while frame.f_code.co_filename == logging.__file__:
+            frame = frame.f_back
+            depth += 1
+
+        logger.opt(depth=depth, exception=record.exc_info).log(
+            level, record.getMessage()
+        )
+
+
+def setup_logging():
+    """配置 Loguru 日志系统。"""
+    logger.remove()
+    logger.add(
+        sys.stderr, level=settings.LOG_LEVEL, format=settings.LOG_FORMAT, colorize=True
+    )
+    log_file_path = settings.LOG_DIR / "{time:YYYY-MM-DD}.log"
+    logger.add(
+        log_file_path,
+        level=settings.LOG_LEVEL,
+        format=settings.LOG_FORMAT,
+        encoding="utf-8",
+        enqueue=True,
+        backtrace=True,
+        diagnose=True,
+    )
+    logging.basicConfig(handlers=[InterceptHandler()], level=0)
+    for name in logging.root.manager.loggerDict:
+        if name.startswith("uvicorn"):
+            logging.getLogger(name).handlers = [InterceptHandler()]
+            logging.getLogger(name).propagate = False
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """应用生命周期管理"""
+    setup_logging()
+    logger.info("Logging system initialized.")
+    logger.info("Application starting up...")
+
     # 启动时执行
     global video_scheduler
 

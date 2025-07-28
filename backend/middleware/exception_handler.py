@@ -1,5 +1,3 @@
-import logging
-import traceback
 from fastapi import Request, FastAPI
 from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException
@@ -15,9 +13,6 @@ from exceptions import (
     SystemException,
 )
 from utils.responses import api_response
-
-
-logger = logging.getLogger(__name__)
 
 
 def add_exception_handlers(app: FastAPI):
@@ -36,8 +31,6 @@ def add_exception_handlers(app: FastAPI):
             )
             if hasattr(exc, "original_error") and exc.original_error:
                 error_details += f" | Original Error: {type(exc.original_error).__name__}: {exc.original_error}"
-            logger.error(error_details)
-            logger.error(f"Traceback: {traceback.format_exc()}")
 
             # 前端返回通用错误信息
             return api_response(500, "服务器内部错误")
@@ -53,9 +46,6 @@ def add_exception_handlers(app: FastAPI):
             else:  # 其他业务异常默认为 400
                 status_code = 400
 
-            logger.warning(
-                f"Business exception: {exc.message} | Request: {request.url}"
-            )
             return api_response(status_code, exc.message)
 
     @app.exception_handler(HTTPException)
@@ -72,9 +62,6 @@ def add_exception_handlers(app: FastAPI):
             f"{'.'.join(map(str, err['loc']))}: {err['msg']}" for err in exc.errors()
         ]
         full_message = f"参数验证失败: {'; '.join(error_messages)}"
-        logger.warning(
-            f"Pydantic validation failed: {full_message} for request: {request.url}"
-        )
         return api_response(400, full_message)
 
     @app.exception_handler(IntegrityError)
@@ -90,9 +77,6 @@ def add_exception_handlers(app: FastAPI):
         else:
             message = "数据库操作失败，请检查数据完整性"
 
-        logger.error(
-            f"Database Integrity Error: {message} | Details: {exc.orig} | Request: {request.url}"
-        )
         return api_response(400, message)
 
     @app.exception_handler(Exception)
@@ -100,8 +84,4 @@ def add_exception_handlers(app: FastAPI):
         """
         其他异常
         """
-        logger.error(
-            f"Unhandled internal server error: {type(exc).__name__}: {exc} for request: {request.url}"
-        )
-        logger.error(f"Traceback: {traceback.format_exc()}")
         return api_response(500, "服务器内部错误")

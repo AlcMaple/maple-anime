@@ -5,9 +5,13 @@
 import os
 from dotenv import load_dotenv
 from typing import Optional
+from pathlib import Path
 
 # 加载环境变量
 load_dotenv()
+
+# 项目根目录
+BASE_DIR = Path(__file__).parent.parent
 
 
 class Settings:
@@ -35,8 +39,9 @@ class Settings:
     DATABASE_PATH: str = "data/anime.json"
 
     # 日志配置
-    LOG_LEVEL: str = os.getenv("LOG_LEVEL", "INFO")
-    LOG_FORMAT: str = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    LOG_DIR: Path = BASE_DIR / "logs"  # 日志文件目录
+    LOG_LEVEL: str = "INFO"  # "DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"
+    LOG_FORMAT: str = "[{level: <9} {time:HH:mm:ss.SSS}] {message}"
 
     # 服务器配置
     HOST: str = os.getenv("HOST", "0.0.0.0")

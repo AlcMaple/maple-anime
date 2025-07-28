@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { Button } from '@/ui/Button';
-import { Input } from '@/ui/Input';
 import { Table } from '@/ui/Table';
 import { Search } from '@/ui/Search';
 import { message } from '@/ui/Message';
@@ -352,12 +351,6 @@ export default function AdminMainPage() {
   return (
     <div className="min-h-screen p-5 bg-gray-50">
       <div className="max-w-7xl mx-auto">
-        {/* 页面头部 */}
-        <div className="text-center mb-8 text-gray-800">
-          <h1 className="text-5xl mb-2 font-bold">
-            Maple Anime 管理端
-          </h1>
-        </div>
 
         {/* 主内容区域 */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200">
