@@ -102,7 +102,6 @@ async def rename_episode(request: FileRenameRequest):
         if not request.file_id or not request.new_name:
             raise ValidationException("请指定某个动漫文件和新名称")
 
-        #
         try:
             pikpak_service = PikPakService()
             client = await pikpak_service.get_client(request.username, request.password)

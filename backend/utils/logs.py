@@ -65,7 +65,7 @@ def setup_logging(settings=None):
         )
         logger.info("WebSocket日志推送已启用")
     else:
-        logger.info("WebSocket日志推送已禁用（本地开发模式）")
+        logger.info("本地开发禁用WebSocket日志推送")
 
     # 添加文件日志
     log_file_path = settings.LOG_DIR / "{time:YYYY-MM-DD}.log"

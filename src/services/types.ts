@@ -1,8 +1,35 @@
-// 动漫搜索相关类型
+// ==================== 通用响应类型 ====================
+
+export interface BackendApiResponse<T = any> {
+    code: number;
+    msg: string;
+    data?: T;
+}
+
+// 兼容旧的API响应
+export interface ApiResponse<T = any> {
+    success: boolean;
+    data?: T;
+    message?: string;
+    error?: string;
+}
+
+// 分页数据结构
+export interface PaginatedData<T> {
+    items: T[];
+    total: number;
+    page?: number;
+    pageSize?: number;
+}
+
+// ==================== 动漫类型 ====================
+
+// 动漫搜索请求
 export interface AnimeSearchRequest {
     name: string;
 }
 
+// 动漫搜索结果
 export interface AnimeSearchResult {
     id: string;
     title: string;
@@ -10,45 +37,7 @@ export interface AnimeSearchResult {
     episodes?: number;
 }
 
-// PikPak相关类型
-export interface PikPakCredentials {
-    username: string;
-    password: string;
-    folder_id?: string;
-    file_ids?: string[];
-}
-
-export interface PikPakConfig extends PikPakCredentials {
-    rememberCredentials: boolean;
-}
-
-// 集数文件类型
-export interface EpisodeFile {
-    id: string;
-    name: string;
-    size?: number;
-    kind?: string;
-    create_time?: string;
-    update_time?: string;
-    mime_type?: string;
-    play_url?: string;
-    hash?: string;
-    is_video?: boolean;
-    folder_id?: string;
-}
-
-// 动漫项目类型
-export interface AnimeItem {
-    id: string;
-    title: string;
-    status: '完结' | '连载';
-    summary?: string;
-    cover_url?: string;
-    updated_at?: string;
-    files?: EpisodeFile[];
-}
-
-// 动漫详细信息类型
+// 动漫详细信息请求
 export interface AnimeInfoRequest {
     id: string;
     title: string;
@@ -59,7 +48,7 @@ export interface AnimeInfoRequest {
     password?: string;
 }
 
-// 动漫信息响应类型
+// bangumi 动漫信息
 export interface BangumiAnimeInfo {
     id: number;
     name: string;
@@ -79,6 +68,7 @@ export interface BangumiAnimeInfo {
     tags: string[];
 }
 
+// bangumi 动漫信息响应
 export interface AnimeInfoResponse {
     success: boolean;
     data: BangumiAnimeInfo[];
@@ -87,20 +77,54 @@ export interface AnimeInfoResponse {
     message: string;
 }
 
-// 动漫列表响应类型
-export interface AnimeListResponse {
-    success: boolean;
-    data: AnimeItem[];
-    total: number;
-    message: string;
+// 集数文件
+export interface EpisodeFile {
+    id: string;
+    name: string;
+    size?: number;
+    kind?: string;
+    create_time?: string;
+    update_time?: string;
+    mime_type?: string;
+    play_url?: string;
+    hash?: string;
+    is_video?: boolean;
+    folder_id?: string;
 }
 
-// 动漫分组类型
+// 动漫信息
+export interface AnimeItem {
+    id: string;
+    title: string;
+    status: '完结' | '连载';
+    summary?: string;
+    cover_url?: string;
+    updated_at?: string;
+    files?: EpisodeFile[];
+}
+
+// 动漫分组
 export interface AnimeGroup {
     title: string;
     anime_list: AnimeSearchResult[];
 }
 
+// ==================== PikPak 相关类型 ====================
+
+// PikPak凭证
+export interface PikPakCredentials {
+    username: string;
+    password: string;
+    folder_id?: string;
+    file_ids?: string[];
+}
+
+// PikPak配置
+export interface PikPakConfig extends PikPakCredentials {
+    rememberCredentials: boolean;
+}
+
+// 下载请求类型
 export interface DownloadRequest {
     username: string;
     password: string;
@@ -110,31 +134,97 @@ export interface DownloadRequest {
     groups?: AnimeGroup[];  // 多季模式使用
 }
 
+// 下载简介
+export interface DownloadSummary {
+    total_anime: number;
+    successful_anime: number;
+    total_episodes: number;
+    successful_episodes: number;
+}
+
 export interface DownloadResult {
     success: boolean;
     message: string;
-    summary?: {
-        total_anime: number;
-        successful_anime: number;
-        total_episodes: number;
-        successful_episodes: number;
-    };
+    summary?: DownloadSummary;
     details?: any[];
 }
 
-// 当季新番类型定义
+// 文件删除请求
+export interface FileDeleteRequest {
+    username: string;
+    password: string;
+    file_ids: string[];
+    folder_id: string;
+}
+
+// 文件重命名请求
+export interface FileRenameRequest {
+    username: string;
+    password: string;
+    file_id: string;
+    new_name: string;
+    folder_id: string;
+}
+
+// 文件重命名响应
+export interface FileRenameResponse extends ApiResponse { }
+
+// 更新动漫请求
+export interface UpdateAnimeRequest {
+    username: string;
+    password: string;
+    folder_id: string;
+    anime_list: AnimeSearchResult[];
+}
+
+// 更新动漫数据
+export interface UpdateAnimeData {
+    added_count: number;
+    failed_count: number;
+    folder_id: string;
+}
+
+export type UpdateAnimeResponse = ApiResponse<UpdateAnimeData>;
+
+// 删除动漫请求
+export interface DeleteAnimeRequest {
+    username: string;
+    password: string;
+    folder_id: string;
+}
+
+// 删除动漫数据
+export interface DeleteAnimeData {
+    folder_id: string;
+    anime_title: string;
+    synced: boolean;
+}
+
+export type DeleteAnimeResponse = ApiResponse<DeleteAnimeData>;
+
+// 文件删除响应
+export interface FileDeleteResponse extends ApiResponse {
+    deleted_count: number;
+    failed_count: number;
+}
+
+// ==================== Bangumi 相关类型 ====================
+
+// 动漫图片
 export interface AnimeImages {
     large: string;
     medium: string;
     small: string;
 }
 
+// 动漫评分
 export interface AnimeRating {
     total: number;
     count: Record<string, number>;
     score: number;
 }
 
+// 星期
 export interface Weekday {
     en: string;
     cn: string;
@@ -142,6 +232,7 @@ export interface Weekday {
     id: number;
 }
 
+// 当季动漫
 export interface CalendarAnime {
     id: number;
     name: string;
@@ -158,6 +249,21 @@ export interface CalendarDay {
     items: CalendarAnime[];
 }
 
+// ==================== 客户端 相关类型 ====================
+
+// 动漫列表响应
+export interface AnimeListResponse {
+    success: boolean;
+    data: AnimeItem[];
+    total: number;
+    message: string;
+}
+
+// 搜索动漫响应
+export interface SearchResponse extends AnimeListResponse {
+    keyword: string;
+}
+
 export interface CalendarResponse {
     success: boolean;
     data: CalendarDay[];
@@ -165,62 +271,17 @@ export interface CalendarResponse {
     error?: string;
 }
 
-
-
 export interface EpisodeListRequest {
     folder_id: string;
 }
 
-export interface FileDeleteRequest {
-    username: string;
-    password: string;
-    file_ids: string[];
-    folder_id: string;
+// 集数列表响应
+export interface EpisodeListResponse extends ApiResponse {
+    data: EpisodeFile[];
+    total: number;
 }
 
-export interface FileRenameRequest {
-    username: string;
-    password: string;
-    file_id: string;
-    new_name: string;
-    folder_id: string;
-}
-
-export interface UpdateAnimeRequest {
-    username: string;
-    password: string;
-    folder_id: string;
-    anime_list: AnimeSearchResult[];
-}
-
-export interface UpdateAnimeResponse extends ApiResponse {
-    data: {
-        added_count: number;
-        failed_count: number;
-        folder_id: string;
-    };
-}
-
-export interface DeleteAnimeRequest {
-    username: string;
-    password: string;
-    folder_id: string;
-}
-
-export interface DeleteAnimeResponse extends ApiResponse {
-    data: {
-        folder_id: string;
-        anime_title: string;
-        synced: boolean;
-    };
-}
-
-// 客户端：搜索动漫响应
-export interface SearchResponse extends AnimeListResponse {
-    keyword: string;
-}
-
-// 客户端：动漫数据响应
+// 动漫数据响应
 export interface AnimeDetailResponse {
     message: string;
     data: AnimeItem;
@@ -228,23 +289,31 @@ export interface AnimeDetailResponse {
     success?: boolean;
 }
 
-// API响应包装类型
-export interface ApiResponse<T = any> {
-    success: boolean;
-    data?: T;
-    message?: string;
-    error?: string;
+// ==================== 日志系统类型定义 ====================
+
+// 日志级别类型
+export type LogLevel = 'DEBUG' | 'INFO' | 'WARNING' | 'ERROR' | 'CRITICAL';
+
+// 日志条目
+export interface LogEntry {
+    id?: string;
+    timestamp: string;
+    level: LogLevel;
+    logger: string;
+    function: string;
+    line: number;
+    message: string;
+    raw?: string; // 原始日志文本
 }
 
-// 响应类型
-export interface EpisodeListResponse extends ApiResponse {
-    data: EpisodeFile[];
-    total: number;
+// 日志请求响应类型
+export type LogResponse = BackendApiResponse<LogEntry[]>;
+
+// 日志系统状态
+export interface LogStatus {
+    active_connections: number;
+    log_buffer_size: number;
+    websocket_connected: boolean;
 }
 
-export interface FileDeleteResponse extends ApiResponse {
-    deleted_count: number;
-    failed_count: number;
-}
-
-export interface FileRenameResponse extends ApiResponse { }
+export type LogStatusResponse = BackendApiResponse<LogStatus>;

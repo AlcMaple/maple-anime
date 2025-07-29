@@ -41,13 +41,11 @@ class Settings:
     # 日志配置
     LOG_DIR: Path = BASE_DIR / "logs"  # 日志文件目录
     LOG_LEVEL: str = "INFO"  # "DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"
-    # LOG_FORMAT: str = "[{level: <9} {time:HH:mm:ss.SSS}] {message}"
 
     # 控制台-文件日志格式
     CONSOLE_LOG_FORMAT: str = (
-        "<green>{time:YYYY-MM-DD HH:mm:ss}</green> | <level>{level: <8}</level> | <cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message}</level>"
+        "<green>{time:YYYY-MM-DD HH:mm:ss}</green> | <level>{level: <8}</level> | <cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - {message}"
     )
-
     # WebSocket日志（前端显示）
     WEBSOCKET_LOG_FORMAT: str = (
         "{time:YYYY-MM-DD HH:mm:ss} | {level: <8} | {name}:{function}:{line} - {message}"

@@ -1,23 +1,16 @@
 import axios from 'axios';
 import { message } from '@/ui/Message';
 
-// 获取 Axios 实例类型
-type AxiosInstance = ReturnType<typeof axios.create>;
+// ==================== 基础响应类型 ====================
 
-// 统一API响应结构
+// 统一响应结构
 export interface BackendApiResponse<T = any> {
     code: number;
     msg: string;
     data?: T;
 }
 
-// API 接口响应结构
-export interface ApiResponse<T = any> {
-    success: boolean;
-    data?: T;
-    message?: string;
-    error?: string;
-}
+// ==================== 环境配置 ====================
 
 // 根据环境获取 API 基础 URL
 const getApiBaseUrl = (): string => {
@@ -34,6 +27,11 @@ const getApiBaseUrl = (): string => {
     // 默认使用生产环境地址
     return '';
 };
+
+// ==================== Axios 实例配置 ====================
+
+// 获取 Axios 实例类型
+type AxiosInstance = ReturnType<typeof axios.create>;
 
 // 创建 axios 实例
 const api: AxiosInstance = axios.create({

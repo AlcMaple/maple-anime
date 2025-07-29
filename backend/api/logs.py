@@ -21,11 +21,11 @@ async def websocket_logs(websocket: WebSocket):
 async def get_logs():
     """获取历史日志"""
     logs = LogsService.get_historical_logs()
-    return success(data={"logs": logs})
+    return success(logs, "获取日志成功")
 
 
 @router.get("/status")
 async def get_log_status():
     """获取日志系统状态"""
     status = LogsService.get_connection_status()
-    return success(data=status)
+    return success(status, "获取日志系统状态成功")
