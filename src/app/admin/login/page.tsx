@@ -63,7 +63,7 @@ export default function LoginPage() {
                             <div className="bg-red-50 border border-red-200 rounded-lg p-3">
                                 <div className="flex items-center">
                                     <div className="w-3 h-3 bg-red-500 rounded-full mr-2"></div>
-                                    <span className="text-sm text-red-700">❌ {error}</span>
+                                    <span className="text-sm text-red-700"> {error}</span>
                                 </div>
                             </div>
                         )}

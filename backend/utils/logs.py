@@ -34,7 +34,7 @@ class LogBuffer:
         """移除 websocket 链接"""
         self.connections.discard(connection)
 
-    def get_connetcion_count(self):
+    def get_connection_count(self):
         """获取链接数量"""
         return len(self.connections)
 

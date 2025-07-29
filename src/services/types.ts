@@ -289,7 +289,7 @@ export interface AnimeDetailResponse {
     success?: boolean;
 }
 
-// ==================== 日志系统类型定义 ====================
+// ==================== 日志系统类型 ====================
 
 // 日志级别类型
 export type LogLevel = 'DEBUG' | 'INFO' | 'WARNING' | 'ERROR' | 'CRITICAL';
