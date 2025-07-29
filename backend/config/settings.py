@@ -40,7 +40,7 @@ class Settings:
 
     # 日志配置
     LOG_DIR: Path = BASE_DIR / "logs"  # 日志文件目录
-    LOG_LEVEL: str = "INFO"  # "DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"
+    LOG_LEVEL: str = "DEBUG"  # "DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"
 
     # 控制台-文件日志格式
     CONSOLE_LOG_FORMAT: str = (
