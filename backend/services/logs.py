@@ -10,7 +10,7 @@ from loguru import logger
 
 from utils.logs import logs
 from config.settings import settings
-from exceptions.base import SystemException, ValidationException
+from exceptions.base import SystemException
 
 
 class LogsService:
@@ -39,7 +39,7 @@ class LogsService:
 
         # 检查功能是否启用
         if not LogsService.check_websocket_enabled():
-            await websocket.send_text("WebSocket日志推送功能已禁用（本地开发模式）")
+            await websocket.send_text("本地开发模式禁用WebSocket日志推送功能")
             await websocket.close(code=1000, reason="WebSocket logs disabled")
             return
 
@@ -80,7 +80,7 @@ class LogsService:
                 # 检查新的日志消息
                 await LogsService._process_new_messages(websocket)
 
-                # 检查客户端消息（保持连接活跃）
+                # 检查客户端消息
                 await LogsService._check_client_messages(websocket)
 
                 # 避免CPU占用过高

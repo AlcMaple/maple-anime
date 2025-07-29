@@ -9,6 +9,7 @@ import pytz
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore
 from apscheduler.executors.asyncio import AsyncIOExecutor
+from loguru import logger
 
 from database.pikpak import PikPakDatabase
 from api.pikpak import PikPakService
@@ -47,7 +48,7 @@ async def update_anime_task(
     lock = LockManager.get_api_lock()
 
     async with lock:
-        print(f"获取到 API 锁，开始更新动漫的 ID 是: {folder_id}")
+        logger.debug(f"获取到 API 锁，开始更新动漫的 ID 是: {folder_id}")
         try:
             anime_db = PikPakDatabase()
             pikpak_service = PikPakService()
@@ -103,14 +104,18 @@ async def update_anime_task(
                 await anime_db.update_folder_video_links_time(folder_id, container_id)
                 await anime_db.update_anime_info(folder_id, {}, container_id)
 
-            print(
+            logger.info(
                 f"更新完成: {anime_detail.get('title', '未知')} 成功 {success_count}, 失败 {failed_count}"
             )
 
         except Exception as e:
-            print(f"更新失败: {e}")
+            logger.error(
+                f"更新动漫链接失败: {anime_detail.get('title', '未知')} - 错误: {str(e)}"
+            )
         finally:
-            print(f"释放 API 锁，更新动漫: {anime_detail.get('title', '未知')} 完成")
+            logger.debug(
+                f"释放 API 锁，更新动漫: {anime_detail.get('title', '未知')} 完成"
+            )
 
 
 class LinksScheduler:
@@ -187,7 +192,7 @@ class LinksScheduler:
             await self._clear_del_scheduled_jobs(folder_ids)
 
         except Exception as e:
-            print(f"初始化动漫调度任务失败: {e}")
+            logger.error(f"初始化动漫调度任务失败: {e}")
 
     async def _clear_del_scheduled_jobs(self, folder_ids: List[str]):
         """
@@ -204,10 +209,10 @@ class LinksScheduler:
                     # 如果该动漫不在给定的 folder_ids 中，移除该任务
                     if folder_id not in folder_ids:
                         self.scheduler.remove_job(job.id)
-                        print(f"移除不存在的动漫调度任务: {job.name}")
+                        logger.info(f"已移除不存在的动漫调度任务: {job.name}")
 
         except Exception as e:
-            print(f"清除不存在的动漫调度任务失败: {e}")
+            logger.error(f"清除不存在的动漫调度任务失败: {e}")
 
     def remove_anime_schedule(self, folder_id: str):
         """移除指定动漫的调度任务"""
@@ -215,9 +220,9 @@ class LinksScheduler:
         if self.scheduler and self.scheduler.get_job(job_id):
             try:
                 self.scheduler.remove_job(job_id)
-                print(f"已移除不存在的动漫任务: {job_id}")
+                logger.info(f"已移除不存在的动漫任务: {job_id}")
             except Exception as e:
-                print(f"移除动漫任务失败 {job_id}: {e}")
+                logger.error(f"移除动漫任务失败 {job_id}: {e}")
 
     async def _schedule_anime_update(self, folder_info: Dict):
         """为动漫安排更新任务"""
@@ -260,11 +265,11 @@ class LinksScheduler:
             )
 
         except Exception as e:
-            print(f"安排更新失败: {e}")
+            logger.error(f"安排更新失败: {e}")
 
     async def reinitialize(self):
         """初始化所有调度"""
         try:
             await self._initialize_all_anime()
         except Exception as e:
-            print(f"链接调度初始化失败: {e}")
+            logger.error(f"链接调度初始化失败: {e}")
