@@ -20,20 +20,35 @@ export const CalendarModal: React.FC<CalendarModalProps> = ({
     const [isLoading, setIsLoading] = useState(false);
     const [isRefreshing, setIsRefreshing] = useState(false);
 
+    // 解析响应数据的通用函数
+    const parseCalendarData = (responseData: any): CalendarDay[] => {
+        // 获取数据
+        if (Array.isArray(responseData)) {
+            return responseData;
+        }
+
+        // 更新数据
+        if (responseData && responseData.data && Array.isArray(responseData.data)) {
+            return responseData.data;
+        }
+
+        // 其他情况
+        return [];
+    };
+
     // 加载当季新番数据
     const loadCalendarData = async () => {
         setIsLoading(true);
 
         try {
             const response = await bangumiApi.get();
-            console.log("加载当季新番数据：", response.data);
-            const responseData = response.data || [];
-
+            console.log("加载当季新番数据：", response);
 
             if (response.code == 200) {
-                setCalendarData(responseData);
+                const parsedData = parseCalendarData(response.data);
+                setCalendarData(parsedData);
             } else {
-                message.error(`获取数据失败: ${response.message}`);
+                message.error(`获取数据失败: ${response.msg}`);
             }
         } catch (error) {
             message.error('获取当季新番数据失败');
@@ -48,13 +63,14 @@ export const CalendarModal: React.FC<CalendarModalProps> = ({
 
         try {
             const response = await bangumiApi.update();
-            const responseData = response.data || [];
-
             if (response.code == 200) {
-                setCalendarData(responseData);
+                const parsedData = parseCalendarData(response.data);
+                console.log("更新后的当季新番数据：", parsedData);
+
+                setCalendarData(parsedData);
                 message.success('当季新番数据已更新');
             } else {
-                message.error(`刷新数据失败: ${response.message}`);
+                message.error(`刷新数据失败: ${response.msg}`);
             }
         } catch (error) {
             message.error('刷新当季新番数据失败');

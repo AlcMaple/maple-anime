@@ -249,15 +249,7 @@ export interface CalendarDay {
     items: CalendarAnime[];
 }
 
-
-// 日历响应数据
-export interface CalendarData {
-    data: CalendarDay[];
-    last_update?: string;
-    error?: string;
-}
-
-export type CalendarResponse = BackendApiResponse<CalendarData[]>;
+export type CalendarResponse = BackendApiResponse<CalendarDay[]>;
 
 // ==================== 客户端 相关类型 ====================
 

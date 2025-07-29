@@ -35,7 +35,7 @@ function SearchContent() {
 
             const response = await clientApi.clientSearch({ name: searchQuery });
             console.log("搜索动漫响应数据:", response.data);
-            setSearchResults(response.data.anime_list || []);
+            setSearchResults(response.data?.[0]?.anime_list || []);
 
             setTimeout(() => {
                 setShowContent(true);

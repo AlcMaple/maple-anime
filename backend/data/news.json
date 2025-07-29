@@ -17,22 +17,22 @@
                 "air_date": "2025-07-07",
                 "air_weekday": 1,
                 "rating": {
-                    "total": 162,
+                    "total": 203,
                     "count": {
                         "10": 1,
                         "9": 1,
                         "8": 3,
-                        "7": 27,
-                        "6": 66,
-                        "5": 39,
-                        "4": 14,
-                        "3": 4,
-                        "2": 1,
-                        "1": 6
+                        "7": 28,
+                        "6": 63,
+                        "5": 52,
+                        "4": 33,
+                        "3": 12,
+                        "2": 3,
+                        "1": 7
                     },
-                    "score": 5.5
+                    "score": 5.2
                 },
-                "rank": 7769,
+                "rank": 8581,
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/3b/e5/481745_PZSg0.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/3b/e5/481745_PZSg0.jpg",
@@ -41,7 +41,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/3b/e5/481745_PZSg0.jpg"
                 },
                 "collection": {
-                    "doing": 707
+                    "doing": 679
                 }
             },
             {
@@ -54,22 +54,22 @@
                 "air_date": "2025-07-07",
                 "air_weekday": 1,
                 "rating": {
-                    "total": 1387,
+                    "total": 1857,
                     "count": {
-                        "10": 92,
-                        "9": 152,
-                        "8": 633,
-                        "7": 378,
-                        "6": 90,
-                        "5": 23,
-                        "4": 9,
+                        "10": 112,
+                        "9": 189,
+                        "8": 793,
+                        "7": 566,
+                        "6": 131,
+                        "5": 39,
+                        "4": 15,
                         "3": 3,
-                        "2": 1,
-                        "1": 6
+                        "2": 4,
+                        "1": 5
                     },
-                    "score": 7.7
+                    "score": 7.6
                 },
-                "rank": 539,
+                "rank": 650,
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/d6/29/515880_96Oxr.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/d6/29/515880_96Oxr.jpg",
@@ -78,7 +78,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/d6/29/515880_96Oxr.jpg"
                 },
                 "collection": {
-                    "doing": 7847
+                    "doing": 9788
                 }
             },
             {
@@ -91,22 +91,22 @@
                 "air_date": "2025-07-14",
                 "air_weekday": 1,
                 "rating": {
-                    "total": 119,
+                    "total": 226,
                     "count": {
-                        "10": 1,
-                        "9": 2,
-                        "8": 3,
-                        "7": 30,
-                        "6": 62,
-                        "5": 12,
-                        "4": 5,
-                        "3": 1,
-                        "2": 2,
-                        "1": 1
+                        "10": 2,
+                        "9": 4,
+                        "8": 7,
+                        "7": 58,
+                        "6": 109,
+                        "5": 22,
+                        "4": 16,
+                        "3": 2,
+                        "2": 3,
+                        "1": 3
                     },
-                    "score": 6.1
+                    "score": 6
                 },
-                "rank": 5900,
+                "rank": 6586,
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/04/95/524005_lSNqT.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/04/95/524005_lSNqT.jpg",
@@ -115,7 +115,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/04/95/524005_lSNqT.jpg"
                 },
                 "collection": {
-                    "doing": 1045
+                    "doing": 1455
                 }
             },
             {
@@ -128,22 +128,22 @@
                 "air_date": "2025-07-07",
                 "air_weekday": 1,
                 "rating": {
-                    "total": 136,
+                    "total": 183,
                     "count": {
                         "10": 1,
                         "9": 1,
-                        "8": 9,
-                        "7": 38,
-                        "6": 40,
-                        "5": 28,
-                        "4": 6,
-                        "3": 9,
+                        "8": 12,
+                        "7": 55,
+                        "6": 53,
+                        "5": 37,
+                        "4": 8,
+                        "3": 11,
                         "2": 2,
-                        "1": 2
+                        "1": 3
                     },
-                    "score": 5.8
+                    "score": 5.9
                 },
-                "rank": 6818,
+                "rank": 6980,
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/bd/36/524289_41R9r.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/bd/36/524289_41R9r.jpg",
@@ -152,7 +152,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/bd/36/524289_41R9r.jpg"
                 },
                 "collection": {
-                    "doing": 587
+                    "doing": 680
                 }
             },
             {
@@ -165,22 +165,22 @@
                 "air_date": "2025-07-07",
                 "air_weekday": 1,
                 "rating": {
-                    "total": 1225,
+                    "total": 1778,
                     "count": {
-                        "10": 39,
-                        "9": 40,
-                        "8": 352,
-                        "7": 553,
-                        "6": 173,
-                        "5": 46,
-                        "4": 7,
-                        "3": 2,
-                        "2": 4,
-                        "1": 9
+                        "10": 54,
+                        "9": 62,
+                        "8": 557,
+                        "7": 764,
+                        "6": 237,
+                        "5": 63,
+                        "4": 14,
+                        "3": 5,
+                        "2": 5,
+                        "1": 17
                     },
-                    "score": 7.1
+                    "score": 7.2
                 },
-                "rank": 1968,
+                "rank": 1906,
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/ae/03/524707_1quxk.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/ae/03/524707_1quxk.jpg",
@@ -189,7 +189,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/ae/03/524707_1quxk.jpg"
                 },
                 "collection": {
-                    "doing": 5897
+                    "doing": 7844
                 }
             },
             {
@@ -202,22 +202,22 @@
                 "air_date": "2025-07-07",
                 "air_weekday": 1,
                 "rating": {
-                    "total": 803,
+                    "total": 1117,
                     "count": {
-                        "10": 10,
-                        "9": 10,
-                        "8": 180,
-                        "7": 401,
-                        "6": 156,
-                        "5": 28,
-                        "4": 12,
-                        "3": 2,
+                        "10": 20,
+                        "9": 32,
+                        "8": 312,
+                        "7": 518,
+                        "6": 173,
+                        "5": 36,
+                        "4": 15,
+                        "3": 6,
                         "2": 2,
-                        "1": 2
+                        "1": 3
                     },
-                    "score": 6.9
+                    "score": 7.1
                 },
-                "rank": 2794,
+                "rank": 2330,
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/0d/5b/528438_cyCPQ.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/0d/5b/528438_cyCPQ.jpg",
@@ -226,7 +226,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/0d/5b/528438_cyCPQ.jpg"
                 },
                 "collection": {
-                    "doing": 3684
+                    "doing": 4490
                 }
             },
             {
@@ -275,18 +275,18 @@
                 "air_date": "2025-07-07",
                 "air_weekday": 1,
                 "rating": {
-                    "total": 7,
+                    "total": 11,
                     "count": {
                         "10": 1,
                         "9": 1,
-                        "8": 0,
+                        "8": 1,
                         "7": 1,
                         "6": 0,
-                        "5": 0,
+                        "5": 2,
                         "4": 0,
                         "3": 1,
                         "2": 1,
-                        "1": 2
+                        "1": 3
                     },
                     "score": 4.7
                 },
@@ -298,7 +298,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/04/7e/544967_m5v1l.jpg"
                 },
                 "collection": {
-                    "doing": 41
+                    "doing": 46
                 }
             },
             {
@@ -311,12 +311,12 @@
                 "air_date": "2025-07-28",
                 "air_weekday": 1,
                 "rating": {
-                    "total": 1,
+                    "total": 2,
                     "count": {
                         "10": 0,
                         "9": 0,
                         "8": 1,
-                        "7": 0,
+                        "7": 1,
                         "6": 0,
                         "5": 0,
                         "4": 0,
@@ -324,7 +324,7 @@
                         "2": 0,
                         "1": 0
                     },
-                    "score": 8
+                    "score": 7.5
                 },
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/65/5e/561133_p523b.jpg",
@@ -334,7 +334,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/65/5e/561133_p523b.jpg"
                 },
                 "collection": {
-                    "doing": 1
+                    "doing": 3
                 }
             },
             {
@@ -390,22 +390,22 @@
                 "air_date": "2025-07-08",
                 "air_weekday": 2,
                 "rating": {
-                    "total": 559,
+                    "total": 715,
                     "count": {
-                        "10": 10,
-                        "9": 13,
-                        "8": 40,
-                        "7": 247,
-                        "6": 170,
-                        "5": 51,
-                        "4": 14,
-                        "3": 8,
-                        "2": 2,
-                        "1": 4
+                        "10": 7,
+                        "9": 12,
+                        "8": 41,
+                        "7": 219,
+                        "6": 271,
+                        "5": 111,
+                        "4": 30,
+                        "3": 15,
+                        "2": 4,
+                        "1": 5
                     },
-                    "score": 6.5
+                    "score": 6.2
                 },
-                "rank": 4797,
+                "rank": 6627,
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/bb/dc/413567_a2ezg.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/bb/dc/413567_a2ezg.jpg",
@@ -414,7 +414,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/bb/dc/413567_a2ezg.jpg"
                 },
                 "collection": {
-                    "doing": 2431
+                    "doing": 2650
                 }
             },
             {
@@ -427,20 +427,20 @@
                 "air_date": "2025-07-22",
                 "air_weekday": 2,
                 "rating": {
-                    "total": 3,
+                    "total": 20,
                     "count": {
                         "10": 0,
                         "9": 0,
-                        "8": 2,
-                        "7": 1,
-                        "6": 0,
+                        "8": 6,
+                        "7": 9,
+                        "6": 5,
                         "5": 0,
                         "4": 0,
                         "3": 0,
                         "2": 0,
                         "1": 0
                     },
-                    "score": 7.7
+                    "score": 7.1
                 },
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/58/8b/448677_y60E6.jpg",
@@ -450,7 +450,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/58/8b/448677_y60E6.jpg"
                 },
                 "collection": {
-                    "doing": 19
+                    "doing": 63
                 }
             },
             {
@@ -462,6 +462,22 @@
                 "summary": "",
                 "air_date": "2025-07-29",
                 "air_weekday": 2,
+                "rating": {
+                    "total": 1,
+                    "count": {
+                        "10": 0,
+                        "9": 0,
+                        "8": 1,
+                        "7": 0,
+                        "6": 0,
+                        "5": 0,
+                        "4": 0,
+                        "3": 0,
+                        "2": 0,
+                        "1": 0
+                    },
+                    "score": 8
+                },
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/f9/3a/456171_DllLV.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/f9/3a/456171_DllLV.jpg",
@@ -470,7 +486,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/f9/3a/456171_DllLV.jpg"
                 },
                 "collection": {
-                    "doing": 4
+                    "doing": 11
                 }
             },
             {
@@ -483,20 +499,20 @@
                 "air_date": "2025-07-08",
                 "air_weekday": 2,
                 "rating": {
-                    "total": 17,
+                    "total": 25,
                     "count": {
-                        "10": 2,
+                        "10": 1,
                         "9": 1,
                         "8": 0,
-                        "7": 2,
-                        "6": 3,
-                        "5": 5,
+                        "7": 4,
+                        "6": 7,
+                        "5": 6,
                         "4": 2,
-                        "3": 1,
+                        "3": 2,
                         "2": 0,
-                        "1": 1
+                        "1": 2
                     },
-                    "score": 5.8
+                    "score": 5.4
                 },
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/c2/2a/497881_9lhDz.jpg",
@@ -506,7 +522,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/c2/2a/497881_9lhDz.jpg"
                 },
                 "collection": {
-                    "doing": 195
+                    "doing": 214
                 }
             },
             {
@@ -519,22 +535,22 @@
                 "air_date": "2025-07-08",
                 "air_weekday": 2,
                 "rating": {
-                    "total": 95,
+                    "total": 125,
                     "count": {
-                        "10": 3,
+                        "10": 2,
                         "9": 1,
-                        "8": 1,
-                        "7": 9,
-                        "6": 33,
-                        "5": 31,
-                        "4": 8,
-                        "3": 2,
+                        "8": 2,
+                        "7": 11,
+                        "6": 41,
+                        "5": 38,
+                        "4": 14,
+                        "3": 6,
                         "2": 0,
-                        "1": 7
+                        "1": 10
                     },
-                    "score": 5.3
+                    "score": 5.1
                 },
-                "rank": 7626,
+                "rank": 8378,
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/46/bc/505303_Za1G6.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/46/bc/505303_Za1G6.jpg",
@@ -543,7 +559,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/46/bc/505303_Za1G6.jpg"
                 },
                 "collection": {
-                    "doing": 582
+                    "doing": 693
                 }
             },
             {
@@ -556,22 +572,22 @@
                 "air_date": "2025-07-01",
                 "air_weekday": 2,
                 "rating": {
-                    "total": 582,
+                    "total": 687,
                     "count": {
-                        "10": 3,
-                        "9": 4,
-                        "8": 41,
-                        "7": 198,
-                        "6": 244,
-                        "5": 68,
-                        "4": 17,
-                        "3": 3,
+                        "10": 2,
+                        "9": 8,
+                        "8": 59,
+                        "7": 240,
+                        "6": 277,
+                        "5": 74,
+                        "4": 18,
+                        "3": 4,
                         "2": 2,
-                        "1": 2
+                        "1": 3
                     },
-                    "score": 6.3
+                    "score": 6.4
                 },
-                "rank": 5942,
+                "rank": 5785,
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/24/61/509216_2s20b.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/24/61/509216_2s20b.jpg",
@@ -580,7 +596,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/24/61/509216_2s20b.jpg"
                 },
                 "collection": {
-                    "doing": 2436
+                    "doing": 2745
                 }
             },
             {
@@ -593,22 +609,22 @@
                 "air_date": "2025-07-01",
                 "air_weekday": 2,
                 "rating": {
-                    "total": 212,
+                    "total": 258,
                     "count": {
-                        "10": 3,
-                        "9": 2,
-                        "8": 1,
-                        "7": 16,
-                        "6": 33,
-                        "5": 63,
-                        "4": 48,
-                        "3": 22,
-                        "2": 14,
-                        "1": 10
+                        "10": 2,
+                        "9": 1,
+                        "8": 2,
+                        "7": 15,
+                        "6": 45,
+                        "5": 77,
+                        "4": 56,
+                        "3": 32,
+                        "2": 16,
+                        "1": 12
                     },
-                    "score": 4.6
+                    "score": 4.5
                 },
-                "rank": 9118,
+                "rank": 9215,
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/bd/23/528147_l96M9.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/bd/23/528147_l96M9.jpg",
@@ -617,7 +633,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/bd/23/528147_l96M9.jpg"
                 },
                 "collection": {
-                    "doing": 662
+                    "doing": 750
                 }
             },
             {
@@ -630,22 +646,22 @@
                 "air_date": "2025-07-01",
                 "air_weekday": 2,
                 "rating": {
-                    "total": 119,
+                    "total": 148,
                     "count": {
-                        "10": 2,
+                        "10": 3,
                         "9": 1,
                         "8": 1,
-                        "7": 8,
-                        "6": 35,
-                        "5": 33,
-                        "4": 21,
-                        "3": 9,
+                        "7": 11,
+                        "6": 43,
+                        "5": 43,
+                        "4": 24,
+                        "3": 12,
                         "2": 4,
-                        "1": 5
+                        "1": 6
                     },
                     "score": 5
                 },
-                "rank": 8526,
+                "rank": 8665,
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/2d/53/537894_GAg1d.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/2d/53/537894_GAg1d.jpg",
@@ -654,7 +670,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/2d/53/537894_GAg1d.jpg"
                 },
                 "collection": {
-                    "doing": 683
+                    "doing": 845
                 }
             },
             {
@@ -667,20 +683,20 @@
                 "air_date": "2025-07-15",
                 "air_weekday": 2,
                 "rating": {
-                    "total": 2,
+                    "total": 4,
                     "count": {
                         "10": 1,
                         "9": 0,
                         "8": 0,
-                        "7": 0,
-                        "6": 0,
+                        "7": 1,
+                        "6": 1,
                         "5": 0,
                         "4": 0,
                         "3": 0,
                         "2": 0,
                         "1": 1
                     },
-                    "score": 5.5
+                    "score": 6
                 },
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/ca/5b/569138_8dj22.jpg",
@@ -690,7 +706,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/ca/5b/569138_8dj22.jpg"
                 },
                 "collection": {
-                    "doing": 1
+                    "doing": 29
                 }
             }
         ]
@@ -713,16 +729,16 @@
                 "air_date": "1999-10-20",
                 "air_weekday": 3,
                 "rating": {
-                    "total": 12995,
+                    "total": 13048,
                     "count": {
-                        "10": 3650,
-                        "9": 2500,
-                        "8": 3368,
-                        "7": 2033,
-                        "6": 841,
-                        "5": 335,
-                        "4": 102,
-                        "3": 36,
+                        "10": 3661,
+                        "9": 2509,
+                        "8": 3383,
+                        "7": 2047,
+                        "6": 842,
+                        "5": 338,
+                        "4": 103,
+                        "3": 35,
                         "2": 42,
                         "1": 88
                     },
@@ -737,7 +753,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/92/97/975_YKuWd.jpg"
                 },
                 "collection": {
-                    "doing": 13115
+                    "doing": 13288
                 }
             },
             {
@@ -750,22 +766,22 @@
                 "air_date": "2025-07-09",
                 "air_weekday": 3,
                 "rating": {
-                    "total": 1146,
+                    "total": 1727,
                     "count": {
-                        "10": 115,
-                        "9": 333,
-                        "8": 541,
-                        "7": 117,
-                        "6": 21,
-                        "5": 10,
-                        "4": 1,
-                        "3": 1,
+                        "10": 163,
+                        "9": 488,
+                        "8": 799,
+                        "7": 201,
+                        "6": 46,
+                        "5": 12,
+                        "4": 4,
+                        "3": 4,
                         "2": 2,
-                        "1": 5
+                        "1": 8
                     },
-                    "score": 8.3
+                    "score": 8.2
                 },
-                "rank": 112,
+                "rank": 130,
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/52/88/390555_11QS3.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/52/88/390555_11QS3.jpg",
@@ -774,7 +790,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/52/88/390555_11QS3.jpg"
                 },
                 "collection": {
-                    "doing": 6240
+                    "doing": 8328
                 }
             },
             {
@@ -787,22 +803,22 @@
                 "air_date": "2025-07-02",
                 "air_weekday": 3,
                 "rating": {
-                    "total": 132,
+                    "total": 166,
                     "count": {
                         "10": 2,
                         "9": 3,
                         "8": 1,
-                        "7": 15,
-                        "6": 49,
-                        "5": 38,
-                        "4": 14,
-                        "3": 3,
+                        "7": 18,
+                        "6": 58,
+                        "5": 55,
+                        "4": 18,
+                        "3": 4,
                         "2": 3,
                         "1": 4
                     },
                     "score": 5.4
                 },
-                "rank": 7799,
+                "rank": 8098,
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/ad/ac/404909_9HOfw.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/ad/ac/404909_9HOfw.jpg",
@@ -811,7 +827,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/ad/ac/404909_9HOfw.jpg"
                 },
                 "collection": {
-                    "doing": 576
+                    "doing": 732
                 }
             },
             {
@@ -824,20 +840,20 @@
                 "air_date": "2025-07-09",
                 "air_weekday": 3,
                 "rating": {
-                    "total": 9,
+                    "total": 18,
                     "count": {
                         "10": 0,
                         "9": 0,
-                        "8": 0,
-                        "7": 5,
-                        "6": 3,
+                        "8": 1,
+                        "7": 11,
+                        "6": 5,
                         "5": 1,
                         "4": 0,
                         "3": 0,
                         "2": 0,
                         "1": 0
                     },
-                    "score": 6.4
+                    "score": 6.7
                 },
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/95/33/405233_92HyT.jpg",
@@ -847,7 +863,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/95/33/405233_92HyT.jpg"
                 },
                 "collection": {
-                    "doing": 70
+                    "doing": 98
                 }
             },
             {
@@ -860,21 +876,22 @@
                 "air_date": "2025-07-16",
                 "air_weekday": 3,
                 "rating": {
-                    "total": 33,
+                    "total": 67,
                     "count": {
                         "10": 1,
                         "9": 2,
-                        "8": 1,
-                        "7": 9,
-                        "6": 9,
-                        "5": 5,
-                        "4": 1,
-                        "3": 3,
+                        "8": 3,
+                        "7": 13,
+                        "6": 20,
+                        "5": 18,
+                        "4": 3,
+                        "3": 6,
                         "2": 0,
-                        "1": 2
+                        "1": 1
                     },
-                    "score": 5.8
+                    "score": 5.7
                 },
+                "rank": 6182,
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/d4/5b/408467_7lebu.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/d4/5b/408467_7lebu.jpg",
@@ -883,7 +900,43 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/d4/5b/408467_7lebu.jpg"
                 },
                 "collection": {
-                    "doing": 408
+                    "doing": 419
+                }
+            },
+            {
+                "id": 449338,
+                "url": "http://bgm.tv/subject/449338",
+                "type": 2,
+                "name": "紫川 第2季",
+                "name_cn": "紫川 第二季",
+                "summary": "",
+                "air_date": "2025-07-30",
+                "air_weekday": 3,
+                "rating": {
+                    "total": 1,
+                    "count": {
+                        "10": 0,
+                        "9": 0,
+                        "8": 0,
+                        "7": 1,
+                        "6": 0,
+                        "5": 0,
+                        "4": 0,
+                        "3": 0,
+                        "2": 0,
+                        "1": 0
+                    },
+                    "score": 7
+                },
+                "images": {
+                    "large": "http://lain.bgm.tv/pic/cover/l/85/7a/449338_NQkl6.jpg",
+                    "common": "http://lain.bgm.tv/pic/cover/c/85/7a/449338_NQkl6.jpg",
+                    "medium": "http://lain.bgm.tv/pic/cover/m/85/7a/449338_NQkl6.jpg",
+                    "small": "http://lain.bgm.tv/pic/cover/s/85/7a/449338_NQkl6.jpg",
+                    "grid": "http://lain.bgm.tv/pic/cover/g/85/7a/449338_NQkl6.jpg"
+                },
+                "collection": {
+                    "doing": 4
                 }
             },
             {
@@ -919,7 +972,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/29/25/449361_FjLLs.jpg"
                 },
                 "collection": {
-                    "doing": 1
+                    "doing": 4
                 }
             },
             {
@@ -932,22 +985,22 @@
                 "air_date": "2025-07-02",
                 "air_weekday": 3,
                 "rating": {
-                    "total": 102,
+                    "total": 122,
                     "count": {
                         "10": 1,
                         "9": 2,
                         "8": 3,
-                        "7": 5,
-                        "6": 31,
-                        "5": 37,
-                        "4": 15,
-                        "3": 6,
+                        "7": 6,
+                        "6": 33,
+                        "5": 46,
+                        "4": 19,
+                        "3": 8,
                         "2": 1,
-                        "1": 1
+                        "1": 3
                     },
-                    "score": 5.3
+                    "score": 5.1
                 },
-                "rank": 7881,
+                "rank": 8320,
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/03/cf/455617_WG3Mg.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/03/cf/455617_WG3Mg.jpg",
@@ -956,7 +1009,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/03/cf/455617_WG3Mg.jpg"
                 },
                 "collection": {
-                    "doing": 512
+                    "doing": 574
                 }
             },
             {
@@ -969,22 +1022,22 @@
                 "air_date": "2025-07-09",
                 "air_weekday": 3,
                 "rating": {
-                    "total": 130,
+                    "total": 181,
                     "count": {
                         "10": 4,
-                        "9": 3,
+                        "9": 4,
                         "8": 3,
-                        "7": 21,
-                        "6": 52,
-                        "5": 28,
-                        "4": 6,
-                        "3": 4,
+                        "7": 32,
+                        "6": 69,
+                        "5": 41,
+                        "4": 14,
+                        "3": 7,
                         "2": 2,
-                        "1": 7
+                        "1": 5
                     },
                     "score": 5.7
                 },
-                "rank": 7289,
+                "rank": 7534,
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/64/b6/476542_szQNI.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/64/b6/476542_szQNI.jpg",
@@ -993,7 +1046,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/64/b6/476542_szQNI.jpg"
                 },
                 "collection": {
-                    "doing": 819
+                    "doing": 1049
                 }
             },
             {
@@ -1006,22 +1059,22 @@
                 "air_date": "2025-07-09",
                 "air_weekday": 3,
                 "rating": {
-                    "total": 272,
+                    "total": 388,
                     "count": {
-                        "10": 26,
-                        "9": 16,
-                        "8": 23,
-                        "7": 111,
-                        "6": 70,
-                        "5": 11,
-                        "4": 7,
-                        "3": 1,
+                        "10": 33,
+                        "9": 21,
+                        "8": 44,
+                        "7": 162,
+                        "6": 97,
+                        "5": 13,
+                        "4": 9,
+                        "3": 2,
                         "2": 0,
                         "1": 7
                     },
-                    "score": 6.9
+                    "score": 7
                 },
-                "rank": 2833,
+                "rank": 2660,
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/30/9e/499656_rpNoi.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/30/9e/499656_rpNoi.jpg",
@@ -1030,7 +1083,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/30/9e/499656_rpNoi.jpg"
                 },
                 "collection": {
-                    "doing": 1654
+                    "doing": 2246
                 }
             },
             {
@@ -1043,22 +1096,22 @@
                 "air_date": "2025-07-02",
                 "air_weekday": 3,
                 "rating": {
-                    "total": 536,
+                    "total": 697,
                     "count": {
-                        "10": 5,
-                        "9": 16,
-                        "8": 106,
-                        "7": 282,
-                        "6": 84,
-                        "5": 23,
-                        "4": 11,
-                        "3": 2,
-                        "2": 2,
+                        "10": 10,
+                        "9": 21,
+                        "8": 143,
+                        "7": 362,
+                        "6": 102,
+                        "5": 27,
+                        "4": 14,
+                        "3": 10,
+                        "2": 3,
                         "1": 5
                     },
                     "score": 6.9
                 },
-                "rank": 2984,
+                "rank": 2939,
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/5c/49/502142_XG5pA.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/5c/49/502142_XG5pA.jpg",
@@ -1067,7 +1120,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/5c/49/502142_XG5pA.jpg"
                 },
                 "collection": {
-                    "doing": 2354
+                    "doing": 3038
                 }
             },
             {
@@ -1080,22 +1133,22 @@
                 "air_date": "2025-07-09",
                 "air_weekday": 3,
                 "rating": {
-                    "total": 210,
+                    "total": 337,
                     "count": {
-                        "10": 4,
-                        "9": 2,
-                        "8": 11,
-                        "7": 57,
-                        "6": 80,
-                        "5": 28,
-                        "4": 16,
+                        "10": 5,
+                        "9": 6,
+                        "8": 28,
+                        "7": 120,
+                        "6": 107,
+                        "5": 39,
+                        "4": 21,
                         "3": 3,
                         "2": 4,
-                        "1": 5
+                        "1": 4
                     },
-                    "score": 6
+                    "score": 6.3
                 },
-                "rank": 6906,
+                "rank": 5956,
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/f2/85/502272_LB63x.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/f2/85/502272_LB63x.jpg",
@@ -1104,7 +1157,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/f2/85/502272_LB63x.jpg"
                 },
                 "collection": {
-                    "doing": 988
+                    "doing": 1326
                 }
             },
             {
@@ -1117,22 +1170,22 @@
                 "air_date": "2025-07-02",
                 "air_weekday": 3,
                 "rating": {
-                    "total": 111,
+                    "total": 134,
                     "count": {
                         "10": 2,
                         "9": 1,
                         "8": 3,
-                        "7": 18,
-                        "6": 47,
-                        "5": 24,
-                        "4": 11,
-                        "3": 2,
+                        "7": 15,
+                        "6": 53,
+                        "5": 35,
+                        "4": 17,
+                        "3": 4,
                         "2": 0,
-                        "1": 3
+                        "1": 4
                     },
-                    "score": 5.7
+                    "score": 5.5
                 },
-                "rank": 6990,
+                "rank": 7725,
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/a7/4a/504524_uvyT0.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/a7/4a/504524_uvyT0.jpg",
@@ -1141,7 +1194,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/a7/4a/504524_uvyT0.jpg"
                 },
                 "collection": {
-                    "doing": 450
+                    "doing": 458
                 }
             },
             {
@@ -1154,21 +1207,22 @@
                 "air_date": "2025-07-09",
                 "air_weekday": 3,
                 "rating": {
-                    "total": 44,
+                    "total": 57,
                     "count": {
-                        "10": 2,
+                        "10": 0,
                         "9": 2,
-                        "8": 1,
+                        "8": 2,
                         "7": 3,
-                        "6": 4,
-                        "5": 4,
-                        "4": 9,
-                        "3": 7,
-                        "2": 4,
-                        "1": 8
+                        "6": 5,
+                        "5": 10,
+                        "4": 13,
+                        "3": 6,
+                        "2": 6,
+                        "1": 10
                     },
-                    "score": 4.2
+                    "score": 4
                 },
+                "rank": 8801,
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/76/b3/515418_T9DJG.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/76/b3/515418_T9DJG.jpg",
@@ -1177,7 +1231,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/76/b3/515418_T9DJG.jpg"
                 },
                 "collection": {
-                    "doing": 150
+                    "doing": 171
                 }
             },
             {
@@ -1190,22 +1244,22 @@
                 "air_date": "2025-07-02",
                 "air_weekday": 3,
                 "rating": {
-                    "total": 189,
+                    "total": 231,
                     "count": {
                         "10": 3,
-                        "9": 2,
+                        "9": 1,
                         "8": 2,
-                        "7": 24,
-                        "6": 77,
-                        "5": 46,
-                        "4": 24,
-                        "3": 7,
-                        "2": 2,
-                        "1": 2
+                        "7": 26,
+                        "6": 82,
+                        "5": 65,
+                        "4": 36,
+                        "3": 11,
+                        "2": 1,
+                        "1": 4
                     },
-                    "score": 5.5
+                    "score": 5.4
                 },
-                "rank": 7898,
+                "rank": 8433,
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/e2/9f/541945_xX005.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/e2/9f/541945_xX005.jpg",
@@ -1214,7 +1268,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/e2/9f/541945_xX005.jpg"
                 },
                 "collection": {
-                    "doing": 740
+                    "doing": 787
                 }
             },
             {
@@ -1226,6 +1280,22 @@
                 "summary": "",
                 "air_date": "2025-07-23",
                 "air_weekday": 3,
+                "rating": {
+                    "total": 1,
+                    "count": {
+                        "10": 0,
+                        "9": 0,
+                        "8": 1,
+                        "7": 0,
+                        "6": 0,
+                        "5": 0,
+                        "4": 0,
+                        "3": 0,
+                        "2": 0,
+                        "1": 0
+                    },
+                    "score": 8
+                },
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/4c/be/549641_E8zm7.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/4c/be/549641_E8zm7.jpg",
@@ -1234,7 +1304,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/4c/be/549641_E8zm7.jpg"
                 },
                 "collection": {
-                    "doing": 5
+                    "doing": 11
                 }
             },
             {
@@ -1247,13 +1317,13 @@
                 "air_date": "2025-07-02",
                 "air_weekday": 3,
                 "rating": {
-                    "total": 3,
+                    "total": 4,
                     "count": {
                         "10": 1,
                         "9": 0,
                         "8": 0,
                         "7": 1,
-                        "6": 0,
+                        "6": 1,
                         "5": 0,
                         "4": 0,
                         "3": 0,
@@ -1270,7 +1340,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/19/48/561787_131K8.jpg"
                 },
                 "collection": {
-                    "doing": 18
+                    "doing": 19
                 }
             },
             {
@@ -1282,6 +1352,22 @@
                 "summary": "",
                 "air_date": "2025-07-09",
                 "air_weekday": 3,
+                "rating": {
+                    "total": 1,
+                    "count": {
+                        "10": 0,
+                        "9": 0,
+                        "8": 0,
+                        "7": 0,
+                        "6": 0,
+                        "5": 0,
+                        "4": 0,
+                        "3": 0,
+                        "2": 0,
+                        "1": 1
+                    },
+                    "score": 1
+                },
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/76/e1/565400_Hf8OJ.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/76/e1/565400_Hf8OJ.jpg",
@@ -1299,6 +1385,22 @@
                 "summary": "",
                 "air_date": "2025-07-02",
                 "air_weekday": 3,
+                "rating": {
+                    "total": 1,
+                    "count": {
+                        "10": 0,
+                        "9": 0,
+                        "8": 0,
+                        "7": 0,
+                        "6": 0,
+                        "5": 0,
+                        "4": 1,
+                        "3": 0,
+                        "2": 0,
+                        "1": 0
+                    },
+                    "score": 4
+                },
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/49/03/566125_yoONb.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/49/03/566125_yoONb.jpg",
@@ -1307,7 +1409,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/49/03/566125_yoONb.jpg"
                 },
                 "collection": {
-                    "doing": 4
+                    "doing": 6
                 }
             },
             {
@@ -1320,7 +1422,7 @@
                 "air_date": "2025-07-09",
                 "air_weekday": 3,
                 "rating": {
-                    "total": 1,
+                    "total": 2,
                     "count": {
                         "10": 0,
                         "9": 1,
@@ -1331,9 +1433,9 @@
                         "4": 0,
                         "3": 0,
                         "2": 0,
-                        "1": 0
+                        "1": 1
                     },
-                    "score": 9
+                    "score": 5
                 },
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/c7/2c/567279_6jsGg.jpg",
@@ -1341,6 +1443,9 @@
                     "medium": "http://lain.bgm.tv/pic/cover/m/c7/2c/567279_6jsGg.jpg",
                     "small": "http://lain.bgm.tv/pic/cover/s/c7/2c/567279_6jsGg.jpg",
                     "grid": "http://lain.bgm.tv/pic/cover/g/c7/2c/567279_6jsGg.jpg"
+                },
+                "collection": {
+                    "doing": 1
                 }
             }
         ]
@@ -1363,7 +1468,7 @@
                 "air_date": "2025-07-10",
                 "air_weekday": 4,
                 "rating": {
-                    "total": 1,
+                    "total": 2,
                     "count": {
                         "10": 0,
                         "9": 0,
@@ -1372,11 +1477,11 @@
                         "6": 0,
                         "5": 0,
                         "4": 1,
-                        "3": 0,
+                        "3": 1,
                         "2": 0,
                         "1": 0
                     },
-                    "score": 4
+                    "score": 3.5
                 },
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/c7/96/434797_DkVyH.jpg",
@@ -1386,7 +1491,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/c7/96/434797_DkVyH.jpg"
                 },
                 "collection": {
-                    "doing": 7
+                    "doing": 11
                 }
             },
             {
@@ -1399,21 +1504,22 @@
                 "air_date": "2025-07-17",
                 "air_weekday": 4,
                 "rating": {
-                    "total": 20,
+                    "total": 273,
                     "count": {
-                        "10": 4,
-                        "9": 1,
-                        "8": 1,
-                        "7": 3,
-                        "6": 6,
-                        "5": 1,
-                        "4": 0,
-                        "3": 1,
-                        "2": 1,
-                        "1": 2
+                        "10": 7,
+                        "9": 3,
+                        "8": 7,
+                        "7": 37,
+                        "6": 100,
+                        "5": 62,
+                        "4": 33,
+                        "3": 10,
+                        "2": 6,
+                        "1": 8
                     },
-                    "score": 6.3
+                    "score": 5.5
                 },
+                "rank": 8184,
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/ef/27/441670_sByY9.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/ef/27/441670_sByY9.jpg",
@@ -1422,7 +1528,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/ef/27/441670_sByY9.jpg"
                 },
                 "collection": {
-                    "doing": 809
+                    "doing": 1138
                 }
             },
             {
@@ -1435,20 +1541,20 @@
                 "air_date": "2025-07-17",
                 "air_weekday": 4,
                 "rating": {
-                    "total": 4,
+                    "total": 8,
                     "count": {
-                        "10": 1,
+                        "10": 0,
                         "9": 1,
-                        "8": 0,
+                        "8": 1,
                         "7": 1,
-                        "6": 0,
-                        "5": 0,
+                        "6": 3,
+                        "5": 1,
                         "4": 0,
                         "3": 0,
                         "2": 0,
                         "1": 1
                     },
-                    "score": 6.8
+                    "score": 6
                 },
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/fc/de/456336_QRx0G.jpg",
@@ -1458,7 +1564,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/fc/de/456336_QRx0G.jpg"
                 },
                 "collection": {
-                    "doing": 16
+                    "doing": 28
                 }
             },
             {
@@ -1471,22 +1577,22 @@
                 "air_date": "2025-07-03",
                 "air_weekday": 4,
                 "rating": {
-                    "total": 484,
+                    "total": 571,
                     "count": {
-                        "10": 16,
-                        "9": 3,
-                        "8": 1,
-                        "7": 22,
-                        "6": 52,
-                        "5": 87,
-                        "4": 100,
-                        "3": 103,
-                        "2": 53,
-                        "1": 47
+                        "10": 15,
+                        "9": 4,
+                        "8": 2,
+                        "7": 19,
+                        "6": 50,
+                        "5": 96,
+                        "4": 121,
+                        "3": 131,
+                        "2": 71,
+                        "1": 62
                     },
-                    "score": 4
+                    "score": 3.8
                 },
-                "rank": 9355,
+                "rank": 9405,
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/fb/78/475032_PCVWp.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/fb/78/475032_PCVWp.jpg",
@@ -1495,7 +1601,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/fb/78/475032_PCVWp.jpg"
                 },
                 "collection": {
-                    "doing": 1540
+                    "doing": 1504
                 }
             },
             {
@@ -1508,21 +1614,22 @@
                 "air_date": "2025-07-10",
                 "air_weekday": 4,
                 "rating": {
-                    "total": 37,
+                    "total": 57,
                     "count": {
                         "10": 1,
                         "9": 1,
-                        "8": 2,
+                        "8": 1,
                         "7": 6,
-                        "6": 13,
-                        "5": 7,
-                        "4": 2,
-                        "3": 1,
-                        "2": 2,
-                        "1": 2
+                        "6": 17,
+                        "5": 10,
+                        "4": 8,
+                        "3": 6,
+                        "2": 3,
+                        "1": 4
                     },
-                    "score": 5.6
+                    "score": 4.9
                 },
+                "rank": 7674,
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/58/66/497923_8r9Nr.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/58/66/497923_8r9Nr.jpg",
@@ -1531,7 +1638,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/58/66/497923_8r9Nr.jpg"
                 },
                 "collection": {
-                    "doing": 118
+                    "doing": 101
                 }
             },
             {
@@ -1544,22 +1651,22 @@
                 "air_date": "2025-07-10",
                 "air_weekday": 4,
                 "rating": {
-                    "total": 146,
+                    "total": 207,
                     "count": {
                         "10": 1,
                         "9": 1,
                         "8": 1,
-                        "7": 10,
-                        "6": 34,
-                        "5": 59,
-                        "4": 21,
-                        "3": 11,
-                        "2": 3,
-                        "1": 5
+                        "7": 9,
+                        "6": 40,
+                        "5": 79,
+                        "4": 46,
+                        "3": 18,
+                        "2": 5,
+                        "1": 7
                     },
-                    "score": 5
+                    "score": 4.7
                 },
-                "rank": 8700,
+                "rank": 9060,
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/19/38/505793_HF3Ug.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/19/38/505793_HF3Ug.jpg",
@@ -1568,7 +1675,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/19/38/505793_HF3Ug.jpg"
                 },
                 "collection": {
-                    "doing": 751
+                    "doing": 888
                 }
             },
             {
@@ -1581,18 +1688,18 @@
                 "air_date": "2025-07-10",
                 "air_weekday": 4,
                 "rating": {
-                    "total": 193,
+                    "total": 275,
                     "count": {
                         "10": 6,
-                        "9": 10,
-                        "8": 43,
-                        "7": 98,
-                        "6": 23,
-                        "5": 5,
+                        "9": 11,
+                        "8": 68,
+                        "7": 142,
+                        "6": 31,
+                        "5": 8,
                         "4": 1,
                         "3": 1,
                         "2": 1,
-                        "1": 5
+                        "1": 6
                     },
                     "score": 7
                 },
@@ -1605,7 +1712,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/d3/c4/508003_DD2wd.jpg"
                 },
                 "collection": {
-                    "doing": 1393
+                    "doing": 1842
                 }
             },
             {
@@ -1618,20 +1725,20 @@
                 "air_date": "2025-07-24",
                 "air_weekday": 4,
                 "rating": {
-                    "total": 4,
+                    "total": 41,
                     "count": {
-                        "10": 1,
+                        "10": 2,
                         "9": 1,
-                        "8": 0,
-                        "7": 0,
-                        "6": 0,
-                        "5": 0,
-                        "4": 0,
-                        "3": 1,
-                        "2": 1,
-                        "1": 0
+                        "8": 5,
+                        "7": 15,
+                        "6": 7,
+                        "5": 1,
+                        "4": 4,
+                        "3": 2,
+                        "2": 2,
+                        "1": 2
                     },
-                    "score": 6
+                    "score": 6.1
                 },
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/fa/33/519956_R6iFg.jpg",
@@ -1641,7 +1748,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/fa/33/519956_R6iFg.jpg"
                 },
                 "collection": {
-                    "doing": 169
+                    "doing": 318
                 }
             },
             {
@@ -1654,22 +1761,22 @@
                 "air_date": "2025-07-03",
                 "air_weekday": 4,
                 "rating": {
-                    "total": 348,
+                    "total": 426,
                     "count": {
                         "10": 6,
                         "9": 3,
-                        "8": 16,
-                        "7": 88,
-                        "6": 148,
-                        "5": 55,
-                        "4": 17,
-                        "3": 4,
+                        "8": 18,
+                        "7": 89,
+                        "6": 181,
+                        "5": 86,
+                        "4": 25,
+                        "3": 7,
                         "2": 5,
                         "1": 6
                     },
-                    "score": 6
+                    "score": 5.9
                 },
-                "rank": 6961,
+                "rank": 7493,
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/80/16/528831_0UoeE.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/80/16/528831_0UoeE.jpg",
@@ -1678,7 +1785,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/80/16/528831_0UoeE.jpg"
                 },
                 "collection": {
-                    "doing": 1484
+                    "doing": 1665
                 }
             },
             {
@@ -1691,22 +1798,22 @@
                 "air_date": "2025-07-03",
                 "air_weekday": 4,
                 "rating": {
-                    "total": 1129,
+                    "total": 1530,
                     "count": {
-                        "10": 27,
-                        "9": 32,
-                        "8": 361,
-                        "7": 571,
-                        "6": 93,
-                        "5": 30,
-                        "4": 6,
+                        "10": 37,
+                        "9": 43,
+                        "8": 509,
+                        "7": 742,
+                        "6": 143,
+                        "5": 38,
+                        "4": 10,
                         "3": 1,
                         "2": 2,
-                        "1": 6
+                        "1": 5
                     },
                     "score": 7.3
                 },
-                "rank": 1595,
+                "rank": 1520,
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/4a/2b/529431_a7joa.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/4a/2b/529431_a7joa.jpg",
@@ -1715,7 +1822,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/4a/2b/529431_a7joa.jpg"
                 },
                 "collection": {
-                    "doing": 7475
+                    "doing": 9156
                 }
             },
             {
@@ -1728,22 +1835,22 @@
                 "air_date": "2025-07-10",
                 "air_weekday": 4,
                 "rating": {
-                    "total": 116,
+                    "total": 172,
                     "count": {
                         "10": 2,
                         "9": 1,
-                        "8": 0,
-                        "7": 27,
-                        "6": 53,
-                        "5": 23,
-                        "4": 5,
-                        "3": 2,
+                        "8": 2,
+                        "7": 26,
+                        "6": 69,
+                        "5": 50,
+                        "4": 14,
+                        "3": 5,
                         "2": 1,
                         "1": 2
                     },
-                    "score": 5.9
+                    "score": 5.6
                 },
-                "rank": 6574,
+                "rank": 7615,
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/c5/51/531344_f65f8.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/c5/51/531344_f65f8.jpg",
@@ -1752,7 +1859,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/c5/51/531344_f65f8.jpg"
                 },
                 "collection": {
-                    "doing": 612
+                    "doing": 656
                 }
             },
             {
@@ -1765,20 +1872,20 @@
                 "air_date": "2025-07-24",
                 "air_weekday": 4,
                 "rating": {
-                    "total": 2,
+                    "total": 19,
                     "count": {
                         "10": 0,
                         "9": 1,
-                        "8": 0,
-                        "7": 0,
-                        "6": 1,
-                        "5": 0,
-                        "4": 0,
-                        "3": 0,
+                        "8": 4,
+                        "7": 8,
+                        "6": 2,
+                        "5": 1,
+                        "4": 1,
+                        "3": 1,
                         "2": 0,
-                        "1": 0
+                        "1": 1
                     },
-                    "score": 7.5
+                    "score": 6.4
                 },
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/5c/dc/532378_LziVD.jpg",
@@ -1788,7 +1895,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/5c/dc/532378_LziVD.jpg"
                 },
                 "collection": {
-                    "doing": 32
+                    "doing": 41
                 }
             },
             {
@@ -1801,31 +1908,31 @@
                 "air_date": "2025-07-03",
                 "air_weekday": 4,
                 "rating": {
-                    "total": 355,
+                    "total": 460,
                     "count": {
                         "10": 1,
                         "9": 4,
-                        "8": 11,
-                        "7": 48,
-                        "6": 139,
-                        "5": 101,
-                        "4": 29,
-                        "3": 12,
-                        "2": 5,
-                        "1": 5
+                        "8": 14,
+                        "7": 62,
+                        "6": 181,
+                        "5": 132,
+                        "4": 37,
+                        "3": 19,
+                        "2": 6,
+                        "1": 4
                     },
                     "score": 5.6
                 },
-                "rank": 8211,
+                "rank": 8321,
                 "images": {
-                    "large": "http://lain.bgm.tv/pic/cover/l/16/e9/532403_5rfk5.jpg",
-                    "common": "http://lain.bgm.tv/pic/cover/c/16/e9/532403_5rfk5.jpg",
-                    "medium": "http://lain.bgm.tv/pic/cover/m/16/e9/532403_5rfk5.jpg",
-                    "small": "http://lain.bgm.tv/pic/cover/s/16/e9/532403_5rfk5.jpg",
-                    "grid": "http://lain.bgm.tv/pic/cover/g/16/e9/532403_5rfk5.jpg"
+                    "large": "http://lain.bgm.tv/pic/cover/l/16/e9/532403_f7P6q.jpg",
+                    "common": "http://lain.bgm.tv/pic/cover/c/16/e9/532403_f7P6q.jpg",
+                    "medium": "http://lain.bgm.tv/pic/cover/m/16/e9/532403_f7P6q.jpg",
+                    "small": "http://lain.bgm.tv/pic/cover/s/16/e9/532403_f7P6q.jpg",
+                    "grid": "http://lain.bgm.tv/pic/cover/g/16/e9/532403_f7P6q.jpg"
                 },
                 "collection": {
-                    "doing": 1471
+                    "doing": 1787
                 }
             },
             {
@@ -1838,22 +1945,22 @@
                 "air_date": "2025-07-03",
                 "air_weekday": 4,
                 "rating": {
-                    "total": 99,
+                    "total": 136,
                     "count": {
                         "10": 1,
-                        "9": 1,
-                        "8": 9,
-                        "7": 49,
-                        "6": 31,
+                        "9": 3,
+                        "8": 16,
+                        "7": 67,
+                        "6": 41,
                         "5": 5,
                         "4": 0,
                         "3": 1,
                         "2": 1,
                         "1": 1
                     },
-                    "score": 6.6
+                    "score": 6.7
                 },
-                "rank": 3793,
+                "rank": 3456,
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/46/4d/545328_2RRhx.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/46/4d/545328_2RRhx.jpg",
@@ -1862,7 +1969,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/46/4d/545328_2RRhx.jpg"
                 },
                 "collection": {
-                    "doing": 627
+                    "doing": 716
                 }
             },
             {
@@ -1880,6 +1987,9 @@
                     "medium": "http://lain.bgm.tv/pic/cover/m/1d/bc/562146_hR1NM.jpg",
                     "small": "http://lain.bgm.tv/pic/cover/s/1d/bc/562146_hR1NM.jpg",
                     "grid": "http://lain.bgm.tv/pic/cover/g/1d/bc/562146_hR1NM.jpg"
+                },
+                "collection": {
+                    "doing": 4
                 }
             },
             {
@@ -1915,7 +2025,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/d3/ae/563152_2M888.jpg"
                 },
                 "collection": {
-                    "doing": 7
+                    "doing": 9
                 }
             },
             {
@@ -1927,6 +2037,22 @@
                 "summary": "",
                 "air_date": "2025-07-03",
                 "air_weekday": 4,
+                "rating": {
+                    "total": 2,
+                    "count": {
+                        "10": 0,
+                        "9": 0,
+                        "8": 0,
+                        "7": 0,
+                        "6": 0,
+                        "5": 1,
+                        "4": 0,
+                        "3": 0,
+                        "2": 0,
+                        "1": 1
+                    },
+                    "score": 3
+                },
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/03/9a/565325_GUavI.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/03/9a/565325_GUavI.jpg",
@@ -1947,6 +2073,22 @@
                 "summary": "",
                 "air_date": "2025-07-24",
                 "air_weekday": 4,
+                "rating": {
+                    "total": 1,
+                    "count": {
+                        "10": 0,
+                        "9": 0,
+                        "8": 0,
+                        "7": 1,
+                        "6": 0,
+                        "5": 0,
+                        "4": 0,
+                        "3": 0,
+                        "2": 0,
+                        "1": 0
+                    },
+                    "score": 7
+                },
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/f8/89/566079_2Do22.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/f8/89/566079_2Do22.jpg",
@@ -1955,7 +2097,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/f8/89/566079_2Do22.jpg"
                 },
                 "collection": {
-                    "doing": 1
+                    "doing": 5
                 }
             },
             {
@@ -1973,6 +2115,9 @@
                     "medium": "http://lain.bgm.tv/pic/cover/m/e9/27/569770_MZz49.jpg",
                     "small": "http://lain.bgm.tv/pic/cover/s/e9/27/569770_MZz49.jpg",
                     "grid": "http://lain.bgm.tv/pic/cover/g/e9/27/569770_MZz49.jpg"
+                },
+                "collection": {
+                    "doing": 1
                 }
             }
         ]
@@ -1995,22 +2140,22 @@
                 "air_date": "2025-07-04",
                 "air_weekday": 5,
                 "rating": {
-                    "total": 130,
+                    "total": 172,
                     "count": {
-                        "10": 4,
+                        "10": 7,
                         "9": 2,
-                        "8": 1,
+                        "8": 5,
                         "7": 19,
-                        "6": 39,
-                        "5": 21,
-                        "4": 14,
-                        "3": 12,
-                        "2": 8,
-                        "1": 10
+                        "6": 55,
+                        "5": 29,
+                        "4": 20,
+                        "3": 14,
+                        "2": 7,
+                        "1": 14
                     },
-                    "score": 5
+                    "score": 5.2
                 },
-                "rank": 8520,
+                "rank": 8603,
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/5a/25/406857_pIL9z.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/5a/25/406857_pIL9z.jpg",
@@ -2019,7 +2164,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/5a/25/406857_pIL9z.jpg"
                 },
                 "collection": {
-                    "doing": 472
+                    "doing": 505
                 }
             },
             {
@@ -2032,20 +2177,20 @@
                 "air_date": "2025-07-18",
                 "air_weekday": 5,
                 "rating": {
-                    "total": 2,
+                    "total": 45,
                     "count": {
                         "10": 0,
                         "9": 0,
-                        "8": 1,
-                        "7": 0,
-                        "6": 0,
-                        "5": 0,
-                        "4": 0,
-                        "3": 0,
-                        "2": 0,
-                        "1": 1
+                        "8": 3,
+                        "7": 5,
+                        "6": 4,
+                        "5": 10,
+                        "4": 7,
+                        "3": 5,
+                        "2": 2,
+                        "1": 9
                     },
-                    "score": 4.5
+                    "score": 4.2
                 },
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/17/42/408897_BnCHp.jpg",
@@ -2055,7 +2200,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/17/42/408897_BnCHp.jpg"
                 },
                 "collection": {
-                    "doing": 70
+                    "doing": 267
                 }
             },
             {
@@ -2067,6 +2212,22 @@
                 "summary": "",
                 "air_date": "2025-07-18",
                 "air_weekday": 5,
+                "rating": {
+                    "total": 5,
+                    "count": {
+                        "10": 1,
+                        "9": 0,
+                        "8": 3,
+                        "7": 0,
+                        "6": 0,
+                        "5": 0,
+                        "4": 0,
+                        "3": 0,
+                        "2": 0,
+                        "1": 1
+                    },
+                    "score": 7
+                },
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/83/17/423976_9OEsn.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/83/17/423976_9OEsn.jpg",
@@ -2075,7 +2236,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/83/17/423976_9OEsn.jpg"
                 },
                 "collection": {
-                    "doing": 6
+                    "doing": 19
                 }
             },
             {
@@ -2088,22 +2249,22 @@
                 "air_date": "2025-07-04",
                 "air_weekday": 5,
                 "rating": {
-                    "total": 185,
+                    "total": 233,
                     "count": {
-                        "10": 4,
-                        "9": 2,
+                        "10": 3,
+                        "9": 3,
                         "8": 3,
-                        "7": 12,
-                        "6": 55,
-                        "5": 51,
-                        "4": 29,
-                        "3": 15,
-                        "2": 7,
-                        "1": 7
+                        "7": 13,
+                        "6": 63,
+                        "5": 66,
+                        "4": 46,
+                        "3": 17,
+                        "2": 9,
+                        "1": 10
                     },
-                    "score": 5
+                    "score": 4.9
                 },
-                "rank": 8729,
+                "rank": 8954,
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/f8/a8/455454_cEllE.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/f8/a8/455454_cEllE.jpg",
@@ -2112,7 +2273,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/f8/a8/455454_cEllE.jpg"
                 },
                 "collection": {
-                    "doing": 863
+                    "doing": 950
                 }
             },
             {
@@ -2125,22 +2286,22 @@
                 "air_date": "2025-07-18",
                 "air_weekday": 5,
                 "rating": {
-                    "total": 94,
+                    "total": 2483,
                     "count": {
-                        "10": 15,
-                        "9": 6,
-                        "8": 20,
-                        "7": 35,
-                        "6": 7,
-                        "5": 4,
-                        "4": 2,
-                        "3": 1,
-                        "2": 1,
-                        "1": 3
+                        "10": 253,
+                        "9": 498,
+                        "8": 1098,
+                        "7": 458,
+                        "6": 100,
+                        "5": 28,
+                        "4": 13,
+                        "3": 7,
+                        "2": 4,
+                        "1": 24
                     },
-                    "score": 7.3
+                    "score": 8
                 },
-                "rank": 1668,
+                "rank": 246,
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/ee/a3/477825_5H55M.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/ee/a3/477825_5H55M.jpg",
@@ -2149,7 +2310,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/ee/a3/477825_5H55M.jpg"
                 },
                 "collection": {
-                    "doing": 2756
+                    "doing": 11895
                 }
             },
             {
@@ -2162,22 +2323,22 @@
                 "air_date": "2025-07-04",
                 "air_weekday": 5,
                 "rating": {
-                    "total": 727,
+                    "total": 960,
                     "count": {
-                        "10": 32,
-                        "9": 38,
-                        "8": 327,
-                        "7": 268,
-                        "6": 50,
-                        "5": 4,
-                        "4": 3,
+                        "10": 46,
+                        "9": 72,
+                        "8": 462,
+                        "7": 302,
+                        "6": 63,
+                        "5": 7,
+                        "4": 2,
                         "3": 1,
                         "2": 2,
-                        "1": 2
+                        "1": 3
                     },
-                    "score": 7.6
+                    "score": 7.7
                 },
-                "rank": 844,
+                "rank": 654,
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/15/5f/484623_6EWej.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/15/5f/484623_6EWej.jpg",
@@ -2186,7 +2347,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/15/5f/484623_6EWej.jpg"
                 },
                 "collection": {
-                    "doing": 4323
+                    "doing": 5092
                 }
             },
             {
@@ -2199,22 +2360,22 @@
                 "air_date": "2025-07-04",
                 "air_weekday": 5,
                 "rating": {
-                    "total": 150,
+                    "total": 188,
                     "count": {
                         "10": 4,
                         "9": 2,
-                        "8": 15,
-                        "7": 55,
-                        "6": 50,
-                        "5": 13,
-                        "4": 2,
-                        "3": 3,
+                        "8": 18,
+                        "7": 69,
+                        "6": 59,
+                        "5": 20,
+                        "4": 4,
+                        "3": 4,
                         "2": 3,
-                        "1": 3
+                        "1": 5
                     },
-                    "score": 6.4
+                    "score": 6.3
                 },
-                "rank": 5003,
+                "rank": 5522,
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/d2/b0/492199_PfRQS.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/d2/b0/492199_PfRQS.jpg",
@@ -2223,7 +2384,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/d2/b0/492199_PfRQS.jpg"
                 },
                 "collection": {
-                    "doing": 823
+                    "doing": 954
                 }
             },
             {
@@ -2236,22 +2397,22 @@
                 "air_date": "2025-07-11",
                 "air_weekday": 5,
                 "rating": {
-                    "total": 87,
+                    "total": 131,
                     "count": {
                         "10": 1,
                         "9": 1,
-                        "8": 3,
-                        "7": 7,
-                        "6": 36,
-                        "5": 20,
-                        "4": 11,
-                        "3": 2,
-                        "2": 3,
-                        "1": 3
+                        "8": 2,
+                        "7": 9,
+                        "6": 45,
+                        "5": 38,
+                        "4": 20,
+                        "3": 5,
+                        "2": 4,
+                        "1": 6
                     },
-                    "score": 5.4
+                    "score": 5.1
                 },
-                "rank": 7511,
+                "rank": 8461,
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/b9/09/493546_gT54V.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/b9/09/493546_gT54V.jpg",
@@ -2260,7 +2421,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/b9/09/493546_gT54V.jpg"
                 },
                 "collection": {
-                    "doing": 405
+                    "doing": 460
                 }
             },
             {
@@ -2273,22 +2434,22 @@
                 "air_date": "2025-07-04",
                 "air_weekday": 5,
                 "rating": {
-                    "total": 197,
+                    "total": 235,
                     "count": {
                         "10": 5,
-                        "9": 3,
+                        "9": 4,
                         "8": 3,
-                        "7": 7,
-                        "6": 14,
-                        "5": 39,
-                        "4": 33,
-                        "3": 19,
-                        "2": 13,
-                        "1": 61
+                        "7": 9,
+                        "6": 19,
+                        "5": 44,
+                        "4": 37,
+                        "3": 23,
+                        "2": 14,
+                        "1": 77
                     },
-                    "score": 3.6
+                    "score": 3.5
                 },
-                "rank": 9360,
+                "rank": 9400,
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/84/a9/503450_wS9yJ.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/84/a9/503450_wS9yJ.jpg",
@@ -2297,7 +2458,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/84/a9/503450_wS9yJ.jpg"
                 },
                 "collection": {
-                    "doing": 805
+                    "doing": 909
                 }
             },
             {
@@ -2310,22 +2471,22 @@
                 "air_date": "2025-07-04",
                 "air_weekday": 5,
                 "rating": {
-                    "total": 56,
+                    "total": 72,
                     "count": {
-                        "10": 2,
+                        "10": 1,
                         "9": 1,
-                        "8": 3,
-                        "7": 2,
-                        "6": 11,
-                        "5": 21,
-                        "4": 11,
-                        "3": 2,
-                        "2": 1,
-                        "1": 2
+                        "8": 2,
+                        "7": 3,
+                        "6": 15,
+                        "5": 24,
+                        "4": 16,
+                        "3": 4,
+                        "2": 2,
+                        "1": 4
                     },
-                    "score": 5.2
+                    "score": 4.9
                 },
-                "rank": 7152,
+                "rank": 8195,
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/be/45/505782_PZQHP.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/be/45/505782_PZQHP.jpg",
@@ -2334,7 +2495,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/be/45/505782_PZQHP.jpg"
                 },
                 "collection": {
-                    "doing": 239
+                    "doing": 278
                 }
             },
             {
@@ -2347,22 +2508,22 @@
                 "air_date": "2025-07-04",
                 "air_weekday": 5,
                 "rating": {
-                    "total": 1269,
+                    "total": 1706,
                     "count": {
-                        "10": 27,
-                        "9": 46,
-                        "8": 419,
-                        "7": 569,
-                        "6": 157,
-                        "5": 34,
-                        "4": 7,
-                        "3": 5,
+                        "10": 29,
+                        "9": 54,
+                        "8": 495,
+                        "7": 737,
+                        "6": 285,
+                        "5": 71,
+                        "4": 21,
+                        "3": 8,
                         "2": 1,
-                        "1": 4
+                        "1": 5
                     },
-                    "score": 7.2
+                    "score": 7.1
                 },
-                "rank": 1708,
+                "rank": 2241,
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/a0/60/506677_B74d5.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/a0/60/506677_B74d5.jpg",
@@ -2371,7 +2532,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/a0/60/506677_B74d5.jpg"
                 },
                 "collection": {
-                    "doing": 6446
+                    "doing": 7906
                 }
             },
             {
@@ -2407,7 +2568,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/99/23/542325_c8fE7.jpg"
                 },
                 "collection": {
-                    "doing": 1
+                    "doing": 4
                 }
             },
             {
@@ -2420,20 +2581,20 @@
                 "air_date": "2025-07-04",
                 "air_weekday": 5,
                 "rating": {
-                    "total": 6,
+                    "total": 9,
                     "count": {
                         "10": 0,
                         "9": 0,
-                        "8": 2,
-                        "7": 1,
-                        "6": 1,
-                        "5": 1,
+                        "8": 1,
+                        "7": 3,
+                        "6": 2,
+                        "5": 2,
                         "4": 1,
                         "3": 0,
                         "2": 0,
                         "1": 0
                     },
-                    "score": 6.3
+                    "score": 6.1
                 },
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/88/3a/545938_ln4an.jpg",
@@ -2443,7 +2604,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/88/3a/545938_ln4an.jpg"
                 },
                 "collection": {
-                    "doing": 19
+                    "doing": 14
                 }
             },
             {
@@ -2473,20 +2634,20 @@
                 "air_date": "2025-07-04",
                 "air_weekday": 5,
                 "rating": {
-                    "total": 15,
+                    "total": 18,
                     "count": {
                         "10": 0,
                         "9": 0,
                         "8": 0,
                         "7": 6,
-                        "6": 4,
-                        "5": 3,
+                        "6": 5,
+                        "5": 4,
                         "4": 1,
                         "3": 0,
                         "2": 1,
-                        "1": 0
+                        "1": 1
                     },
-                    "score": 5.8
+                    "score": 5.5
                 },
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/e3/69/568245_0bY72.jpg",
@@ -2508,15 +2669,28 @@
                 "summary": "",
                 "air_date": "2025-07-25",
                 "air_weekday": 5,
+                "rating": {
+                    "total": 1,
+                    "count": {
+                        "10": 0,
+                        "9": 0,
+                        "8": 0,
+                        "7": 0,
+                        "6": 0,
+                        "5": 0,
+                        "4": 0,
+                        "3": 0,
+                        "2": 0,
+                        "1": 1
+                    },
+                    "score": 1
+                },
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/ce/25/568790_E6e5M.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/ce/25/568790_E6e5M.jpg",
                     "medium": "http://lain.bgm.tv/pic/cover/m/ce/25/568790_E6e5M.jpg",
                     "small": "http://lain.bgm.tv/pic/cover/s/ce/25/568790_E6e5M.jpg",
                     "grid": "http://lain.bgm.tv/pic/cover/g/ce/25/568790_E6e5M.jpg"
-                },
-                "collection": {
-                    "doing": 1
                 }
             },
             {
@@ -2529,20 +2703,20 @@
                 "air_date": "2025-07-16",
                 "air_weekday": 5,
                 "rating": {
-                    "total": 2,
+                    "total": 8,
                     "count": {
-                        "10": 1,
-                        "9": 0,
-                        "8": 1,
-                        "7": 0,
+                        "10": 2,
+                        "9": 1,
+                        "8": 2,
+                        "7": 1,
                         "6": 0,
-                        "5": 0,
+                        "5": 1,
                         "4": 0,
                         "3": 0,
                         "2": 0,
-                        "1": 0
+                        "1": 1
                     },
-                    "score": 9
+                    "score": 7.3
                 },
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/20/09/569579_ecrO9.jpg",
@@ -2552,7 +2726,109 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/20/09/569579_ecrO9.jpg"
                 },
                 "collection": {
-                    "doing": 1
+                    "doing": 12
+                }
+            },
+            {
+                "id": 572988,
+                "url": "http://bgm.tv/subject/572988",
+                "type": 2,
+                "name": "是假千金也要手握团宠剧本",
+                "name_cn": "",
+                "summary": "",
+                "air_date": "2025-07-18",
+                "air_weekday": 5,
+                "rating": {
+                    "total": 1,
+                    "count": {
+                        "10": 0,
+                        "9": 0,
+                        "8": 0,
+                        "7": 0,
+                        "6": 0,
+                        "5": 0,
+                        "4": 0,
+                        "3": 0,
+                        "2": 0,
+                        "1": 1
+                    },
+                    "score": 1
+                },
+                "images": {
+                    "large": "http://lain.bgm.tv/pic/cover/l/2a/14/572988_MB89Y.jpg",
+                    "common": "http://lain.bgm.tv/pic/cover/c/2a/14/572988_MB89Y.jpg",
+                    "medium": "http://lain.bgm.tv/pic/cover/m/2a/14/572988_MB89Y.jpg",
+                    "small": "http://lain.bgm.tv/pic/cover/s/2a/14/572988_MB89Y.jpg",
+                    "grid": "http://lain.bgm.tv/pic/cover/g/2a/14/572988_MB89Y.jpg"
+                }
+            },
+            {
+                "id": 573465,
+                "url": "http://bgm.tv/subject/573465",
+                "type": 2,
+                "name": "新機動戦記ガンダムW -Operation 30th-",
+                "name_cn": "新机动战记高达W -Operation 30th-",
+                "summary": "",
+                "air_date": "2025-07-25",
+                "air_weekday": 5,
+                "rating": {
+                    "total": 30,
+                    "count": {
+                        "10": 2,
+                        "9": 3,
+                        "8": 5,
+                        "7": 14,
+                        "6": 3,
+                        "5": 1,
+                        "4": 1,
+                        "3": 0,
+                        "2": 0,
+                        "1": 1
+                    },
+                    "score": 7.1
+                },
+                "images": {
+                    "large": "http://lain.bgm.tv/pic/cover/l/f4/95/573465_h6p3w.jpg",
+                    "common": "http://lain.bgm.tv/pic/cover/c/f4/95/573465_h6p3w.jpg",
+                    "medium": "http://lain.bgm.tv/pic/cover/m/f4/95/573465_h6p3w.jpg",
+                    "small": "http://lain.bgm.tv/pic/cover/s/f4/95/573465_h6p3w.jpg",
+                    "grid": "http://lain.bgm.tv/pic/cover/g/f4/95/573465_h6p3w.jpg"
+                },
+                "collection": {
+                    "doing": 2
+                }
+            },
+            {
+                "id": 573786,
+                "url": "http://bgm.tv/subject/573786",
+                "type": 2,
+                "name": "あの日、プロデュースしてくれたあなたへ",
+                "name_cn": "致那一天开始培育我的你",
+                "summary": "",
+                "air_date": "2025-07-25",
+                "air_weekday": 5,
+                "rating": {
+                    "total": 9,
+                    "count": {
+                        "10": 0,
+                        "9": 0,
+                        "8": 2,
+                        "7": 5,
+                        "6": 2,
+                        "5": 0,
+                        "4": 0,
+                        "3": 0,
+                        "2": 0,
+                        "1": 0
+                    },
+                    "score": 7
+                },
+                "images": {
+                    "large": "http://lain.bgm.tv/pic/cover/l/73/a6/573786_I5ZWj.jpg",
+                    "common": "http://lain.bgm.tv/pic/cover/c/73/a6/573786_I5ZWj.jpg",
+                    "medium": "http://lain.bgm.tv/pic/cover/m/73/a6/573786_I5ZWj.jpg",
+                    "small": "http://lain.bgm.tv/pic/cover/s/73/a6/573786_I5ZWj.jpg",
+                    "grid": "http://lain.bgm.tv/pic/cover/g/73/a6/573786_I5ZWj.jpg"
                 }
             }
         ]
@@ -2575,22 +2851,22 @@
                 "air_date": "1996-01-08",
                 "air_weekday": 6,
                 "rating": {
-                    "total": 10175,
+                    "total": 10245,
                     "count": {
-                        "10": 1071,
-                        "9": 1073,
-                        "8": 2908,
-                        "7": 3330,
-                        "6": 1282,
-                        "5": 371,
-                        "4": 70,
-                        "3": 31,
+                        "10": 1073,
+                        "9": 1080,
+                        "8": 2922,
+                        "7": 3354,
+                        "6": 1295,
+                        "5": 377,
+                        "4": 71,
+                        "3": 33,
                         "2": 10,
-                        "1": 29
+                        "1": 30
                     },
                     "score": 7.6
                 },
-                "rank": 771,
+                "rank": 780,
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/01/88/899_Q3F3X.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/01/88/899_Q3F3X.jpg",
@@ -2599,7 +2875,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/01/88/899_Q3F3X.jpg"
                 },
                 "collection": {
-                    "doing": 9237
+                    "doing": 9330
                 }
             },
             {
@@ -2612,22 +2888,22 @@
                 "air_date": "2025-07-05",
                 "air_weekday": 6,
                 "rating": {
-                    "total": 1350,
+                    "total": 1757,
                     "count": {
-                        "10": 83,
-                        "9": 171,
-                        "8": 712,
-                        "7": 298,
-                        "6": 54,
-                        "5": 11,
+                        "10": 105,
+                        "9": 212,
+                        "8": 922,
+                        "7": 409,
+                        "6": 68,
+                        "5": 16,
                         "4": 3,
-                        "3": 4,
-                        "2": 3,
-                        "1": 11
+                        "3": 5,
+                        "2": 4,
+                        "1": 13
                     },
                     "score": 7.8
                 },
-                "rank": 405,
+                "rank": 409,
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/38/44/398951_973Z3.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/38/44/398951_973Z3.jpg",
@@ -2636,7 +2912,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/38/44/398951_973Z3.jpg"
                 },
                 "collection": {
-                    "doing": 7197
+                    "doing": 8947
                 }
             },
             {
@@ -2649,20 +2925,20 @@
                 "air_date": "2025-07-05",
                 "air_weekday": 6,
                 "rating": {
-                    "total": 7,
+                    "total": 9,
                     "count": {
                         "10": 2,
                         "9": 1,
                         "8": 0,
                         "7": 1,
-                        "6": 1,
+                        "6": 2,
                         "5": 1,
                         "4": 0,
                         "3": 0,
-                        "2": 0,
+                        "2": 1,
                         "1": 1
                     },
-                    "score": 6.9
+                    "score": 6.2
                 },
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/d4/3f/440881_HxoO2.jpg",
@@ -2672,7 +2948,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/d4/3f/440881_HxoO2.jpg"
                 },
                 "collection": {
-                    "doing": 34
+                    "doing": 37
                 }
             },
             {
@@ -2685,22 +2961,22 @@
                 "air_date": "2025-07-05",
                 "air_weekday": 6,
                 "rating": {
-                    "total": 407,
+                    "total": 492,
                     "count": {
                         "10": 5,
-                        "9": 7,
-                        "8": 17,
-                        "7": 74,
-                        "6": 197,
-                        "5": 72,
-                        "4": 25,
-                        "3": 7,
-                        "2": 0,
-                        "1": 3
+                        "9": 8,
+                        "8": 19,
+                        "7": 87,
+                        "6": 224,
+                        "5": 103,
+                        "4": 29,
+                        "3": 12,
+                        "2": 1,
+                        "1": 4
                     },
-                    "score": 6
+                    "score": 5.9
                 },
-                "rank": 7142,
+                "rank": 7470,
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/ac/67/459616_916Qm.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/ac/67/459616_916Qm.jpg",
@@ -2709,7 +2985,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/ac/67/459616_916Qm.jpg"
                 },
                 "collection": {
-                    "doing": 1830
+                    "doing": 2112
                 }
             },
             {
@@ -2722,22 +2998,22 @@
                 "air_date": "2025-07-05",
                 "air_weekday": 6,
                 "rating": {
-                    "total": 711,
+                    "total": 932,
                     "count": {
-                        "10": 36,
+                        "10": 49,
                         "9": 28,
-                        "8": 187,
-                        "7": 346,
-                        "6": 80,
-                        "5": 22,
-                        "4": 4,
+                        "8": 218,
+                        "7": 435,
+                        "6": 154,
+                        "5": 33,
+                        "4": 7,
                         "3": 2,
                         "2": 1,
                         "1": 5
                     },
-                    "score": 7.2
+                    "score": 7.1
                 },
-                "rank": 1640,
+                "rank": 1988,
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/d3/a3/467930_jH4s4.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/d3/a3/467930_jH4s4.jpg",
@@ -2746,7 +3022,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/d3/a3/467930_jH4s4.jpg"
                 },
                 "collection": {
-                    "doing": 5461
+                    "doing": 6428
                 }
             },
             {
@@ -2759,22 +3035,22 @@
                 "air_date": "2025-07-05",
                 "air_weekday": 6,
                 "rating": {
-                    "total": 691,
+                    "total": 887,
                     "count": {
-                        "10": 10,
-                        "9": 23,
-                        "8": 236,
-                        "7": 305,
-                        "6": 85,
-                        "5": 14,
-                        "4": 4,
-                        "3": 2,
-                        "2": 4,
-                        "1": 8
+                        "10": 13,
+                        "9": 26,
+                        "8": 263,
+                        "7": 403,
+                        "6": 127,
+                        "5": 28,
+                        "4": 11,
+                        "3": 4,
+                        "2": 2,
+                        "1": 10
                     },
-                    "score": 7.2
+                    "score": 7.1
                 },
-                "rank": 1939,
+                "rank": 2294,
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/c6/a6/496086_o27ob.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/c6/a6/496086_o27ob.jpg",
@@ -2783,7 +3059,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/c6/a6/496086_o27ob.jpg"
                 },
                 "collection": {
-                    "doing": 3986
+                    "doing": 4551
                 }
             },
             {
@@ -2796,22 +3072,22 @@
                 "air_date": "2025-07-05",
                 "air_weekday": 6,
                 "rating": {
-                    "total": 393,
+                    "total": 477,
                     "count": {
                         "10": 3,
                         "9": 2,
-                        "8": 13,
-                        "7": 40,
-                        "6": 102,
-                        "5": 123,
-                        "4": 58,
-                        "3": 29,
-                        "2": 8,
-                        "1": 15
+                        "8": 16,
+                        "7": 41,
+                        "6": 116,
+                        "5": 145,
+                        "4": 90,
+                        "3": 35,
+                        "2": 11,
+                        "1": 18
                     },
-                    "score": 5.1
+                    "score": 5
                 },
-                "rank": 8899,
+                "rank": 9047,
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/0a/ad/496973_kUlKl.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/0a/ad/496973_kUlKl.jpg",
@@ -2820,7 +3096,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/0a/ad/496973_kUlKl.jpg"
                 },
                 "collection": {
-                    "doing": 1662
+                    "doing": 1867
                 }
             },
             {
@@ -2833,22 +3109,22 @@
                 "air_date": "2025-07-05",
                 "air_weekday": 6,
                 "rating": {
-                    "total": 775,
+                    "total": 963,
                     "count": {
-                        "10": 9,
-                        "9": 13,
-                        "8": 113,
-                        "7": 363,
-                        "6": 215,
-                        "5": 46,
-                        "4": 10,
-                        "3": 2,
+                        "10": 8,
+                        "9": 16,
+                        "8": 135,
+                        "7": 429,
+                        "6": 283,
+                        "5": 65,
+                        "4": 18,
+                        "3": 4,
                         "2": 2,
-                        "1": 2
+                        "1": 3
                     },
                     "score": 6.7
                 },
-                "rank": 3709,
+                "rank": 4075,
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/df/1b/501614_SzXy2.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/df/1b/501614_SzXy2.jpg",
@@ -2857,7 +3133,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/df/1b/501614_SzXy2.jpg"
                 },
                 "collection": {
-                    "doing": 3610
+                    "doing": 4044
                 }
             },
             {
@@ -2870,22 +3146,22 @@
                 "air_date": "2025-07-19",
                 "air_weekday": 6,
                 "rating": {
-                    "total": 82,
+                    "total": 266,
                     "count": {
-                        "10": 4,
-                        "9": 2,
-                        "8": 5,
-                        "7": 24,
-                        "6": 31,
-                        "5": 12,
-                        "4": 1,
-                        "3": 1,
-                        "2": 0,
-                        "1": 2
+                        "10": 5,
+                        "9": 4,
+                        "8": 9,
+                        "7": 56,
+                        "6": 120,
+                        "5": 42,
+                        "4": 16,
+                        "3": 6,
+                        "2": 3,
+                        "1": 5
                     },
-                    "score": 6.4
+                    "score": 5.9
                 },
-                "rank": 4462,
+                "rank": 7070,
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/19/39/501844_Lh308.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/19/39/501844_Lh308.jpg",
@@ -2894,7 +3170,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/19/39/501844_Lh308.jpg"
                 },
                 "collection": {
-                    "doing": 1271
+                    "doing": 2039
                 }
             },
             {
@@ -2907,20 +3183,20 @@
                 "air_date": "2025-07-12",
                 "air_weekday": 6,
                 "rating": {
-                    "total": 8,
+                    "total": 16,
                     "count": {
                         "10": 1,
                         "9": 0,
-                        "8": 0,
-                        "7": 2,
-                        "6": 2,
+                        "8": 1,
+                        "7": 3,
+                        "6": 3,
                         "5": 2,
-                        "4": 0,
-                        "3": 0,
-                        "2": 0,
-                        "1": 1
+                        "4": 2,
+                        "3": 1,
+                        "2": 1,
+                        "1": 2
                     },
-                    "score": 5.9
+                    "score": 5.1
                 },
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/56/ec/505397_6jzsz.jpg",
@@ -2930,7 +3206,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/56/ec/505397_6jzsz.jpg"
                 },
                 "collection": {
-                    "doing": 10
+                    "doing": 8
                 }
             },
             {
@@ -2943,22 +3219,22 @@
                 "air_date": "2025-07-05",
                 "air_weekday": 6,
                 "rating": {
-                    "total": 360,
+                    "total": 494,
                     "count": {
-                        "10": 4,
-                        "9": 7,
-                        "8": 74,
-                        "7": 204,
-                        "6": 57,
-                        "5": 9,
-                        "4": 1,
-                        "3": 1,
-                        "2": 1,
+                        "10": 7,
+                        "9": 12,
+                        "8": 100,
+                        "7": 262,
+                        "6": 86,
+                        "5": 13,
+                        "4": 4,
+                        "3": 6,
+                        "2": 2,
                         "1": 2
                     },
-                    "score": 7
+                    "score": 6.9
                 },
-                "rank": 2511,
+                "rank": 2708,
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/75/94/509062_mC4D1.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/75/94/509062_mC4D1.jpg",
@@ -2967,7 +3243,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/75/94/509062_mC4D1.jpg"
                 },
                 "collection": {
-                    "doing": 1677
+                    "doing": 2060
                 }
             },
             {
@@ -2980,22 +3256,22 @@
                 "air_date": "2025-07-05",
                 "air_weekday": 6,
                 "rating": {
-                    "total": 833,
+                    "total": 1130,
                     "count": {
-                        "10": 35,
-                        "9": 28,
-                        "8": 209,
-                        "7": 388,
-                        "6": 120,
-                        "5": 37,
-                        "4": 6,
-                        "3": 2,
+                        "10": 54,
+                        "9": 33,
+                        "8": 265,
+                        "7": 496,
+                        "6": 189,
+                        "5": 66,
+                        "4": 14,
+                        "3": 5,
                         "2": 2,
                         "1": 6
                     },
                     "score": 7.1
                 },
-                "rank": 2085,
+                "rank": 2335,
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/b8/0d/513345_jv4wM.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/b8/0d/513345_jv4wM.jpg",
@@ -3004,7 +3280,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/b8/0d/513345_jv4wM.jpg"
                 },
                 "collection": {
-                    "doing": 4326
+                    "doing": 5351
                 }
             },
             {
@@ -3017,20 +3293,20 @@
                 "air_date": "2025-07-05",
                 "air_weekday": 6,
                 "rating": {
-                    "total": 5,
+                    "total": 10,
                     "count": {
-                        "10": 0,
+                        "10": 1,
                         "9": 1,
-                        "8": 0,
-                        "7": 2,
-                        "6": 2,
-                        "5": 0,
+                        "8": 1,
+                        "7": 3,
+                        "6": 3,
+                        "5": 1,
                         "4": 0,
                         "3": 0,
                         "2": 0,
                         "1": 0
                     },
-                    "score": 7
+                    "score": 7.1
                 },
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/4c/99/516423_X9Kqm.jpg",
@@ -3040,7 +3316,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/4c/99/516423_X9Kqm.jpg"
                 },
                 "collection": {
-                    "doing": 45
+                    "doing": 80
                 }
             },
             {
@@ -3053,22 +3329,22 @@
                 "air_date": "2025-07-05",
                 "air_weekday": 6,
                 "rating": {
-                    "total": 161,
+                    "total": 201,
                     "count": {
                         "10": 2,
-                        "9": 2,
-                        "8": 0,
+                        "9": 1,
+                        "8": 2,
                         "7": 14,
-                        "6": 52,
-                        "5": 46,
-                        "4": 22,
-                        "3": 10,
+                        "6": 53,
+                        "5": 65,
+                        "4": 33,
+                        "3": 13,
                         "2": 7,
-                        "1": 6
+                        "1": 11
                     },
-                    "score": 5.1
+                    "score": 4.9
                 },
-                "rank": 8634,
+                "rank": 8925,
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/5f/98/531945_KE257.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/5f/98/531945_KE257.jpg",
@@ -3077,7 +3353,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/5f/98/531945_KE257.jpg"
                 },
                 "collection": {
-                    "doing": 542
+                    "doing": 578
                 }
             },
             {
@@ -3090,22 +3366,22 @@
                 "air_date": "2025-07-12",
                 "air_weekday": 6,
                 "rating": {
-                    "total": 250,
+                    "total": 308,
                     "count": {
                         "10": 2,
                         "9": 3,
-                        "8": 9,
-                        "7": 48,
-                        "6": 115,
-                        "5": 49,
-                        "4": 14,
+                        "8": 10,
+                        "7": 54,
+                        "6": 127,
+                        "5": 78,
+                        "4": 22,
                         "3": 6,
-                        "2": 0,
+                        "2": 2,
                         "1": 4
                     },
-                    "score": 5.9
+                    "score": 5.8
                 },
-                "rank": 7221,
+                "rank": 7641,
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/8e/92/536363_42Ul2.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/8e/92/536363_42Ul2.jpg",
@@ -3114,7 +3390,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/8e/92/536363_42Ul2.jpg"
                 },
                 "collection": {
-                    "doing": 1175
+                    "doing": 1315
                 }
             },
             {
@@ -3127,20 +3403,20 @@
                 "air_date": "2025-07-05",
                 "air_weekday": 6,
                 "rating": {
-                    "total": 6,
+                    "total": 7,
                     "count": {
                         "10": 1,
                         "9": 1,
                         "8": 0,
                         "7": 1,
-                        "6": 0,
+                        "6": 1,
                         "5": 0,
                         "4": 0,
                         "3": 0,
                         "2": 1,
                         "1": 2
                     },
-                    "score": 5
+                    "score": 5.1
                 },
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/a9/2c/546442_I9Br3.jpg",
@@ -3150,7 +3426,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/a9/2c/546442_I9Br3.jpg"
                 },
                 "collection": {
-                    "doing": 4
+                    "doing": 5
                 }
             },
             {
@@ -3163,9 +3439,9 @@
                 "air_date": "2025-07-05",
                 "air_weekday": 6,
                 "rating": {
-                    "total": 4,
+                    "total": 5,
                     "count": {
-                        "10": 0,
+                        "10": 1,
                         "9": 0,
                         "8": 0,
                         "7": 1,
@@ -3176,7 +3452,7 @@
                         "2": 1,
                         "1": 1
                     },
-                    "score": 4
+                    "score": 5.2
                 },
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/f0/bb/559674_1106F.jpg",
@@ -3217,6 +3493,42 @@
         },
         "items": [
             {
+                "id": 345835,
+                "url": "http://bgm.tv/subject/345835",
+                "type": 2,
+                "name": "在下“英台”",
+                "name_cn": "在下“英台”",
+                "summary": "",
+                "air_date": "2025-07-27",
+                "air_weekday": 7,
+                "rating": {
+                    "total": 1,
+                    "count": {
+                        "10": 0,
+                        "9": 0,
+                        "8": 0,
+                        "7": 0,
+                        "6": 1,
+                        "5": 0,
+                        "4": 0,
+                        "3": 0,
+                        "2": 0,
+                        "1": 0
+                    },
+                    "score": 6
+                },
+                "images": {
+                    "large": "http://lain.bgm.tv/pic/cover/l/d0/5d/345835_4p55I.jpg",
+                    "common": "http://lain.bgm.tv/pic/cover/c/d0/5d/345835_4p55I.jpg",
+                    "medium": "http://lain.bgm.tv/pic/cover/m/d0/5d/345835_4p55I.jpg",
+                    "small": "http://lain.bgm.tv/pic/cover/s/d0/5d/345835_4p55I.jpg",
+                    "grid": "http://lain.bgm.tv/pic/cover/g/d0/5d/345835_4p55I.jpg"
+                },
+                "collection": {
+                    "doing": 2
+                }
+            },
+            {
                 "id": 498947,
                 "url": "http://bgm.tv/subject/498947",
                 "type": 2,
@@ -3226,22 +3538,22 @@
                 "air_date": "2025-07-06",
                 "air_weekday": 7,
                 "rating": {
-                    "total": 282,
+                    "total": 344,
                     "count": {
                         "10": 4,
                         "9": 5,
-                        "8": 10,
-                        "7": 71,
-                        "6": 109,
-                        "5": 53,
-                        "4": 16,
-                        "3": 4,
+                        "8": 9,
+                        "7": 80,
+                        "6": 147,
+                        "5": 50,
+                        "4": 29,
+                        "3": 8,
                         "2": 2,
-                        "1": 8
+                        "1": 10
                     },
-                    "score": 5.9
+                    "score": 5.8
                 },
-                "rank": 7171,
+                "rank": 7524,
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/ea/10/498947_x3ZvD.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/ea/10/498947_x3ZvD.jpg",
@@ -3250,7 +3562,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/ea/10/498947_x3ZvD.jpg"
                 },
                 "collection": {
-                    "doing": 1375
+                    "doing": 1494
                 }
             },
             {
@@ -3263,22 +3575,22 @@
                 "air_date": "2025-07-06",
                 "air_weekday": 7,
                 "rating": {
-                    "total": 186,
+                    "total": 240,
                     "count": {
-                        "10": 5,
+                        "10": 4,
                         "9": 2,
-                        "8": 11,
-                        "7": 22,
-                        "6": 62,
-                        "5": 46,
-                        "4": 24,
+                        "8": 13,
+                        "7": 25,
+                        "6": 85,
+                        "5": 69,
+                        "4": 28,
                         "3": 6,
                         "2": 3,
                         "1": 5
                     },
                     "score": 5.6
                 },
-                "rank": 7825,
+                "rank": 8043,
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/f5/b1/500825_i02ef.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/f5/b1/500825_i02ef.jpg",
@@ -3287,7 +3599,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/f5/b1/500825_i02ef.jpg"
                 },
                 "collection": {
-                    "doing": 943
+                    "doing": 1211
                 }
             },
             {
@@ -3300,22 +3612,22 @@
                 "air_date": "2025-07-06",
                 "air_weekday": 7,
                 "rating": {
-                    "total": 110,
+                    "total": 122,
                     "count": {
                         "10": 1,
                         "9": 2,
                         "8": 0,
                         "7": 5,
-                        "6": 12,
-                        "5": 21,
-                        "4": 23,
-                        "3": 17,
-                        "2": 10,
-                        "1": 19
+                        "6": 13,
+                        "5": 25,
+                        "4": 26,
+                        "3": 19,
+                        "2": 11,
+                        "1": 20
                     },
                     "score": 3.8
                 },
-                "rank": 9226,
+                "rank": 9274,
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/b9/27/504054_ad477.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/b9/27/504054_ad477.jpg",
@@ -3324,7 +3636,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/b9/27/504054_ad477.jpg"
                 },
                 "collection": {
-                    "doing": 60
+                    "doing": 65
                 }
             },
             {
@@ -3337,22 +3649,22 @@
                 "air_date": "2025-07-06",
                 "air_weekday": 7,
                 "rating": {
-                    "total": 905,
+                    "total": 1217,
                     "count": {
-                        "10": 21,
-                        "9": 22,
-                        "8": 171,
-                        "7": 478,
-                        "6": 164,
-                        "5": 37,
-                        "4": 8,
-                        "3": 1,
+                        "10": 32,
+                        "9": 24,
+                        "8": 229,
+                        "7": 615,
+                        "6": 233,
+                        "5": 62,
+                        "4": 17,
+                        "3": 2,
                         "2": 1,
                         "1": 2
                     },
                     "score": 7
                 },
-                "rank": 2592,
+                "rank": 2762,
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/55/d5/510256_09w10.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/55/d5/510256_09w10.jpg",
@@ -3361,7 +3673,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/55/d5/510256_09w10.jpg"
                 },
                 "collection": {
-                    "doing": 4314
+                    "doing": 5364
                 }
             },
             {
@@ -3374,22 +3686,22 @@
                 "air_date": "2025-07-06",
                 "air_weekday": 7,
                 "rating": {
-                    "total": 1214,
+                    "total": 1602,
                     "count": {
-                        "10": 33,
-                        "9": 93,
-                        "8": 627,
-                        "7": 374,
-                        "6": 68,
-                        "5": 9,
-                        "4": 4,
-                        "3": 2,
+                        "10": 50,
+                        "9": 127,
+                        "8": 826,
+                        "7": 473,
+                        "6": 101,
+                        "5": 12,
+                        "4": 5,
+                        "3": 4,
                         "2": 2,
                         "1": 2
                     },
-                    "score": 7.6
+                    "score": 7.7
                 },
-                "rank": 654,
+                "rank": 636,
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/27/d7/512190_3FtCT.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/27/d7/512190_3FtCT.jpg",
@@ -3398,7 +3710,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/27/d7/512190_3FtCT.jpg"
                 },
                 "collection": {
-                    "doing": 5628
+                    "doing": 6842
                 }
             },
             {
@@ -3411,22 +3723,22 @@
                 "air_date": "2025-07-06",
                 "air_weekday": 7,
                 "rating": {
-                    "total": 1759,
+                    "total": 2218,
                     "count": {
-                        "10": 77,
-                        "9": 181,
-                        "8": 770,
-                        "7": 497,
-                        "6": 153,
-                        "5": 48,
-                        "4": 12,
-                        "3": 2,
-                        "2": 5,
-                        "1": 14
+                        "10": 88,
+                        "9": 201,
+                        "8": 866,
+                        "7": 696,
+                        "6": 244,
+                        "5": 75,
+                        "4": 24,
+                        "3": 4,
+                        "2": 8,
+                        "1": 12
                     },
-                    "score": 7.5
+                    "score": 7.4
                 },
-                "rank": 814,
+                "rank": 1077,
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/b2/c2/514358_oRoZH.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/b2/c2/514358_oRoZH.jpg",
@@ -3435,7 +3747,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/b2/c2/514358_oRoZH.jpg"
                 },
                 "collection": {
-                    "doing": 8581
+                    "doing": 9668
                 }
             },
             {
@@ -3448,22 +3760,22 @@
                 "air_date": "2025-07-06",
                 "air_weekday": 7,
                 "rating": {
-                    "total": 126,
+                    "total": 154,
                     "count": {
-                        "10": 1,
+                        "10": 2,
                         "9": 3,
-                        "8": 1,
-                        "7": 18,
-                        "6": 41,
-                        "5": 39,
+                        "8": 0,
+                        "7": 19,
+                        "6": 44,
+                        "5": 61,
                         "4": 16,
-                        "3": 4,
+                        "3": 6,
                         "2": 0,
                         "1": 3
                     },
-                    "score": 5.5
+                    "score": 5.4
                 },
-                "rank": 7659,
+                "rank": 8040,
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/e7/c7/523426_GJCIE.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/e7/c7/523426_GJCIE.jpg",
@@ -3472,7 +3784,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/e7/c7/523426_GJCIE.jpg"
                 },
                 "collection": {
-                    "doing": 480
+                    "doing": 511
                 }
             },
             {
@@ -3485,22 +3797,22 @@
                 "air_date": "2025-07-06",
                 "air_weekday": 7,
                 "rating": {
-                    "total": 320,
+                    "total": 428,
                     "count": {
-                        "10": 5,
-                        "9": 3,
-                        "8": 12,
-                        "7": 53,
-                        "6": 143,
-                        "5": 71,
-                        "4": 19,
-                        "3": 6,
+                        "10": 6,
+                        "9": 4,
+                        "8": 20,
+                        "7": 68,
+                        "6": 178,
+                        "5": 91,
+                        "4": 39,
+                        "3": 11,
                         "2": 2,
-                        "1": 6
+                        "1": 9
                     },
-                    "score": 5.8
+                    "score": 5.7
                 },
-                "rank": 7538,
+                "rank": 7882,
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/69/01/524593_yyLxl.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/69/01/524593_yyLxl.jpg",
@@ -3509,7 +3821,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/69/01/524593_yyLxl.jpg"
                 },
                 "collection": {
-                    "doing": 1451
+                    "doing": 1734
                 }
             },
             {
@@ -3521,15 +3833,31 @@
                 "summary": "",
                 "air_date": "2025-07-20",
                 "air_weekday": 7,
+                "rating": {
+                    "total": 2,
+                    "count": {
+                        "10": 0,
+                        "9": 0,
+                        "8": 0,
+                        "7": 0,
+                        "6": 1,
+                        "5": 1,
+                        "4": 0,
+                        "3": 0,
+                        "2": 0,
+                        "1": 0
+                    },
+                    "score": 5.5
+                },
                 "images": {
-                    "large": "http://lain.bgm.tv/pic/cover/l/7f/1c/526973_dcEIC.jpg",
-                    "common": "http://lain.bgm.tv/pic/cover/c/7f/1c/526973_dcEIC.jpg",
-                    "medium": "http://lain.bgm.tv/pic/cover/m/7f/1c/526973_dcEIC.jpg",
-                    "small": "http://lain.bgm.tv/pic/cover/s/7f/1c/526973_dcEIC.jpg",
-                    "grid": "http://lain.bgm.tv/pic/cover/g/7f/1c/526973_dcEIC.jpg"
+                    "large": "http://lain.bgm.tv/pic/cover/l/7f/1c/526973_zE0vy.jpg",
+                    "common": "http://lain.bgm.tv/pic/cover/c/7f/1c/526973_zE0vy.jpg",
+                    "medium": "http://lain.bgm.tv/pic/cover/m/7f/1c/526973_zE0vy.jpg",
+                    "small": "http://lain.bgm.tv/pic/cover/s/7f/1c/526973_zE0vy.jpg",
+                    "grid": "http://lain.bgm.tv/pic/cover/g/7f/1c/526973_zE0vy.jpg"
                 },
                 "collection": {
-                    "doing": 4
+                    "doing": 10
                 }
             },
             {
@@ -3542,22 +3870,22 @@
                 "air_date": "2025-07-06",
                 "air_weekday": 7,
                 "rating": {
-                    "total": 439,
+                    "total": 537,
                     "count": {
                         "10": 8,
-                        "9": 16,
-                        "8": 176,
-                        "7": 200,
-                        "6": 30,
-                        "5": 3,
+                        "9": 25,
+                        "8": 221,
+                        "7": 229,
+                        "6": 42,
+                        "5": 5,
                         "4": 2,
-                        "3": 1,
+                        "3": 2,
                         "2": 1,
                         "1": 2
                     },
                     "score": 7.4
                 },
-                "rank": 1214,
+                "rank": 1199,
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/14/f9/530115_8prir.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/14/f9/530115_8prir.jpg",
@@ -3566,7 +3894,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/14/f9/530115_8prir.jpg"
                 },
                 "collection": {
-                    "doing": 2265
+                    "doing": 2591
                 }
             },
             {
@@ -3579,22 +3907,22 @@
                 "air_date": "2025-07-06",
                 "air_weekday": 7,
                 "rating": {
-                    "total": 85,
+                    "total": 109,
                     "count": {
-                        "10": 1,
-                        "9": 2,
-                        "8": 5,
-                        "7": 39,
-                        "6": 23,
-                        "5": 9,
-                        "4": 2,
+                        "10": 2,
+                        "9": 3,
+                        "8": 6,
+                        "7": 54,
+                        "6": 29,
+                        "5": 10,
+                        "4": 1,
                         "3": 1,
                         "2": 1,
                         "1": 2
                     },
-                    "score": 6.3
+                    "score": 6.5
                 },
-                "rank": 4499,
+                "rank": 4132,
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/93/a0/548940_BP9vy.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/93/a0/548940_BP9vy.jpg",
@@ -3603,7 +3931,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/93/a0/548940_BP9vy.jpg"
                 },
                 "collection": {
-                    "doing": 544
+                    "doing": 630
                 }
             },
             {
@@ -3616,20 +3944,20 @@
                 "air_date": "2025-07-06",
                 "air_weekday": 7,
                 "rating": {
-                    "total": 3,
+                    "total": 4,
                     "count": {
                         "10": 1,
                         "9": 1,
                         "8": 0,
                         "7": 0,
-                        "6": 0,
+                        "6": 1,
                         "5": 0,
                         "4": 0,
                         "3": 0,
                         "2": 0,
                         "1": 1
                     },
-                    "score": 6.7
+                    "score": 6.5
                 },
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/04/4d/559967_ethUU.jpg",
@@ -3652,21 +3980,22 @@
                 "air_date": "2025-07-06",
                 "air_weekday": 7,
                 "rating": {
-                    "total": 44,
+                    "total": 62,
                     "count": {
                         "10": 2,
                         "9": 1,
-                        "8": 0,
+                        "8": 1,
                         "7": 0,
-                        "6": 1,
-                        "5": 6,
-                        "4": 6,
+                        "6": 0,
+                        "5": 7,
+                        "4": 7,
                         "3": 10,
-                        "2": 5,
-                        "1": 13
+                        "2": 10,
+                        "1": 24
                     },
-                    "score": 3.2
+                    "score": 2.8
                 },
+                "rank": 9302,
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/87/91/560988_z1t1u.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/87/91/560988_z1t1u.jpg",
@@ -3675,7 +4004,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/87/91/560988_z1t1u.jpg"
                 },
                 "collection": {
-                    "doing": 238
+                    "doing": 314
                 }
             },
             {
@@ -3688,20 +4017,20 @@
                 "air_date": "2025-07-13",
                 "air_weekday": 7,
                 "rating": {
-                    "total": 3,
+                    "total": 9,
                     "count": {
                         "10": 1,
                         "9": 0,
                         "8": 0,
                         "7": 1,
-                        "6": 0,
-                        "5": 0,
+                        "6": 2,
+                        "5": 2,
                         "4": 0,
-                        "3": 0,
-                        "2": 0,
+                        "3": 1,
+                        "2": 1,
                         "1": 1
                     },
-                    "score": 6
+                    "score": 5
                 },
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/8b/0e/562793_X2Tf4.jpg",
@@ -3711,7 +4040,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/8b/0e/562793_X2Tf4.jpg"
                 },
                 "collection": {
-                    "doing": 26
+                    "doing": 41
                 }
             },
             {
@@ -3724,20 +4053,20 @@
                 "air_date": "2025-07-13",
                 "air_weekday": 7,
                 "rating": {
-                    "total": 6,
+                    "total": 7,
                     "count": {
                         "10": 0,
                         "9": 0,
                         "8": 0,
                         "7": 0,
                         "6": 0,
-                        "5": 2,
+                        "5": 3,
                         "4": 0,
                         "3": 0,
                         "2": 2,
                         "1": 2
                     },
-                    "score": 2.7
+                    "score": 3
                 },
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/dd/5d/564314_DfcHG.jpg",
@@ -3747,7 +4076,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/dd/5d/564314_DfcHG.jpg"
                 },
                 "collection": {
-                    "doing": 6
+                    "doing": 5
                 }
             },
             {
@@ -3759,6 +4088,22 @@
                 "summary": "",
                 "air_date": "2025-07-20",
                 "air_weekday": 7,
+                "rating": {
+                    "total": 1,
+                    "count": {
+                        "10": 0,
+                        "9": 0,
+                        "8": 0,
+                        "7": 0,
+                        "6": 0,
+                        "5": 0,
+                        "4": 0,
+                        "3": 0,
+                        "2": 0,
+                        "1": 1
+                    },
+                    "score": 1
+                },
                 "images": {
                     "large": "http://lain.bgm.tv/pic/cover/l/79/33/564506_33o5m.jpg",
                     "common": "http://lain.bgm.tv/pic/cover/c/79/33/564506_33o5m.jpg",
@@ -3767,7 +4112,7 @@
                     "grid": "http://lain.bgm.tv/pic/cover/g/79/33/564506_33o5m.jpg"
                 },
                 "collection": {
-                    "doing": 2
+                    "doing": 3
                 }
             }
         ]

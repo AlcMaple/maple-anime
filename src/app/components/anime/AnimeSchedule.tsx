@@ -48,7 +48,7 @@ export const AnimeSchedule: React.FC<AnimeScheduleProps> = ({ className = '' }) 
                 // API返回的weekday.id: 1-7 对应周一到周日
                 const targetWeekdayId = selectedDay + 1;
 
-                // 找到对应星期的数据
+                // response.data 直接就是 CalendarDay[]
                 const dayData = response.data.find(item =>
                     item.weekday && item.weekday.id === targetWeekdayId
                 );

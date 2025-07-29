@@ -35,10 +35,7 @@ class BangumiApi:
             # 保存数据
             self.save_calendar_data(data)
 
-            return {
-                "data": data,
-                "last_update": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-            }
+            return data
 
         except Exception as e:
             logger.error(f" 番剧每日放送表获取失败：{e}")

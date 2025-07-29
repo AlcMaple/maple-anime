@@ -45,7 +45,7 @@ export default function WatchPage() {
 
             const response = await clientApi.clientAnimeData(animeId);
             console.log("客户端动漫数据：", response);
-            if (response.code == 200) {
+            if (response.code == 200 && response.data) {
                 setAnimeInfo(response.data);
                 setEpisodes(response.data.files || []);
                 setCurrentEpisode(response.data.files?.[0] || null);
@@ -53,7 +53,7 @@ export default function WatchPage() {
                 setIsLoading(false);
                 setTimeout(() => setShowContent(true), 100);
             } else {
-                console.error('客户端获取动漫数据失败:', response.message);
+                console.error('客户端获取动漫数据失败:', response.msg);
                 setIsLoading(false);
             }
 
