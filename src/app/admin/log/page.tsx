@@ -25,7 +25,7 @@ export default function LogPage() {
     const [isConnected, setIsConnected] = useState(false);
     const [autoScroll, setAutoScroll] = useState(true);
     const [logStatus, setLogStatus] = useState({
-        websocket_enabled: false,
+        websocket_connected: false,
         active_connections: 0,
         log_buffer_size: 0
     });

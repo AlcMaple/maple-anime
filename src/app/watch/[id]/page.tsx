@@ -45,7 +45,7 @@ export default function WatchPage() {
 
             const response = await clientApi.clientAnimeData(animeId);
             console.log("客户端动漫数据：", response);
-            if (response.success) {
+            if (response.code == 200) {
                 setAnimeInfo(response.data);
                 setEpisodes(response.data.files || []);
                 setCurrentEpisode(response.data.files?.[0] || null);

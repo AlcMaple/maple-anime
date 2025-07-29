@@ -77,8 +77,9 @@ export default function AdminMainPage() {
 
 
       if (response.code == 200) {
-        setAnimeList(response.data);
-        message.success(`成功加载 ${response.data.length} 个动漫`);
+        const animeData = response.data || [];
+        setAnimeList(animeData);
+        message.success(`成功加载 ${animeData.length} 个动漫`);
       } else {
         message.error('加载动漫列表失败');
       }

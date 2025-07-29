@@ -2,8 +2,10 @@ import httpx
 import json
 from typing import Dict, List, Any, Optional
 from datetime import datetime
+from loguru import logger
 
 from exceptions import NotFoundException, SystemException, DatabaseException
+from utils.responses import success
 
 
 class BangumiApi:
@@ -28,7 +30,7 @@ class BangumiApi:
             response.raise_for_status()
 
             data = response.json()
-            print(f" 成功获取番剧每日放送表，共 {len(data)} 天")
+            logger.debug(f" 成功获取番剧每日放送表，共 {len(data)} 天")
 
             # 保存数据
             self.save_calendar_data(data)
@@ -36,12 +38,11 @@ class BangumiApi:
             return {
                 "data": data,
                 "last_update": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                "success": True,
             }
 
         except Exception as e:
-            print(f" 番剧每日放送表获取失败：{e}")
-            return {"data": [], "last_update": "", "success": False}
+            logger.error(f" 番剧每日放送表获取失败：{e}")
+            raise SystemException(message="获取番剧每日放送表失败", original_error=e)
 
     def save_calendar_data(self, data: Dict[str, Any]) -> bool:
         """保存番剧每日放送表数据"""
@@ -68,14 +69,16 @@ class BangumiApi:
                 len(day.get("items", [])) for day in data if isinstance(day, dict)
             )
 
-            print(
+            logger.debug(
                 f" 成功加载番剧每日放送表数据，共 {len(data)} 天，{total_items} 部番剧"
             )
-            return {"data": data, "success": True}
+            return data
 
         except Exception as e:
-            print(f" 番剧每日放送表数据加载失败：{e}")
-            return {"data": [], "success": False}
+            logger.error(f" 番剧每日放送表数据加载失败：{e}")
+            raise SystemException(
+                message="加载番剧每日放送表数据失败", original_error=e
+            )
 
     async def get_subject_detail(self, subject_id: int) -> Dict[str, Any]:
         """

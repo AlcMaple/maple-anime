@@ -1,12 +1,12 @@
 import { apiClient } from '@/utils/api';
-import { LogResponse, LogStatusResponse } from './types';
+import { HistoricalLogResponse, LogStatusResponse, ParsedLogEntry } from './types';
 
 export class LogService {
     /**
      * 获取历史日志
      */
-    static async getHistoricalLogs(): Promise<LogResponse> {
-        return apiClient.get<LogResponse>('/api/log');
+    static async getHistoricalLogs(): Promise<HistoricalLogResponse> {
+        return apiClient.get<HistoricalLogResponse>('/api/log');
     }
 
     /**
@@ -36,15 +36,7 @@ export class LogService {
      * 解析日志条目
      * 格式: "2024-01-01 12:00:00 | INFO     | module:function:123 - message"
      */
-    static parseLogEntry(rawLog: string): {
-        timestamp: string;
-        level: string;
-        logger: string;
-        function: string;
-        line: string;
-        message: string;
-        raw: string;
-    } | null {
+    static parseLogEntry(rawLog: string): ParsedLogEntry | null {
         try {
             // 匹配日志格式
             const logPattern = /^(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})\s*\|\s*(\w+)\s*\|\s*([^:]+):([^:]+):(\d+)\s*-\s*(.+)$/;

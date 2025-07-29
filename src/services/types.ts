@@ -249,27 +249,30 @@ export interface CalendarDay {
     items: CalendarAnime[];
 }
 
+
+// 日历响应数据
+export interface CalendarData {
+    data: CalendarDay[];
+    last_update?: string;
+    error?: string;
+}
+
+export type CalendarResponse = BackendApiResponse<CalendarData[]>;
+
 // ==================== 客户端 相关类型 ====================
 
 // 动漫列表响应
-export interface AnimeListResponse {
-    success: boolean;
-    data: AnimeItem[];
-    total: number;
-    message: string;
-}
+export type AnimeListResponse = BackendApiResponse<AnimeItem[]>;
 
-// 搜索动漫响应
-export interface SearchResponse extends AnimeListResponse {
+// 搜索动漫响应数据
+export interface SearchAnimeData {
+    anime_list: AnimeItem[];
+    total: number;
     keyword: string;
 }
 
-export interface CalendarResponse {
-    success: boolean;
-    data: CalendarDay[];
-    updated_at?: string;
-    error?: string;
-}
+// 搜索动漫响应
+export type SearchResponse = BackendApiResponse<SearchAnimeData[]>;
 
 export interface EpisodeListRequest {
     folder_id: string;
@@ -282,19 +285,26 @@ export interface EpisodeListResponse extends ApiResponse {
 }
 
 // 动漫数据响应
-export interface AnimeDetailResponse {
-    message: string;
-    data: AnimeItem;
-    code: number;
-    success?: boolean;
-}
+export type AnimeDetailResponse = BackendApiResponse<AnimeItem>;
 
 // ==================== 日志系统类型 ====================
 
 // 日志级别类型
 export type LogLevel = 'DEBUG' | 'INFO' | 'WARNING' | 'ERROR' | 'CRITICAL';
 
-// 日志条目
+// 解析后的日志条目
+export interface ParsedLogEntry {
+    id?: string;
+    timestamp: string;
+    level: string;
+    logger: string;
+    function: string;
+    line: string;
+    message: string;
+    raw: string;
+}
+
+// 原始日志条目
 export interface LogEntry {
     id?: string;
     timestamp: string;
@@ -303,8 +313,11 @@ export interface LogEntry {
     function: string;
     line: number;
     message: string;
-    raw?: string; // 原始日志文本
+    raw?: string;
 }
+
+// 历史日志请求响应类型
+export type HistoricalLogResponse = BackendApiResponse<string[]>;
 
 // 日志请求响应类型
 export type LogResponse = BackendApiResponse<LogEntry[]>;

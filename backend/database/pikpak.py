@@ -2,6 +2,7 @@ import json
 import os
 from typing import Dict, List, Any
 from datetime import datetime, timedelta
+from loguru import logger
 
 from exceptions import NotFoundException, SystemException
 
@@ -309,22 +310,14 @@ class PikPakDatabase:
                         )
 
             return {
-                "success": True,
-                "message": "搜索成功",
-                "data": anime_list,
+                "anime_list": anime_list,
                 "total": len(anime_list),
                 "keyword": title,
             }
 
         except Exception as e:
-            print(f"搜索动漫失败: {e}")
-            return {
-                "success": False,
-                "message": f"搜索失败: {str(e)}",
-                "data": [],
-                "total": 0,
-                "keyword": title,
-            }
+            logger.error(f"搜索动漫失败: {e}")
+            raise SystemException(message="搜索动漫时发生异常", original_error=e)
 
     async def get_anime_all(self, folder_id, my_pack_id):
         """
@@ -338,7 +331,7 @@ class PikPakDatabase:
             )
 
             if not anime_data:
-                print(f"数据库不存在该动漫，需要同步数据")
+                logger.warning("数据库不存在该动漫，需要同步数据")
                 return False
 
             # 数据处理
@@ -351,8 +344,10 @@ class PikPakDatabase:
             return anime_data
 
         except Exception as e:
-            print(f"获取动漫全部信息失败: {e}")
-            return {}
+            logger.error(f"获取动漫全部信息失败: {e}")
+            raise SystemException(
+                message="获取动漫全部信息时发生异常", original_error=e
+            )
 
     async def update_folder_video_links_time(
         self, folder_id: str, my_pack_id: str, update_time: str = None

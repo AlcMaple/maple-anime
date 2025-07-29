@@ -26,11 +26,14 @@ export const CalendarModal: React.FC<CalendarModalProps> = ({
 
         try {
             const response = await bangumiApi.get();
+            console.log("加载当季新番数据：", response.data);
+            const responseData = response.data || [];
 
-            if (response.success) {
-                setCalendarData(response.data);
+
+            if (response.code == 200) {
+                setCalendarData(responseData);
             } else {
-                message.error(`获取数据失败: ${response.error}`);
+                message.error(`获取数据失败: ${response.message}`);
             }
         } catch (error) {
             message.error('获取当季新番数据失败');
@@ -45,12 +48,13 @@ export const CalendarModal: React.FC<CalendarModalProps> = ({
 
         try {
             const response = await bangumiApi.update();
+            const responseData = response.data || [];
 
-            if (response.success) {
-                setCalendarData(response.data);
+            if (response.code == 200) {
+                setCalendarData(responseData);
                 message.success('当季新番数据已更新');
             } else {
-                message.error(`刷新数据失败: ${response.error}`);
+                message.error(`刷新数据失败: ${response.message}`);
             }
         } catch (error) {
             message.error('刷新当季新番数据失败');
