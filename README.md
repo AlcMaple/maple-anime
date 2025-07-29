@@ -41,6 +41,7 @@ npm run dev
 PIKPAK_USERNAME=your_pikpak_username
 PIKPAK_PASSWORD=your_pikpak_password
 ANIME_CONTAINER_ID=your_mypack_folder_id
+ENABLE_WEBSOCKET_LOGS=false
 ```
 
 
