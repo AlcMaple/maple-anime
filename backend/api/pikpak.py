@@ -15,6 +15,7 @@ from schemas.pikpak import (
     DeleteAnimeRequest,
 )
 from exceptions import ValidationException, SystemException
+from utils.responses import success
 
 router = APIRouter(prefix="/pikpak", tags=["PikPak"])
 
@@ -37,7 +38,7 @@ async def batch_download_anime(request: DownloadRequest):
                     message="下载失败", original_error=result["message"]
                 )
 
-            return result
+            return success(result, "批量下载动漫成功")
 
         # 处理多季动漫
         elif request.mode == "multi_season" and request.groups:
@@ -55,7 +56,7 @@ async def batch_download_anime(request: DownloadRequest):
                         message="下载失败", original_error=result["message"]
                     )
 
-            return result
+            return success(result, "批量下载动漫成功")
 
         else:
             raise ValidationException("请选择下载的动漫")

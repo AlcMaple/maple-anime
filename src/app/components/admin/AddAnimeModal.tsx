@@ -2,10 +2,8 @@
 
 import React, { useState } from 'react';
 import { Button } from '@/ui/Button';
-import { Input } from '@/ui/Input';
 import { Search } from '@/ui/Search';
 import { message } from '@/ui/Message';
-import { Loading } from '@/ui/Loading';
 import { animeApi } from '@/services/anime';
 import { DownloadConfigModal } from './DownloadConfigModal';
 import { AnimeSearchResult } from '@/services/types';

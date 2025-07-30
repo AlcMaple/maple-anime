@@ -73,9 +73,6 @@ class AnimeSearch:
 
                 page += 1
 
-            # if not all_results:
-            #     raise NotFoundException("动漫资源", name)
-
             logger.debug(f" 总共获取到 {len(all_results)} 个结果")
             return all_results
 

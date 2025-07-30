@@ -3,6 +3,7 @@
 """
 
 from fastapi import APIRouter
+from loguru import logger
 
 from services.pikpak import PikPakService
 from database.pikpak import PikPakDatabase
@@ -31,7 +32,7 @@ async def get_episode_list(request: EpisodeListRequest):
             .get("files", [])
         )
 
-        print("获取集数：", len(episode_list))
+        logger.info("获取集数：", len(episode_list))
 
         if episode_list:
             return {
@@ -71,7 +72,7 @@ async def delete_episodes(request: FileDeleteRequest):
 
         if result["success"]:
             # 同步数据以更新本地数据库
-            print(f" 开始同步数据以更新本地数据库...")
+            logger.info(f" 开始同步数据以更新本地数据库...")
             sync_result = await pikpak_service.sync_data(client, blocking_wait=True)
 
             return {
