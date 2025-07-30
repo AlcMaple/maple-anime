@@ -37,6 +37,9 @@ export interface AnimeSearchResult {
     episodes?: number;
 }
 
+// 动漫搜索结果响应
+export type AnimeSearchResponse = BackendApiResponse<AnimeSearchResult[]>
+
 // 动漫详细信息请求
 export interface AnimeInfoRequest {
     id: string;

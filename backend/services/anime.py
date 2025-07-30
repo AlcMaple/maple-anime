@@ -1,5 +1,6 @@
 import httpx
 from typing import Dict, List
+from loguru import logger
 
 from exceptions import NotFoundException, SystemException
 
@@ -25,7 +26,7 @@ class AnimeSearch:
         try:
             url = f"{self.base_url}/resources"
             query = {"search": [name]}
-            print(f" 搜索 {name}...")
+            logger.info(f" 搜索 {name}...")
 
             all_results = []
             page = 1
@@ -59,7 +60,7 @@ class AnimeSearch:
                     }
                     all_results.append(row_data)
 
-                print(f" 第{page}页获取到 {len(resources)} 个结果")
+                logger.debug(f" 第{page}页获取到 {len(resources)} 个结果")
 
                 # 检查是否达到最大结果数限制
                 if max_results and len(all_results) >= max_results:
@@ -72,10 +73,10 @@ class AnimeSearch:
 
                 page += 1
 
-            if not all_results:
-                raise NotFoundException("动漫资源", name)
+            # if not all_results:
+            #     raise NotFoundException("动漫资源", name)
 
-            print(f" 总共获取到 {len(all_results)} 个结果")
+            logger.debug(f" 总共获取到 {len(all_results)} 个结果")
             return all_results
 
         except httpx.HTTPStatusError as e:

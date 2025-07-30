@@ -4,13 +4,14 @@ import {
     AnimeSearchResult,
     AnimeInfoRequest,
     AnimeInfoResponse,
-    AnimeDetailResponse
+    AnimeDetailResponse,
+    AnimeSearchResponse
 } from './types';
 
 export class AnimeService {
     // 搜索动漫
-    static async searchAnime(request: AnimeSearchRequest): Promise<AnimeSearchResult[]> {
-        return apiClient.post<AnimeSearchResult[]>('/api/anime/search', request);
+    static async searchAnime(request: AnimeSearchRequest): Promise<AnimeSearchResponse> {
+        return apiClient.post<AnimeSearchResponse>('/api/anime/search', request);
     }
 
     // 通过名称获取动漫信息（bangumi）

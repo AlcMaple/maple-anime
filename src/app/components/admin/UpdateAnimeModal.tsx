@@ -46,7 +46,10 @@ export const UpdateAnimeModal: React.FC<UpdateAnimeModalProps> = ({
         setCurrentPage(1);
 
         try {
-            const data = await animeApi.search({ name: searchQuery });
+            const response = await animeApi.search({ name: searchQuery });
+            console.log("搜索结果：", response);
+            const data = response.data || [];
+
             setSearchResults(data);
 
             if (data.length === 0) {

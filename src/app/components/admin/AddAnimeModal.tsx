@@ -47,7 +47,8 @@ export const AddAnimeModal: React.FC<AddAnimeModalProps> = ({
         setCurrentPage(1); // 重置到第一页
 
         try {
-            const data = await animeApi.search({ name: searchQuery });
+            const response = await animeApi.search({ name: searchQuery });
+            const data = response.data || [];
             setSearchResults(data);
 
             if (data.length === 0) {
@@ -260,7 +261,7 @@ export const AddAnimeModal: React.FC<AddAnimeModalProps> = ({
 
                                     {/* 结果列表 */}
                                     <div className="space-y-3 mb-6">
-                                        {currentPageResults.map((anime, index) => (
+                                        {currentPageResults.map((anime) => (
                                             <div
                                                 key={anime.id}
                                                 className={`border rounded-lg p-4 transition-colors ${selectedAnimes.has(String(anime.id))
