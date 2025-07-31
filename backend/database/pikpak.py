@@ -4,7 +4,7 @@ from typing import Dict, List, Any
 from datetime import datetime, timedelta
 from loguru import logger
 
-from exceptions import NotFoundException, SystemException
+from exceptions import NotFoundException, SystemException, ValidationException
 
 
 class PikPakDatabase:
@@ -205,8 +205,8 @@ class PikPakDatabase:
             )
 
             if not anime_data:
-                print(f"数据库不存在该动漫，需要同步数据")
-                return False
+                logger.warning(f"数据库不存在该动漫，需要同步数据")
+                raise ValidationException("数据库不存在该动漫，请先同步数据")
 
             files = anime_data.get("files", [])
             # 找到文件并更新名称
@@ -219,8 +219,8 @@ class PikPakDatabase:
             return self.save_data(db_data)
 
         except Exception as e:
-            print(f"更新动漫文件名称失败: {e}")
-            return False
+            logger.error(f"更新动漫文件名称失败: {e}")
+            raise SystemException(message="更新动漫文件名称失败", original_error=e)
 
     async def update_anime_file_link(
         self, file_id: str, play_url: str, my_pack_id: str, folder_id: str
@@ -428,3 +428,29 @@ class PikPakDatabase:
         except Exception as e:
             print(f"获取所有文件夹的调度信息失败: {e}")
             return []
+
+    def get_file_play_url(self, file_id: str) -> str:
+        """根据文件ID获取播放链接"""
+
+        try:
+            # 加载现有数据
+            db_data = self.load_data()
+            animes_data = db_data.get("animes", {})
+
+            # 遍历
+            for container_id, anime_info in animes_data.items():
+                # 遍历所有动漫
+                for folder_id, folder_info in anime_info.items():
+                    # 遍历所有文件夹
+                    files = folder_info.get("files", [])
+
+                    # 查找匹配的文件 ID
+                    for file in files:
+                        if file.get("id") == file_id:
+                            return file.get("play_url", "")
+
+            logger.debug(f"数据库中未找到文件ID: {file_id}")
+            return None
+        except Exception as e:
+            logger.error(f"根据文件ID获取播放链接失败: {e}")
+            return None

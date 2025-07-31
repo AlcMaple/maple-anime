@@ -10,6 +10,7 @@ from database.pikpak import PikPakDatabase
 from config.settings import settings
 from schemas.episodes import EpisodeListRequest, FileDeleteRequest, FileRenameRequest
 from exceptions import SystemException, ValidationException
+from utils.responses import success
 
 router = APIRouter(prefix="/episodes", tags=["集数管理"])
 
@@ -97,6 +98,8 @@ async def delete_episodes(request: FileDeleteRequest):
 async def rename_episode(request: FileRenameRequest):
     """重命名单个集数文件"""
     try:
+        logger.info(f"开始重命名文件, new_name={request.new_name}")
+
         if not request.username or not request.password:
             raise ValidationException("请配置 pikpak 账号密码")
 
@@ -111,14 +114,11 @@ async def rename_episode(request: FileRenameRequest):
             )
             if not result:
                 raise SystemException(
-                    message="文件重命名失败",
-                    original_error=f"文件 {request.file_id} 不存在或者 pikpak 服务异常或者代码内部逻辑出错",
+                    message=f"文件重命名失败: 文件 {request.file_id} 不存在或者 pikpak 服务异常或者代码内部逻辑出错",
                 )
-        except SystemException:
-            raise
         except Exception as e:
             raise SystemException(message="文件重命名失败", original_error=e)
-        print("重命名成功，开始更新本地数据库……")
+        logger.info("重命名成功，开始更新本地数据库……")
         if result:
             # 更新数据库
             anime_db = PikPakDatabase()
@@ -129,9 +129,7 @@ async def rename_episode(request: FileRenameRequest):
                 request.folder_id,
             )
 
-            if res:
-                return {"success": True, "message": "文件重命名成功"}
-            return {"success": False, "message": "文件重命名成功，但更新数据库失败"}
+            return success(msg="文件重命名成功")
         else:
             raise SystemException(
                 message="文件重命名失败",

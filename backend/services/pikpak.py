@@ -11,7 +11,12 @@ from utils import (
     is_collection,
     get_anime_episodes,
 )
-from exceptions import NotFoundException, SystemException, DuplicateException
+from exceptions import (
+    NotFoundException,
+    SystemException,
+    DuplicateException,
+    ValidationException,
+)
 
 
 class PikPakService:
@@ -23,7 +28,7 @@ class PikPakService:
         self.anime_db = PikPakDatabase()
         self.links_scheduler = None
 
-    def _get_links_scheduler(self):
+    async def _get_links_scheduler(self):
         """延迟导入并获取链接调度器实例"""
         if self.links_scheduler is None:
             try:
@@ -32,6 +37,9 @@ class PikPakService:
                 self.links_scheduler = LinksScheduler(
                     settings.PIKPAK_USERNAME, settings.PIKPAK_PASSWORD
                 )
+                # 调度器启动
+                if not self.links_scheduler.scheduler:
+                    await self.links_scheduler.start()
             except ImportError:
                 pass
         return self.links_scheduler
@@ -111,23 +119,25 @@ class PikPakService:
             return {"success": False, "message": f"下载异常: {str(e)}"}
 
     async def find_new_folder(
-        self, client: PikPakApi, before_folders: List[str]
+        self, client: PikPakApi, before_folders: List[str], max_retries: int = 30
     ) -> Optional[Dict]:
         """
         在 My Pack 内查找新文件夹
 
         Args:
             client: PikPak客户端
-            before_folders: 下载前的文件夹列表
+            before_folders: 下载前的文件夹名称列表
+            max_retries: 最大重试次数
 
         Returns:
             新文件夹信息，如果没找到返回None
-        """
-        start_time = time.time()
-        check_interval = 2  # 检查间隔, 单位秒
-        timeout = 60  # 超时时间，单位秒
 
-        while (time.time() - start_time) < timeout:
+        Raises:
+            SystemException: 当网络异常或系统错误时抛出
+        """
+        check_interval = 2  # 检查间隔，单位秒
+
+        for attempt in range(max_retries):
             try:
                 # 获取 My Pack 内当前文件夹列表
                 current_folder_list = await self.get_mypack_folder_list(client)
@@ -141,21 +151,34 @@ class PikPakService:
 
                 if new_folders:
                     # 找到新文件夹，返回第一个（通常合集只生成一个文件夹）
-                    new_folder = new_folders[0]
+                    new_folder_name = new_folders[0]
                     for folder in current_folder_list:
-                        if folder["name"] == new_folder:
+                        if folder["name"] == new_folder_name:
                             logger.debug(
-                                f" 在 My Pack 内找到新文件夹: {folder['name']} (ID: {folder['id']})"
+                                f"在 My Pack 内找到新文件夹: {folder['name']} (ID: {folder['id']})"
                             )
                             return folder
 
-                await asyncio.sleep(check_interval)
+                if attempt < max_retries - 1:  # 不是最后一次尝试
+                    await asyncio.sleep(check_interval)
 
+            except SystemException:
+                # 获取文件夹列表的系统异常
+                if attempt == max_retries - 1:  # 最后一次尝试
+                    raise
+                logger.warning(
+                    f"获取文件夹列表失败，{check_interval}秒后重试 (尝试 {attempt + 1}/{max_retries})"
+                )
+                await asyncio.sleep(check_interval)
             except Exception as e:
                 logger.error(f"查找新文件夹时出错: {e}")
+                if attempt == max_retries - 1:  # 最后一次尝试
+                    raise SystemException(
+                        message="查找新文件夹时发生未知错误", original_error=e
+                    )
                 await asyncio.sleep(check_interval)
 
-        logger.warning("该磁链下载超时，可能是p2p 种子下载失败")
+        logger.warning("超时未找到新生成的文件夹，可能是下载失败")
         return None
 
     async def rename_folder(
@@ -176,14 +199,14 @@ class PikPakService:
             result = await client.file_rename(folder_id, new_name)
 
             if result and isinstance(result, dict) and "id" in result:
-                print(f"成功重命名文件夹: {new_name}")
+                logger.info(f"成功重命名动漫: {new_name}")
                 return True
             else:
-                print(f"重命名文件夹失败: {new_name}")
+                logger.warning(f"重命名文件夹动漫: {new_name}")
                 return False
 
         except Exception as e:
-            print(f"重命名文件夹异常: {e}")
+            logger.error(f"重命名文件夹异常: {e}")
             return False
 
     async def download_to_folder(
@@ -219,6 +242,126 @@ class PikPakService:
         except Exception as e:
             return {"success": False, "message": f"下载异常: {str(e)}"}
 
+    async def batch_download_collection(
+        self, client: PikPakApi, anime_list: List[Dict], target_folder_name: str
+    ) -> Dict:
+        """
+        批量下载合集
+
+        Args:
+            client: PikPak客户端
+            anime_list: 动漫列表,每个对象包含 {id, title, magnet}
+            target_folder_name: 目标文件夹名称
+
+        Returns:
+            success: 是否成功
+            message: 返回信息
+            task_id_list: 下载任务ID列表
+            renamed_folders: 重命名的文件夹列表
+        """
+        try:
+            # 检查 My Pack 内目标文件夹是否已存在
+            logger.debug(f"你当前要下载的动漫数据: {anime_list}")
+            existing_folders = await self.get_mypack_folder_list(client)
+            for folder in existing_folders:
+                if folder["name"] == target_folder_name:
+                    logger.warning(
+                        f"动漫 '{target_folder_name}' 已存在，如需更改内容请前往'更新'功能"
+                    )
+                    return {
+                        "success": False,
+                        "message": f"文件夹 '{target_folder_name}' 已存在",
+                    }
+
+            # 获取下载前的文件夹列表
+            before_folders = [f["name"] for f in existing_folders]
+            logger.debug(f"My Pack 内下载前的文件夹名称列表: {before_folders}")
+            renamed_folders = []
+
+            for anime in anime_list:
+                title = anime.get("title")
+                magnet = anime.get("magnet")
+
+                # 下载到 My Pack
+                logger.info(f"开始下载 {title}")
+                result = await self.download_to_root(client, magnet, title)
+                if result["success"]:
+                    # 等待并查找新生成的文件夹
+                    new_folder = await self.find_new_folder(client, before_folders)
+                    if new_folder:
+                        # 重命名文件夹
+                        rename_success = await self.rename_folder(
+                            client, new_folder["id"], target_folder_name
+                        )
+
+                        if rename_success:
+                            renamed_folders.append(
+                                {
+                                    "old_name": new_folder["name"],
+                                    "new_name": target_folder_name,
+                                    "folder_id": new_folder["id"],
+                                }
+                            )
+
+                            asyncio.create_task(
+                                self.delayed_rename_task(
+                                    client, new_folder["id"], delay_seconds=8
+                                )
+                            )
+
+                            logger.debug(
+                                f" 已为文件夹 {target_folder_name} 安排8秒后重命名任务"
+                            )
+
+                        # 更新before_folders，避免重复检测
+                        before_folders.append(target_folder_name)
+
+            return {
+                "success": True,
+                "message": f"成功处理{len(renamed_folders)}个合集",
+                "renamed_folders": renamed_folders,
+            }
+
+        except Exception as e:
+            return {"success": False, "message": f"合集下载异常: {str(e)}"}
+
+    async def batch_download(
+        self, client: PikPakApi, anime_list: List[Dict], folder_id: str
+    ) -> Dict:
+        """
+        批量下载磁力链接到指定文件夹
+
+        Args:
+            client: PikPak客户端
+            anime_list: 动漫列表,每个对象包含 {id, title, magnet}
+            folder_id: 目标文件夹ID
+
+        Returns:
+            task_id_list: 下载任务ID列表
+            folder_id: 目标文件夹ID
+        """
+        try:
+            task_id_list = []
+            for anime in anime_list:
+                title = anime.get("title")
+                magnet = anime.get("magnet")
+                result = await self.download_to_folder(client, magnet, folder_id, title)
+                if result["success"]:
+                    task_id_list.append(result["task_id"])
+
+            asyncio.create_task(
+                self.delayed_rename_task(client, folder_id, delay_seconds=8)
+            )
+
+            return {
+                "success": True,
+                "message": f"成功添加{len(task_id_list)}个下载任务",
+                "task_id_list": task_id_list,
+                "folder_id": folder_id,
+            }
+        except Exception as e:
+            return {"success": False, "message": f"下载异常: {str(e)}"}
+
     async def batch_download_selected(
         self, client: PikPakApi, anime_list: List[Any], target_folder_name: str
     ) -> Dict:
@@ -238,110 +381,86 @@ class PikPakService:
             results: 下载结果列表
         """
         try:
-            # 创建或获取目标文件夹ID
-            folder_id = await self.create_anime_folder(client, target_folder_name)
-            if not folder_id:
-                raise DuplicateException(
-                    resource="My Pack", field="folder_id", value=target_folder_name
-                )
-
             # 合集和单集处理
             collection_items = []
             single_items = []
+            folder_id = None
             for anime in anime_list:
                 if is_collection(anime.title):
                     collection_items.append(anime)
                 else:
                     single_items.append(anime)
 
-            added_count = 0
-            failed_count = 0
-            failed_episodes = []
-
             # 获取下载前的文件夹列表（检测合集下载的新文件夹）
             before_folders = []
             if collection_items:
-                mypack_folders = await self.get_mypack_folder_list(client)
-                before_folders = [f["name"] for f in mypack_folders]
+                try:
+                    mypack_folders = await self.get_mypack_folder_list(client)
+                    before_folders = [f["name"] for f in mypack_folders]
+                    logger.info(f"下载前动漫列表：{before_folders}")
+                except SystemException as e:
+                    logger.critical(f"获取 My Pack 文件夹列表失败: {e}")
+                    raise SystemException(
+                        message="获取 My Pack 文件夹列表失败，下载中止",
+                        original_error=e.original_error,
+                    )
 
             # 处理合集
-            for anime in collection_items:
-                title = anime.title
-                magnet = anime.magnet
-                try:
-                    # 下载合集到 My Pack 根目录
-                    result = await self.download_to_root(client, magnet, title)
-                    if result["success"]:
-                        # 等待并查找新生成的文件夹
-                        new_folder = await self.find_new_folder(client, before_folders)
-                        if new_folder:
-                            # 将合集文件夹内容移动到目标文件夹
-                            move_result = await self.move_folder_contents(
-                                client, new_folder["id"], folder_id
-                            )
-                            if move_result["success"]:
-                                added_count += 1
-                                # 删除空的合集文件夹
-                                try:
-                                    await client.delete_to_trash(ids=[new_folder["id"]])
-                                except Exception:
-                                    pass  # Ignore error
-                                before_folders.append(new_folder["name"])
-                            else:
-                                failed_count += 1
-                                failed_episodes.append(
-                                    {"title": title, "reason": move_result["message"]}
-                                )
-                        else:
-                            failed_count += 1
-                            failed_episodes.append(
-                                {"title": title, "reason": "未找到新生成的合集文件夹"}
-                            )
+            collection_result = None
+            if collection_items:
+                # 转换AnimeItem对象为字典格式
+                collection_items_dict = []
+                for item in collection_items:
+                    if hasattr(item, "dict"):
+                        collection_items_dict.append(item.dict())
                     else:
-                        failed_count += 1
-                        failed_episodes.append(
-                            {"title": title, "reason": result["message"]}
-                        )
-                except Exception as e:
-                    failed_count += 1
-                    failed_episodes.append({"title": title, "reason": str(e)})
+                        collection_items_dict.append(item)
+
+                # 下载合集
+                collection_result = await self.batch_download_collection(
+                    client, collection_items_dict, target_folder_name
+                )
+                if not collection_result["success"]:
+                    raise SystemException(
+                        message="下载合集失败",
+                        original_error=collection_result["message"],
+                    )
 
             # 处理单集
-            for anime in single_items:
-                title = anime.title
-                magnet = anime.magnet
-                try:
-                    # 直接下载到指定文件夹
-                    result = await self.download_to_folder(
-                        client, magnet, folder_id, title
+            single_result = None
+            if single_items:
+                folder_id = await self.create_anime_folder(client, target_folder_name)
+                if not folder_id:
+                    raise DuplicateException(
+                        resource="My Pack", field="folder_id", value=target_folder_name
                     )
-                    if result["success"]:
-                        added_count += 1
+
+                # 转换AnimeItem对象为字典格式
+                single_items_dict = []
+                for item in single_items:
+                    if hasattr(item, "dict"):
+                        single_items_dict.append(item.dict())
                     else:
-                        failed_count += 1
-                        failed_episodes.append(
-                            {"title": title, "reason": result["message"]}
-                        )
-                except Exception as e:
-                    failed_count += 1
-                    failed_episodes.append({"title": title, "reason": str(e)})
+                        single_items_dict.append(item)
 
-            # 延时重命名和同步
-            if added_count > 0:
-                asyncio.create_task(
-                    self.delayed_rename_task(client, folder_id, delay_seconds=8)
+                single_result = await self.batch_download(
+                    client, single_items_dict, folder_id
                 )
-
-            if failed_count > 0:
-                logger.error(f"失败详情：{failed_episodes}")
+                if not single_result["success"]:
+                    raise SystemException(
+                        message="下载单集失败",
+                        original_error=single_result["message"],
+                    )
 
             return {
                 "collection_count": len(collection_items),
                 "single_count": len(single_items),
-                "folder_id": folder_id,
             }
 
+        except (SystemException, DuplicateException):
+            raise
         except Exception as e:
+            logger.critical(f"批量下载异常: {e}")
             raise SystemException(message="批量下载选择异常", original_error=e)
 
     async def rename_single_file(
@@ -361,8 +480,10 @@ class PikPakService:
         try:
             # 调用PikPak重命名API
             logger.debug("将要重命名的文件 id：", file_id)
+            print("将要重命名的文件 id：", file_id)
             result = await client.file_rename(file_id, new_name)
             logger.debug("rename_result:", result)
+            print("rename_result:", result)
 
             if result and isinstance(result, dict) and "id" in result:
                 return True
@@ -396,6 +517,11 @@ class PikPakService:
             renamed_files = []
             failed_files = []
 
+            # API限流配置
+            api_call_count = 0
+            api_batch_size = 3  # 每3次API调用后休息
+            api_delay = 8  # 休息8秒
+
             for file in files:
                 # 跳过文件夹
                 if file.get("kind") == "drive#folder":
@@ -419,10 +545,21 @@ class PikPakService:
                 rename_result = await self.rename_single_file(
                     client, file_id, episode_num
                 )
+                api_call_count += 1
+
                 if rename_result:
                     renamed_files.append(file)
+                    logger.info(f"成功重命名文件: {original_name} -> {episode_num}")
                 else:
                     failed_files.append(file)
+                    logger.warning(f"重命名失败: {original_name}")
+
+                # 检查是否需要延时以避免触发API限流
+                if api_call_count % api_batch_size == 0:
+                    logger.info(
+                        f"已调用 {api_call_count} 次重命名API，延时 {api_delay} 秒避免限流..."
+                    )
+                    await asyncio.sleep(api_delay)
 
             logger.info(
                 f"重命名 {len(renamed_files)} 个文件，失败 {len(failed_files)} 个文件"
@@ -555,7 +692,7 @@ class PikPakService:
 
         except Exception as e:
             logger.critical(f"获取 My Pack 文件夹列表异常: {e}")
-            return []
+            raise SystemException(message="获取云端文件夹列表失败", original_error=e)
 
     async def get_folder_files(self, client: PikPakApi, folder_id: str) -> Dict:
         """
@@ -734,7 +871,7 @@ class PikPakService:
             else:
                 return None
         except Exception as e:
-            print(f"获取视频播放连接异常: {e}")
+            logger.warning(f"获取视频播放连接异常: {e}")
             return None
 
     async def get_mypack_folder_id(self, client: PikPakApi) -> Optional[str]:
@@ -756,14 +893,16 @@ class PikPakService:
             for folder in folders:
                 folder_name = folder.get("name", "")
                 if folder_name in mypack_names:
-                    print(f"✅ 找到 My Pack 文件夹: {folder_name} (ID: {folder['id']})")
+                    logger.debug(
+                        f" 找到 My Pack 文件夹: {folder_name} (ID: {folder['id']})"
+                    )
                     return folder["id"]
 
-            print("❌ 未找到 My Pack 文件夹")
+            logger.debug(" 未找到 My Pack 文件夹")
             return None
 
         except Exception as e:
-            print(f"❌ 获取 My Pack 文件夹ID异常: {e}")
+            logger.critical(f" 获取 My Pack 文件夹ID异常: {e}")
             return None
 
     async def sync_data(self, client: PikPakApi, blocking_wait: bool = False) -> bool:
@@ -807,7 +946,7 @@ class PikPakService:
                 folder_name = anime_folders[folder_id].get("title", "未知")
                 logger.debug(f"  删除本地多余的 {folder_name} 文件夹")
                 del anime_folders[folder_id]
-                links_scheduler = self._get_links_scheduler()
+                links_scheduler = await self._get_links_scheduler()
                 if links_scheduler:
                     # 如果有链接调度器，删除对应的调度任务
                     links_scheduler.remove_anime_schedule(folder_id)
@@ -894,91 +1033,15 @@ class PikPakService:
             self.anime_db.save_data(data)
             logger.info("同步成功")
 
-            # 初始化调度器
-            links_scheduler = self._get_links_scheduler()
+            # 启动并初始化调度器
+            links_scheduler = await self._get_links_scheduler()
             if links_scheduler:
+                # 重新初始化
                 await links_scheduler.reinitialize()
             return True
         except Exception as e:
             logger.critical(f"同步数据失败: {e}")
             return False
-
-    async def move_folder_contents(
-        self, client: PikPakApi, source_folder_id: str, target_folder_id: str
-    ) -> Dict:
-        """
-        将源文件夹内的所有文件移动到目标文件夹
-
-        Args:
-            client: PikPak客户端
-            source_folder_id: 源文件夹ID
-            target_folder_id: 目标文件夹ID
-
-        Returns:
-            success: 是否成功
-            message: 信息
-            moved_count: 移动的文件数量
-        """
-        try:
-            # 获取源文件夹内的所有文件
-            source_files_result = await self.get_folder_files(client, source_folder_id)
-            if not source_files_result["success"]:
-                return {
-                    "success": False,
-                    "message": f"获取源文件夹内容失败: {source_files_result['message']}",
-                    "moved_count": 0,
-                }
-
-            files = source_files_result["files"]
-            if not files:
-                return {
-                    "success": True,
-                    "message": "源文件夹为空，无需移动",
-                    "moved_count": 0,
-                }
-
-            moved_count = 0
-            failed_count = 0
-
-            # 移动每个文件
-            for file in files:
-                file_id = file["id"]
-                file_name = file["name"]
-                try:
-                    # 调用 PikPak 移动文件 API
-                    result = await client.file_move(file_id, target_folder_id)
-                    if result:
-                        moved_count += 1
-                        logger.debug(f"     移动文件成功: {file_name}")
-                    else:
-                        failed_count += 1
-                        logger.error(f"     移动文件失败: {file_name}")
-                except Exception as e:
-                    failed_count += 1
-                    logger.error(f"     移动文件异常: {file_name} - {str(e)}")
-
-            success = moved_count > 0
-            if success:
-                if failed_count == 0:
-                    message = f"成功移动 {moved_count} 个文件"
-                else:
-                    message = f"移动完成: 成功 {moved_count} 个，失败 {failed_count} 个"
-            else:
-                message = f"所有 {len(files)} 个文件都移动失败"
-
-            return {
-                "success": success,
-                "message": message,
-                "moved_count": moved_count,
-            }
-
-        except Exception as e:
-            logger.error(f" 移动文件夹内容异常: {e}")
-            return {
-                "success": False,
-                "message": f"移动文件夹内容失败: {str(e)}",
-                "moved_count": 0,
-            }
 
     async def update_anime_episodes(
         self, client: PikPakApi, anime_list: List[Dict], folder_id: str
@@ -998,146 +1061,39 @@ class PikPakService:
             failed_count: 失败的集数
         """
         try:
-            added_count = 0
-            failed_count = 0
-            failed_episodes = []
-
             # 分类处理：合集和单集
-            collection_items = []
             single_items = []
 
             for anime in anime_list:
                 title = anime.get("title", "")
                 if is_collection(title):
-                    collection_items.append(anime)
-                else:
-                    single_items.append(anime)
-
-            # 获取下载前的文件夹列表（用于检测合集下载的新文件夹）
-            before_folders = []
-            if collection_items:
-                mypack_folders = await self.get_mypack_folder_list(client)
-                before_folders = [f["name"] for f in mypack_folders]
-
-            # 处理合集
-            for anime in collection_items:
-                title = anime.get("title", "")
-                magnet = anime.get("magnet", "")
-
-                try:
-                    logger.info(f"处理合集: {title}")
-
-                    # 下载合集到 My Pack 根目录
-                    result = await self.download_to_root(client, magnet, title)
-                    if result["success"]:
-                        logger.info(f"    合集下载任务添加成功")
-
-                        # 等待并查找新生成的文件夹
-                        new_folder = await self.find_new_folder(client, before_folders)
-                        if new_folder:
-                            logger.info(f"    找到新合集文件夹: {new_folder['name']}")
-
-                            # 将合集文件夹内容移动到目标文件夹
-                            move_result = await self.move_folder_contents(
-                                client, new_folder["id"], folder_id
-                            )
-
-                            if move_result["success"]:
-                                added_count += 1
-                                print(f"    合集内容移动成功: {move_result['message']}")
-
-                                # 删除空的合集文件夹
-                                try:
-                                    await client.delete_to_trash(ids=[new_folder["id"]])
-                                    print(f"    删除空合集文件夹: {new_folder['name']}")
-                                except Exception as e:
-                                    print(f"    删除空合集文件夹失败: {str(e)}")
-
-                                # 更新 before_folders 以避免重复检测
-                                before_folders.append(new_folder["name"])
-                            else:
-                                failed_count += 1
-                                failed_episodes.append(
-                                    {"title": title, "reason": move_result["message"]}
-                                )
-                                print(f"    合集内容移动失败: {move_result['message']}")
-                        else:
-                            failed_count += 1
-                            failed_episodes.append(
-                                {"title": title, "reason": "未找到新生成的合集文件夹"}
-                            )
-                            print(f"    未找到新生成的合集文件夹")
-                    else:
-                        failed_count += 1
-                        failed_episodes.append(
-                            {"title": title, "reason": result["message"]}
-                        )
-                        print(f"    合集下载任务添加失败: {result['message']}")
-
-                except Exception as e:
-                    failed_count += 1
-                    failed_episodes.append({"title": title, "reason": str(e)})
-                    print(f"    合集处理异常: {str(e)}")
+                    # 更新禁止使用合集
+                    raise ValidationException(
+                        message="更新动漫集数不支持合集，请使用单集更新"
+                    )
+                single_items.append(anime)
 
             # 处理单集
-            for i, anime in enumerate(single_items, 1):
-                title = anime.get("title") or f"集数_{i}"
-                magnet = anime.get("magnet", "")
-
-                try:
-                    print(f"处理单集: {title}")
-
-                    # 直接下载到指定文件夹
-                    result = await self.download_to_folder(
-                        client, magnet, folder_id, title
-                    )
-
-                    if result["success"]:
-                        added_count += 1
-                        print(f"    单集下载任务添加成功")
-                    else:
-                        failed_count += 1
-                        failed_episodes.append(
-                            {"title": title, "reason": result["message"]}
-                        )
-                        print(f"    单集下载任务添加失败: {result['message']}")
-
-                except Exception as e:
-                    failed_count += 1
-                    failed_episodes.append({"title": title, "reason": str(e)})
-                    print(f"    单集下载异常: {str(e)}")
-
-            # 成功添加至少一个集数才算成功
-            success = added_count > 0
-
-            if success:
-                if failed_count == 0:
-                    message = f"成功添加 {added_count} 个新集数"
+            # 转换 AnimeItem 对象为字典格式
+            items = []
+            for anime in single_items:
+                if hasattr(anime, "dict"):
+                    items.append(anime.dict())
                 else:
-                    message = f"添加完成: 成功 {added_count} 个，失败 {failed_count} 个"
-            else:
-                message = f"所有 {failed_count} 个集数都添加失败"
+                    items.append(anime)
 
-            # 如果有成功的下载，延时启动重命名任务
-            if added_count > 0:
-                print(f"安排8秒后为文件夹 {folder_id} 执行重命名任务")
-                asyncio.create_task(
-                    self.delayed_rename_task(client, folder_id, delay_seconds=8)
+            # 下载
+            result = await self.batch_download(client, items, folder_id)
+            if not result["success"]:
+                raise SystemException(
+                    message="更新单集失败",
+                    original_error=result["message"],
                 )
 
             return {
-                "success": success,
-                "message": message,
-                "added_count": added_count,
-                "failed_count": failed_count,
-                "failed_episodes": failed_episodes,
+                "single_count": len(single_items),
             }
 
         except Exception as e:
-            print(f"更新动漫异常: {e}")
-            return {
-                "success": False,
-                "message": f"更新动漫失败: {str(e)}",
-                "added_count": 0,
-                "failed_count": len(anime_list),
-            }
+            logger.critical(f"更新动漫异常: {e}")
+            raise SystemException(message="更新动漫失败", original_error=e)

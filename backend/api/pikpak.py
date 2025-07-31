@@ -24,8 +24,16 @@ router = APIRouter(prefix="/pikpak", tags=["PikPak"])
 async def batch_download_anime(request: DownloadRequest):
     """批量下载动漫"""
     try:
+        if not request.username or not request.password:
+            raise ValidationException("用户名和密码不能为空")
+
         pikpak_service = PikPakService()
-        client = await pikpak_service.get_client(request.username, request.password)
+
+        # 获取客户端
+        try:
+            client = await pikpak_service.get_client(request.username, request.password)
+        except Exception as e:
+            raise ValidationException("PikPak 登录失败，请检查用户名和密码")
 
         # 处理单季动漫
         if request.mode == "single_season" and request.anime_list:
@@ -33,9 +41,9 @@ async def batch_download_anime(request: DownloadRequest):
                 client, request.anime_list, request.title
             )
 
-            if not result["success"]:
+            if not result:
                 raise SystemException(
-                    message="下载失败", original_error=result["message"]
+                    message="下载失败", original_error="批量下载选择返回空结果"
                 )
 
             return success(result, "批量下载动漫成功")
@@ -50,10 +58,10 @@ async def batch_download_anime(request: DownloadRequest):
                     client, group.anime_list, group.title
                 )
 
-                if not result["success"]:
+                if not result:
                     # 如果任何一个失败，立即抛出异常
                     raise SystemException(
-                        message="下载失败", original_error=result["message"]
+                        message="下载失败", original_error="批量下载选择返回空结果"
                     )
 
             return success(result, "批量下载动漫成功")
@@ -246,20 +254,7 @@ async def update_anime_episode(request: UpdateAnimeRequest):
         except Exception as e:
             raise SystemException(message="更新动漫集数服务异常", original_code=e)
 
-        if result["success"]:
-            return {
-                "success": True,
-                "message": result["message"],
-                "data": {
-                    "added_count": result["added_count"],
-                    "failed_count": result["failed_count"],
-                    "folder_id": request.folder_id,
-                },
-            }
-        else:
-            raise SystemException(
-                message="更新动漫集数失败", original_error=result["message"]
-            )
+        return success(result, "更新动漫成功")
 
     except SystemException:
         raise

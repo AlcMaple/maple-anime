@@ -3,6 +3,7 @@ from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException
 from fastapi.exceptions import RequestValidationError
 from sqlalchemy.exc import IntegrityError
+from loguru import logger
 
 from exceptions import (
     BaseException,
@@ -31,6 +32,8 @@ def add_exception_handlers(app: FastAPI):
             )
             if hasattr(exc, "original_error") and exc.original_error:
                 error_details += f" | Original Error: {type(exc.original_error).__name__}: {exc.original_error}"
+            
+            logger.error(error_details)
 
             # 前端返回通用错误信息
             return api_response(500, "服务器内部错误")
@@ -84,4 +87,5 @@ def add_exception_handlers(app: FastAPI):
         """
         其他异常
         """
+        logger.error(f"Unhandled exception: {type(exc).__name__}: {exc} | Request: {request.url}")
         return api_response(500, "服务器内部错误")

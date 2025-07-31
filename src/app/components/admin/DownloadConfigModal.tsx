@@ -179,12 +179,12 @@ export const DownloadConfigModal: React.FC<DownloadConfigModalProps> = ({
 
             const result = await pikpakApi.download(downloadData);
 
-            if (result.success) {
+            if (result.code === 200) {
                 message.success('下载配置已提交，开始下载任务');
                 onConfirm();
                 handleClose();
             } else {
-                message.error(`下载失败: ${result.message}`);
+                message.error(`下载失败: ${result.msg}`);
             }
 
         } catch (error) {
@@ -269,6 +269,8 @@ export const DownloadConfigModal: React.FC<DownloadConfigModalProps> = ({
                             <label htmlFor="hasMultipleSeasons" className="text-sm font-medium text-gray-700">
                                 包含多季（需要分组管理）
                             </label>
+                            {/* 注意事项 */}
+                            <div className="text-xs text-gray-500">注意：同一季度的动漫不能同时下载合集和单集</div>
                         </div>
                     </div>
 

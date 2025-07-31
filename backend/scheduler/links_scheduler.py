@@ -175,6 +175,11 @@ class LinksScheduler:
     async def _initialize_all_anime(self):
         """初始化所有动漫的调度任务"""
         try:
+            # 检查调度器是否存在
+            if not self.scheduler:
+                logger.warning("调度器未初始化，无法初始化动漫调度任务")
+                return
+
             # 获取所有动漫信息
             folders_info = self.anime_db.get_all_anime_schedule_info(
                 self.ANIME_CONTAINER_ID
@@ -183,13 +188,38 @@ class LinksScheduler:
             if not folders_info:
                 return
 
-            # 为每个动漫安排更新任务
-            for folder_info in folders_info:
-                await self._schedule_anime_update(folder_info)
+            # 获取当前已有的调度任务
+            existing_job_ids = set()
+            try:
+                for job in self.scheduler.get_jobs():
+                    if job.id.startswith("update_folder_"):
+                        existing_job_ids.add(job.id)
+            except Exception as e:
+                logger.warning(f"获取现有调度任务失败: {e}")
 
-            # 清除不存在的动漫的调度任务
-            folder_ids = [folder_info["folder_id"] for folder_info in folders_info]
-            await self._clear_del_scheduled_jobs(folder_ids)
+            # 为每个动漫检查并安排更新任务
+            current_job_ids = set()
+            for folder_info in folders_info:
+                job_id = f"update_folder_{folder_info['folder_id']}"
+                current_job_ids.add(job_id)
+
+                # 只有当任务不存在时才创建新任务
+                if job_id not in existing_job_ids:
+                    logger.info(f"为动漫 {folder_info['title']} 创建新的调度任务")
+                    await self._schedule_anime_update(folder_info)
+                else:
+                    logger.warning(
+                        f"动漫 {folder_info['title']} 的调度任务已存在，跳过"
+                    )
+
+            # 清除不再需要的调度任务
+            obsolete_job_ids = existing_job_ids - current_job_ids
+            for job_id in obsolete_job_ids:
+                try:
+                    self.scheduler.remove_job(job_id)
+                    logger.debug(f"已移除过期的调度任务: {job_id}")
+                except Exception as e:
+                    logger.warning(f"移除调度任务失败 {job_id}: {e}")
 
         except Exception as e:
             logger.error(f"初始化动漫调度任务失败: {e}")
@@ -199,6 +229,11 @@ class LinksScheduler:
         清除不存在的动漫的调度任务
         """
         try:
+            # 检查调度器是否存在
+            if not self.scheduler:
+                logger.warning("调度器未初始化，无法清除调度任务")
+                return
+
             # 获取所有当前调度的任务
             all_jobs = self.scheduler.get_jobs()
 
@@ -216,24 +251,33 @@ class LinksScheduler:
 
     def remove_anime_schedule(self, folder_id: str):
         """移除指定动漫的调度任务"""
+        if not self.scheduler:
+            logger.warning("调度器未初始化，无法移除调度任务")
+            return
+
         job_id = f"update_folder_{folder_id}"
-        if self.scheduler and self.scheduler.get_job(job_id):
-            try:
+        try:
+            if self.scheduler.get_job(job_id):
                 self.scheduler.remove_job(job_id)
-                logger.info(f"已移除不存在的动漫任务: {job_id}")
-            except Exception as e:
-                logger.error(f"移除动漫任务失败 {job_id}: {e}")
+                logger.debug(f"已移除动漫调度任务: {job_id}")
+        except Exception as e:
+            logger.error(f"移除动漫任务失败 {job_id}: {e}")
 
     async def _schedule_anime_update(self, folder_info: Dict):
         """为动漫安排更新任务"""
         try:
+            # 检查调度器是否存在
+            if not self.scheduler:
+                logger.warning("调度器未初始化，无法安排更新任务")
+                return
+
             folder_id = folder_info["folder_id"]
             next_update_time = folder_info["next_update_time"]
 
             # 如果更新时间已过，设置为1分钟后
             current_time = datetime.now(self.timezone)
 
-            # 确保next_update_time有时区信息
+            # 时区信息
             if next_update_time.tzinfo is None:
                 next_update_time = self.timezone.localize(next_update_time)
 
@@ -268,8 +312,11 @@ class LinksScheduler:
             logger.error(f"安排更新失败: {e}")
 
     async def reinitialize(self):
-        """初始化所有调度"""
+        """重新初始化调度"""
         try:
+            if not self.scheduler:
+                logger.warning("调度器未启动，跳过重新初始化")
+                return
             await self._initialize_all_anime()
         except Exception as e:
-            logger.error(f"链接调度初始化失败: {e}")
+            logger.error(f"链接调度重新初始化失败: {e}")

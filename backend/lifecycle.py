@@ -23,20 +23,20 @@ async def lifespan(app: FastAPI):
     # 启动时执行
     global video_scheduler
 
-    # 初始化调度器
-    if settings.PIKPAK_USERNAME and settings.PIKPAK_PASSWORD:
-        try:
-            video_scheduler = LinksScheduler(
-                settings.PIKPAK_USERNAME, settings.PIKPAK_PASSWORD
-            )
-            await video_scheduler.start()
-            logger.info("生命周期--------链接调度器已启动")
-        except Exception as e:
-            logger.error(f"生命周期--------调度器启动失败: {str(e)}")
-            video_scheduler = None
-    else:
-        logger.warning("未配置 PikPak 账号，跳过调度器启动")
-        logger.warning("请设置环境变量: PIKPAK_USERNAME 和 PIKPAK_PASSWORD")
+    # # 初始化调度器
+    # if settings.PIKPAK_USERNAME and settings.PIKPAK_PASSWORD:
+    #     try:
+    #         video_scheduler = LinksScheduler(
+    #             settings.PIKPAK_USERNAME, settings.PIKPAK_PASSWORD
+    #         )
+    #         await video_scheduler.start()
+    #         logger.info("生命周期--------链接调度器已启动")
+    #     except Exception as e:
+    #         logger.error(f"生命周期--------调度器启动失败: {str(e)}")
+    #         video_scheduler = None
+    # else:
+    #     logger.warning("未配置 PikPak 账号，跳过调度器启动")
+    #     logger.warning("请设置环境变量: PIKPAK_USERNAME 和 PIKPAK_PASSWORD")
 
     yield
 

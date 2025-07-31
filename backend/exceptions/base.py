@@ -1,4 +1,5 @@
 from enum import Enum
+from loguru import logger
 
 
 class ExceptionType(str, Enum):
@@ -52,7 +53,7 @@ class DatabaseException(BaseException):
     """数据库操作异常"""
 
     def __init__(self, message: str, original_error: Exception = None):
-        self.original_error = original_error
+        logger.critical(f"DatabaseException: {original_error}")
         super().__init__(message, "DATABASE_ERROR", ExceptionType.SYSTEM)
 
 
@@ -60,5 +61,5 @@ class SystemException(BaseException):
     """系统异常"""
 
     def __init__(self, message: str, original_error: Exception = None):
-        self.original_error = original_error
+        logger.critical(f"SystemException: {original_error}")
         super().__init__(message, "SYSTEM_ERROR", ExceptionType.SYSTEM)

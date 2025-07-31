@@ -9,12 +9,12 @@ import {
     FileRenameRequest,
     EpisodeListResponse,
     FileDeleteResponse,
-    FileRenameResponse,
     UpdateAnimeRequest,
     UpdateAnimeResponse,
     DeleteAnimeRequest,
     DeleteAnimeResponse,
-    ApiResponse
+    ApiResponse,
+    BackendApiResponse
 } from './types';
 
 export class PikPakService {
@@ -39,8 +39,8 @@ export class PikPakService {
     }
 
     // 重命名文件
-    static async renameEpisode(request: FileRenameRequest): Promise<FileRenameResponse> {
-        return legacyApiClient.post<FileRenameResponse>('/api/episodes/rename', request);
+    static async renameEpisode(request: FileRenameRequest): Promise<BackendApiResponse> {
+        return legacyApiClient.post<BackendApiResponse>('/api/episodes/rename', request);
     }
 
     // 同步数据

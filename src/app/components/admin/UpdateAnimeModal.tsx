@@ -141,15 +141,12 @@ export const UpdateAnimeModal: React.FC<UpdateAnimeModalProps> = ({
 
             console.log("更新动漫响应：", result);
 
-            if (result.success && result.data) {
-                message.success(`成功为"${currentAnime.title}"新增 ${result.data.added_count} 个集数`);
-                if (result.data.failed_count > 0) {
-                    message.warning(`其中 ${result.data.failed_count} 个集数添加失败`);
-                }
+            if (result.code == 200) {
+                message.success(`成功为"${currentAnime.title}"新增 ${result.data?.single_count} 个集数`);
                 onUpdateComplete();
                 handleClose();
             } else {
-                message.error(`更新失败: ${result.message || '未知错误'}`);
+                message.error(`更新失败: ${result.msg || '未知错误'}`);
             }
 
         } catch (error) {

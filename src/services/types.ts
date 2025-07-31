@@ -137,20 +137,13 @@ export interface DownloadRequest {
     groups?: AnimeGroup[];  // 多季模式使用
 }
 
-// 下载简介
-export interface DownloadSummary {
-    total_anime: number;
-    successful_anime: number;
-    total_episodes: number;
-    successful_episodes: number;
+// 下载响应数据
+export interface DownloadData {
+    collection_count?: number;
+    single_count: number;
 }
 
-export interface DownloadResult {
-    success: boolean;
-    message: string;
-    summary?: DownloadSummary;
-    details?: any[];
-}
+export type DownloadResult = BackendApiResponse<DownloadData>;
 
 // 文件删除请求
 export interface FileDeleteRequest {
@@ -169,9 +162,6 @@ export interface FileRenameRequest {
     folder_id: string;
 }
 
-// 文件重命名响应
-export interface FileRenameResponse extends ApiResponse { }
-
 // 更新动漫请求
 export interface UpdateAnimeRequest {
     username: string;
@@ -180,14 +170,7 @@ export interface UpdateAnimeRequest {
     anime_list: AnimeSearchResult[];
 }
 
-// 更新动漫数据
-export interface UpdateAnimeData {
-    added_count: number;
-    failed_count: number;
-    folder_id: string;
-}
-
-export type UpdateAnimeResponse = ApiResponse<UpdateAnimeData>;
+export type UpdateAnimeResponse = BackendApiResponse<DownloadData>;
 
 // 删除动漫请求
 export interface DeleteAnimeRequest {

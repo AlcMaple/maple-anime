@@ -420,7 +420,7 @@ export const EpisodeManagementModal: React.FC<EpisodeManagementModalProps> = ({
                 folder_id: animeId
             });
 
-            if (response.success) {
+            if (response.code == 200) {
                 message.success('文件重命名成功');
                 setIsRenameModalOpen(false);
                 setCurrentRenameFile(null);
@@ -429,7 +429,7 @@ export const EpisodeManagementModal: React.FC<EpisodeManagementModalProps> = ({
                 // clearCache(animeId);
                 loadEpisodes(true);
             } else {
-                message.error(response.message || '重命名失败');
+                message.error(response.msg || '重命名失败');
             }
         } catch (error) {
             console.error('重命名失败:', error);
